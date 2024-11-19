@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <nav
       style={{ backgroundColor: "#1A3B5D" }}
-      className="text-white p-4 shadow-md"
+      className="text-white p-4 shadow-md z-50"
     >
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center ">
