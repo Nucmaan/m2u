@@ -29,9 +29,9 @@ const UserSettings = () => {
 
   return (
     <div
-      className={`min-h-screen bg-gray-100 ${isDarkMode ? "bg-gray-900" : "bg-white"} transition duration-300`}
+      className={`min-h-screen bg-gray-100 ${isDarkMode ? "bg-gray-900" : "bg-gray-100"} transition duration-300`}
     >
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-5">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6 dark:text-white">User Settings</h1>
 
         {/* Profile Section */}
