@@ -1,10 +1,10 @@
-import AdminSidebar from "@/components/AdminSidebar";
+import AgentSidebar from "@/components/AgentSidebar";
 
 function Layout({ children }) {
   return (
     <div className="flex">
       <div className="">
-        <AdminSidebar />
+        <AgentSidebar />
       </div>
       <div className="flex-1">{children}</div>
     </div>
