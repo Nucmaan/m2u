@@ -61,7 +61,7 @@ const AboutUs = () => {
                 alt="Team Member"
                 className="w-24 h-24 mx-auto rounded-full mb-2"
               />
-              <h4 className="text-lg font-semibold text-[#1A3B5D]">Alice Johnson</h4>
+              <h4 className="text-lg font-semibold text-[#1A3B5D]">Nasri</h4>
               <p className="text-sm text-gray-500">CEO</p>
             </div>
             <div className="w-32 text-center">
@@ -70,7 +70,7 @@ const AboutUs = () => {
                 alt="Team Member"
                 className="w-24 h-24 mx-auto rounded-full mb-2"
               />
-              <h4 className="text-lg font-semibold text-[#1A3B5D]">John Smith</h4>
+              <h4 className="text-lg font-semibold text-[#1A3B5D]">xasan</h4>
               <p className="text-sm text-gray-500">CTO</p>
             </div>
             <div className="w-32 text-center">
@@ -79,7 +79,7 @@ const AboutUs = () => {
                 alt="Team Member"
                 className="w-24 h-24 mx-auto rounded-full mb-2"
               />
-              <h4 className="text-lg font-semibold text-[#1A3B5D]">Emma Lee</h4>
+              <h4 className="text-lg font-semibold text-[#1A3B5D]">Naano</h4>
               <p className="text-sm text-gray-500">Head of Marketing</p>
             </div>
           </div>
