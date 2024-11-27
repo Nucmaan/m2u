@@ -1,32 +1,40 @@
 import Register from "@/components/Register";
-
-export const metadata = {
-  title: "Register | MyHome2U",
-  description: "Create an account on MyHome2U to rent or buy properties easily.",
-  keywords: "register, MyHome2U, rent, buy, properties, account",
-  openGraph: {
-    title: "Register | MyHome2U",
-    description: "Create an account on MyHome2U to rent or buy properties easily.",
-    url: `${process.env.DOMAIN}/register`,
-    siteName: "MyHome2U",
-    images: [
-      {
-        url: `${process.env.DOMAIN}/static/register-page.png`,
-        width: 1200,
-        height: 630,
-        alt: "Register on MyHome2U",
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Register | MyHome2U",
-    description: "Create an account on MyHome2U to rent or buy properties easily.",
-    images: [`${process.env.DOMAIN}/static/register-page.png`],
-  },
-};
+import Head from "next/head";
 
 export default function Page() {
-  return <Register />;
+  const domain = process.env.DOMAIN || "http://localhost:3000"; // Fallback for development
+
+  return (
+    <>
+      <Head>
+        <title>Register | MyHome2U</title>
+        <meta
+          name="description"
+          content="Create an account on MyHome2U to rent or buy properties easily."
+        />
+        <meta name="keywords" content="register, MyHome2U, rent, buy, properties, account" />
+        <meta property="og:title" content="Register | MyHome2U" />
+        <meta
+          property="og:description"
+          content="Create an account on MyHome2U to rent or buy properties easily."
+        />
+        <meta property="og:url" content={`${domain}/register`} />
+        <meta property="og:site_name" content="MyHome2U" />
+        <meta
+          property="og:image"
+          content={`${domain}/static/register-page.png`}
+        />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Register | MyHome2U" />
+        <meta
+          name="twitter:description"
+          content="Create an account on MyHome2U to rent or buy properties easily."
+        />
+        <meta name="twitter:image" content={`${domain}/static/register-page.png`} />
+        <link rel="canonical" href={`${domain}/register`} />
+      </Head>
+      <Register />
+    </>
+  );
 }
