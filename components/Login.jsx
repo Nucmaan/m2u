@@ -3,11 +3,16 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import userAuth from "@/myStore/UserAuth";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const loginUser = userAuth((state) => state.loginUser); 
+  const router = useRouter()
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -17,15 +22,27 @@ const Login = () => {
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
-      const response = await axios.post(
-        "/api/login",
-        { username, password }
-      );
+      const response = await axios.post("/api/login", { username, password });
 
-      console.log(response.data);
+      loginUser(response.data.user);
+
+      if(response.data.user.role==="User") {
+        router.replace("/user");
+      }
+
+      if(response.data.user.role==="Admin") {
+        router.replace("/admin");
+      }
+
+
+      if(response.data.user.role==="Agent") {
+        router.replace("/agent");
+      }
+
       toast.success(response.data.message);
+
       setUserName("");
       setPassword("");
     } catch (error) {
@@ -48,9 +65,9 @@ const Login = () => {
           <div>
             <label
               className="block text-gray-700 font-semibold mb-2"
-              htmlFor="email"
+              htmlFor="username"
             >
-              username
+              Username
             </label>
             <input
               type="text"

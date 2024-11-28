@@ -59,6 +59,8 @@ export async function POST(req) {
       user,
       message:
         "User registered successfully check your email to verify your account",
+    },{
+      status : 201,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

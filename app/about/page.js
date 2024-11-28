@@ -1,4 +1,3 @@
-import React from 'react';
 
 const AboutUs = () => {
   return (
@@ -11,7 +10,6 @@ const AboutUs = () => {
             Welcome to MyHome2U! We connect people with their dream properties. Whether you're looking to rent or buy, our platform offers a seamless and personalized experience to find the perfect home.
           </p>
         </div>
-
     
         <div className="md:flex md:items-center md:space-x-8">
           <div className="md:w-1/2">

@@ -65,10 +65,18 @@ export async function POST(req) {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
-    return NextResponse.json({
-      success: true,
-      message: "User login successful",
-    });
+    existingUserName.password = undefined;
+
+    return NextResponse.json(
+      {
+        success: true,
+        user: existingUserName,
+        message: "User login successful",
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

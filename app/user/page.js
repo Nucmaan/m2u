@@ -1,8 +1,11 @@
 "use client";
 
+import userAuth from "@/myStore/UserAuth";
 import React from "react";
 
 const UserDashboard = () => {
+  const userName = userAuth((state) => state.user); 
+
   const user = {
     name: "John Doe",
     avatar: "https://via.placeholder.com/150",
@@ -24,7 +27,7 @@ const UserDashboard = () => {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-semibold text-gray-800">
-              Welcome back, {user.name}
+              Welcome back, {userName?.username || ""}
             </h1>
             <p className="text-lg text-gray-500 mt-2">
               Here's an overview of your activities
