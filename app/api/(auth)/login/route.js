@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import sendEmail from "@/helpers/sendVerificationEmail";
 
 export async function POST(req) {
   try {
@@ -43,8 +44,17 @@ export async function POST(req) {
 
     //check if user is verified
     if (!existingUserName.isVerified === true) {
+
+      // Generate a token with 1-hour expiration
+      const token1 = jwt.sign({ userId: existingUserName._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      await sendEmail(existingUserName.email, token1, "verify");
+
       return NextResponse.json(
-        { success: false, message: "Your account is not verified" },
+        { success: false, message: "Account is not verified. check your email for verification link" },
+
         { status: 403 }
       );
     }

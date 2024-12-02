@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import sendEmail from "@/helpers/sendVerificationEmail";
 
+
 export async function POST(req) {
   try {
     await ConnectDb();

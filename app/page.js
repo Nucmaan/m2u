@@ -1,7 +1,15 @@
+import BlogSection from "@/components/Blogs";
 import HeroSection from "@/components/Hero";
+import PropertyListing from "@/components/PropertyListing";
+import WhyChooseUs from "@/components/WhyChooseUs";
 
 export default function Page() {
-  return <div>
-  <HeroSection />
-  </div>
+  return (
+    <div>
+      <HeroSection />
+      <PropertyListing />
+      <WhyChooseUs />
+      <BlogSection /> 
+    </div>
+  );
 }
