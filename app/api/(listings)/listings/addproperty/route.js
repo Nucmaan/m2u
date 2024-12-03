@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import ConnectDb from "@/Database/dbConfig";
+import Listings from "@/Models/listingsModel";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -37,18 +39,17 @@ async function uploadImageToS3(file, fileName) {
 export async function POST(req) {
   try {
     const formData = await req.formData();
-
+    const owner = formData.get("owner");
     const title = formData.get("title");
-    const description = formData.get("description");
-    const address = formData.get("address");
     const city = formData.get("city");
+    const address = formData.get("address");
+    const price = parseFloat(formData.get("price"));
     const bedrooms = parseInt(formData.get("bedrooms"));
     const bathrooms = parseInt(formData.get("bathrooms"));
-    const price = parseFloat(formData.get("price"));
-    const deposit = parseFloat(formData.get("deposit"));
     const houseType = formData.get("houseType");
     const status = formData.get("status");
-
+    const deposit = parseFloat(formData.get("deposit"));
+    const description = formData.get("description");
     const images = formData.getAll("images"); 
 
     if (images.length === 0) {
@@ -57,6 +58,8 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+
+    await ConnectDb();
 
     // Upload each image to S3
     const imageUrls = [];
@@ -70,10 +73,26 @@ export async function POST(req) {
       imageUrls.push(fileUrl);
     }
 
-    console.log("Uploading to S3:", imageUrls);
+
+   const listing = await Listings.create({
+      owner,
+      title,
+      city,
+      address,
+      price,
+      bedrooms,
+      bathrooms,
+      houseType,
+      status,
+      deposit,
+      description,
+      images: imageUrls,
+    });
+
+    console.log("Property added ");
 
     return NextResponse.json(
-      { message: `File uploaded successfully to ${imageUrls}` },
+      { message: "Property added successfully.", listing },
       { status: 200 }
     );
   } catch (error) {

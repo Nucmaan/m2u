@@ -42,6 +42,7 @@ const listingsSchema = new mongoose.Schema(
         enum: ["Available", "Sold", "Rented"],
         default: "Available",
       },
+      
       deposit: {
         type: Number,
         default: 0,
