@@ -50,12 +50,10 @@ const listingsSchema = new mongoose.Schema(
         type: String,
         trim: true,
       },
-      images: [
-        {
-          public_id: { type: String, required: true },
-          url: { type: String, required: true },
-        },
-      ],
+      images: {
+        type: [String],  // Array of image URLs
+        required: true,
+      },
       createdAt: {
         type: Date,
         default: Date.now,
