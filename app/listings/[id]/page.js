@@ -1,85 +1,113 @@
-import React from 'react';
+"use client";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const ViewProperty = () => {
+  const { id } = useParams();
+  const [list, setList] = useState({});
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const property = {
-    id: 1,
-    title: 'Modern Family House',
-    address: '123 Main Street, Los Angeles, CA',
-    city: 'Los Angeles',
-    price: '$1,200,000',
-    bedrooms: 4,
-    bathrooms: 3,
-    parking: 2,
-    deposit: '$50,000',
-    houseType: 'Buy', 
-    status: 'Available', 
-    description:
-      'This stunning modern family house features an open-concept design, a spacious backyard, and a luxurious kitchen. Located in a prime area of Los Angeles, this property is perfect for families looking for comfort and style.',
-    imageUrl: 'https://via.placeholder.com/600', 
-    owner: 'John Doe',
-    contact: 'john@example.com',
+  const fetchList = async () => {
+    try {
+      const response = await axios.get(`/api/listings/${id}`);
+      setList(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  const nextImage = () => {
+    if (list.images?.length) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === list.images.length - 1 ? 0 : prevIndex + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (list.images?.length) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? list.images.length - 1 : prevIndex - 1
+      );
+    }
   };
 
   return (
-    <section className="min-h-screen bg-[#F7F7F9] px-6 py-8">
+    <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        <img
-          src={property.imageUrl}
-          alt={property.title}
-          className="w-full h-80 object-cover"
-        />
-        <div className="p-6">
-          <h1 className="text-3xl font-bold text-[#1A3B5D] mb-4">
-            {property.title}
+        {/* Image Section */}
+        <div className="relative">
+          {list.images?.length > 0 ? (
+            <img
+              src={list.images[currentImageIndex]}
+              alt={list.title || "Property"}
+              className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
+            />
+          ) : (
+            <img
+              src="https://via.placeholder.com/600"
+              alt="Placeholder"
+              className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
+            />
+          )}
+          <button
+            onClick={prevImage}
+            className="absolute top-1/2 left-6 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 hover:bg-gray-700 transition shadow-lg"
+            aria-label="Previous Image"
+          >
+            ❮
+          </button>
+          <button
+            onClick={nextImage}
+            className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 hover:bg-gray-700 transition shadow-lg"
+            aria-label="Next Image"
+          >
+            ❯
+          </button>
+        </div>
+
+        {/* Details Section */}
+        <div className="p-6 lg:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1A3B5D] mb-4">
+            {list.title || "Loading..."}
           </h1>
-          <p className="text-sm text-gray-600 mb-2">{property.address}</p>
-          <p className="text-lg font-bold text-[#F47C48] mb-4">{property.price}</p>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">City: </span>
-              {property.city}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">Bedrooms: </span>
-              {property.bedrooms}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">Bathrooms: </span>
-              {property.bathrooms}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">Parking: </span>
-              {property.parking} Spots
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">Deposit: </span>
-              {property.deposit}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">House Type: </span>
-              {property.houseType}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">Status: </span>
-              {property.status}
-            </div>
-            <div className="text-sm text-gray-700">
-              <span className="font-semibold">Owner: </span>
-              {property.owner}
-            </div>
+          <p className="text-sm text-gray-600 mb-2">{list.address}</p>
+          <p className="text-lg font-bold text-[#F47C48] mb-6">{list.price}</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {[{ label: "City", value: list.city || "N/A" },
+              { label: "Bedrooms", value: list.bedrooms || "N/A" },
+              { label: "Bathrooms", value: list.bathrooms || "N/A" },
+              { label: "Deposit", value: list.deposit || "N/A" },
+              { label: "House Type", value: list.houseType || "N/A" },
+              { label: "Status", value: list.status || "N/A" },
+              { label: "Owner", value: list.owner || "N/A" },
+            ].map((item, index) => (
+              <div key={index} className="text-sm text-gray-700">
+                <span className="font-semibold">{item.label}: </span>
+                {item.value}
+              </div>
+            ))}
           </div>
-          <p className="text-gray-600 mb-4">{property.description}</p>
+
+          <p className="text-gray-600 mb-6">{list.description || "N/A"}</p>
+
           <div className="text-sm text-gray-700 mb-6">
             <span className="font-semibold">Contact: </span>
             <a
-              href={`mailto:${property.contact}`}
-              className="text-[#4C8492] font-medium hover:text-[#F47C48]"
+              href="#"
+              className="text-[#4C8492] font-medium hover:text-[#F47C48] underline"
             >
-              {property.contact}
+              0616500191
             </a>
           </div>
-          <button className="w-full py-2 bg-[#4C8492] text-white font-semibold rounded-md hover:bg-[#3b6d78] transition duration-200">
+
+          <button className="w-full py-3 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200">
             Book Now
           </button>
         </div>
