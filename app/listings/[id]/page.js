@@ -40,7 +40,6 @@ const ViewProperty = () => {
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        {/* Image Section */}
         <div className="relative">
           {list.images?.length > 0 ? (
             <img
@@ -71,7 +70,6 @@ const ViewProperty = () => {
           </button>
         </div>
 
-        {/* Details Section */}
         <div className="p-6 lg:p-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1A3B5D] mb-4">
             {list.title || "Loading..."}
@@ -80,7 +78,8 @@ const ViewProperty = () => {
           <p className="text-lg font-bold text-[#F47C48] mb-6">{list.price}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            {[{ label: "City", value: list.city || "N/A" },
+            {[
+              { label: "City", value: list.city || "N/A" },
               { label: "Bedrooms", value: list.bedrooms || "N/A" },
               { label: "Bathrooms", value: list.bathrooms || "N/A" },
               { label: "Deposit", value: list.deposit || "N/A" },

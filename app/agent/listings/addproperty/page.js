@@ -5,6 +5,7 @@ import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
 
 const AddListing = () => {
+  
   const user = userAuth((state) => state.user);
 
   const [title, setTitle] = useState("");

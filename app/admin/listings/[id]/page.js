@@ -1,213 +1,297 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import userAuth from "@/myStore/UserAuth";
+import toast from "react-hot-toast";
 
-export default function EditListingPage() {
-  // Sample property data to populate the form (replace with actual API call)
-  const [property, setProperty] = useState({
-    title: "Luxury Apartment",
-    description: "A spacious and luxurious apartment with modern amenities.",
-    address: "123 Main St, New York, NY",
-    city: "New York",
-    price: 3000,
-    deposit: 1500,
-    status: "Available",
-    houseType: "Rent",
-    bedrooms: 3,
-    bathrooms: 2,
-    parking: 1,
-    coverImage: "https://via.placeholder.com/400",
-    video: "https://www.youtube.com/watch?v=example",
-  });
+const EditListing = () => {
+  
+  const user = userAuth((state) => state.user);
 
-  // Form state
-  const [formData, setFormData] = useState(property);
+  const [title, setTitle] = useState("");
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [price, setPrice] = useState("");
+  const [bedrooms, setBedrooms] = useState("");
+  const [bathrooms, setBathrooms] = useState("");
+  const [houseType, setHouseType] = useState("Rent");
+  const [status, setStatus] = useState("Available");
+  const [deposit, setDeposit] = useState("");
+  const [description, setDescription] = useState("");
+  const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
-  useEffect(() => {
-    // Prefill the form with property data
-    setFormData(property);
-  }, [property]);
+  const [loading, setLoading] = useState(false); // New loading state
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleImageChange = (e) => {
+    const files = e.target.files;
+    if (files) {
+      const newImages = [...images, ...Array.from(files)];
+      const newPreviews = [
+        ...imagePreviews,
+        ...Array.from(files).map((file) => URL.createObjectURL(file)),
+      ];
+      setImages(newImages);
+      setImagePreviews(newPreviews);
+    }
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleImageRemove = (index) => {
+    const updatedImages = images.filter((_, i) => i !== index);
+    const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
+    setImages(updatedImages);
+    setImagePreviews(updatedPreviews);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated property data:", formData);
-    // Make an API call here to save the updated property details
+    setLoading(true); // Set loading to true when submission starts
+
+    const formData = new FormData();
+    formData.append("owner", user._id);
+    formData.append("title", title);
+    formData.append("city", city);
+    formData.append("address", address);
+    formData.append("price", price);
+    formData.append("bedrooms", bedrooms);
+    formData.append("bathrooms", bathrooms);
+    formData.append("houseType", houseType);
+    formData.append("status", status);
+    formData.append("deposit", deposit);
+    formData.append("description", description);
+
+    images.forEach((image) => formData.append("images", image));
+
+    try {
+      const response = await axios.post("/api/listings/addproperty", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        setTitle("");
+        setCity("");
+        setAddress("");
+        setPrice("");
+        setBedrooms("");
+        setBathrooms("");
+        setHouseType("Rent");
+        setStatus("Available");
+        setDeposit("");
+        setDescription("");
+        setImages([]);
+        setImagePreviews([]);
+      } else {
+        toast.error("Failed to add property. Please try again.");
+      }
+    } catch (error) {
+      toast.error(`Failed to add property. Please try again. ${error.message}`);
+    } finally {
+      setLoading(false); 
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] p-6">
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-6">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-4xl mx-auto bg-gray-100 p-8 rounded-lg shadow-md space-y-6"
+    >
+      <h2 className="text-2xl font-semibold text-center text-black">
         Edit Property Listing
-      </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md space-y-4"
-      >
-        {/* Title */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="flex flex-col">
+          <label htmlFor="title" className="text-gray-700 font-medium">
             Title
           </label>
           <input
+            id="title"
             type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter property title"
+            required
           />
         </div>
 
-        {/* Description */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="4"
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
-
-        {/* Cover Image */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Cover Image URL
-          </label>
-          <input
-            type="text"
-            name="coverImage"
-            value={formData.coverImage}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-          {formData.coverImage && (
-            <img
-              src={formData.coverImage}
-              alt="Cover Preview"
-              className="mt-2 w-full h-48 object-cover rounded-lg border border-[#E0E0E0]"
-            />
-          )}
-        </div>
-
-        {/* Video */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Video URL (YouTube or other)
-          </label>
-          <input
-            type="text"
-            name="video"
-            value={formData.video}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-          {formData.video && (
-            <div className="mt-2">
-              <iframe
-                width="100%"
-                height="200"
-                src={formData.video.replace("watch?v=", "embed/")}
-                title="Property Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="rounded-lg border border-[#E0E0E0]"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Address */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Address
-          </label>
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
-
-        {/* City */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
+        <div className="flex flex-col">
+          <label htmlFor="city" className="text-gray-700 font-medium">
             City
           </label>
           <input
+            id="city"
             type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter city"
+            required
           />
         </div>
 
-        {/* Price */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
+        <div className="flex flex-col">
+          <label htmlFor="address" className="text-gray-700 font-medium">
+            Address
+          </label>
+          <input
+            id="address"
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter address"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="price" className="text-gray-700 font-medium">
             Price
           </label>
           <input
+            id="price"
             type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter price"
+            required
           />
         </div>
 
-        {/* Deposit */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Deposit
+        <div className="flex flex-col">
+          <label htmlFor="bedrooms" className="text-gray-700 font-medium">
+            Bedrooms
           </label>
           <input
+            id="bedrooms"
             type="number"
-            name="deposit"
-            value={formData.deposit}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
+            value={bedrooms}
+            onChange={(e) => setBedrooms(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter number of bedrooms"
+            required
           />
         </div>
 
-        {/* Status */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
+        <div className="flex flex-col">
+          <label htmlFor="bathrooms" className="text-gray-700 font-medium">
+            Bathrooms
+          </label>
+          <input
+            id="bathrooms"
+            type="number"
+            value={bathrooms}
+            onChange={(e) => setBathrooms(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter number of bathrooms"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="houseType" className="text-gray-700 font-medium">
+            House Type
+          </label>
+          <select
+            id="houseType"
+            value={houseType}
+            onChange={(e) => setHouseType(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="Rent">Rent</option>
+            <option value="Buy">Buy</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="status" className="text-gray-700 font-medium">
             Status
           </label>
           <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           >
             <option value="Available">Available</option>
-            <option value="Pending">Pending</option>
             <option value="Sold">Sold</option>
             <option value="Rented">Rented</option>
           </select>
         </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-[#1A3B5D] text-white font-bold py-2 px-4 rounded hover:bg-[#16324A]"
-        >
-          Save Changes
-        </button>
-      </form>
-    </div>
+        <div className="flex flex-col">
+          <label htmlFor="deposit" className="text-gray-700 font-medium">
+            Deposit
+          </label>
+          <input
+            id="deposit"
+            type="number"
+            value={deposit}
+            onChange={(e) => setDeposit(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter deposit amount"
+          />
+        </div>
+
+        <div className="flex flex-col col-span-2">
+          <label htmlFor="description" className="text-gray-700 font-medium">
+            Description
+          </label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter property description"
+            rows={4}
+          />
+        </div>
+
+        <div className="flex flex-col col-span-2">
+          <label htmlFor="images" className="text-gray-700 font-medium">
+            Images
+          </label>
+          <input
+            id="images"
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+          <div className="flex flex-wrap gap-4 mt-4">
+            {imagePreviews.map((preview, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={preview}
+                  alt={`preview-${index}`}
+                  className="w-24 h-24 object-cover rounded-md shadow-md"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleImageRemove(index)}
+                  className="absolute top-0 right-0 bg-red-600 text-white text-sm px-2 py-1 rounded-full"
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        className="w-full py-3 bg-black text-white font-semibold rounded-md hover:bg-gray-800 transition duration-300"
+      >
+        {loading ? "Loading..." : "Add Property"}
+      </button>
+    </form>
   );
-}
+};
+
+export default EditListing;
