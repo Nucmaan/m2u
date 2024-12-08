@@ -1,22 +1,32 @@
-"use client"
+"use client";
 import Sidebar from "@/components/Sidebar";
 import userAuth from "@/myStore/UserAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Layout({ children }) {
-  const user = userAuth((state) => state.user); 
+  const user = userAuth((state) => state.user);
   const router = useRouter();
 
-  useEffect(() => {
-    if (user?.role !== "User") {
-      router.push("/login"); // Redirect to login if not a user
-    }
-  }, [user, router]);
+  const hasHydrated = userAuth.persist.hasHydrated;
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Render layout only if user.role === "User"
+  useEffect(() => {
+    if (hasHydrated()) {
+      setIsHydrated(true);
+
+      if (user?.role !== "User") {
+        router.push("/login");
+      }
+    }
+  }, [hasHydrated, user, router]);
+
+  if (!isHydrated) {
+    return <div>Loading...</div>;
+  }
+
   if (user?.role !== "User") {
-    return null; // Prevent rendering during the redirect
+    return null;
   }
 
   return (

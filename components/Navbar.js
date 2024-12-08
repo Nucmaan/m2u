@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logoutUser(); 
-    router.push("/");
+    router.push("/login");
   };
 
   const getDashboardLink = () => {

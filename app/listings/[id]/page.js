@@ -2,11 +2,14 @@
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import userAuth from "@/myStore/UserAuth";
+import toast from "react-hot-toast";
 
 const ViewProperty = () => {
   const { id } = useParams();
   const [list, setList] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const user = userAuth((state) => state.user);
 
   const fetchList = async () => {
     try {
@@ -36,6 +39,23 @@ const ViewProperty = () => {
       );
     }
   };
+
+  const handleBookNow = () => {
+    
+    if (!user) {
+      toast.success("Please login to book this property.");
+      return;
+    }
+
+    if (user?.role === "Admin" || user?.role === "Agent") {
+      toast.success("Admin or Agent can't book property.");
+      return;
+    }
+  
+    // Continue booking logic here
+    toast.success("Booking successful!"); // Placeholder for successful booking logic
+  };
+  
 
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
@@ -106,7 +126,10 @@ const ViewProperty = () => {
             </a>
           </div>
 
-          <button className="w-full py-3 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200">
+          <button
+           onClick={handleBookNow}
+            className="w-full py-3 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200"
+          >
             Book Now
           </button>
         </div>

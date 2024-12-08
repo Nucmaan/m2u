@@ -1,23 +1,33 @@
-"use client"
+"use client";
 import AgentSidebar from "@/components/AgentSidebar";
 import userAuth from "@/myStore/UserAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Layout({ children }) {
-  const user = userAuth((state) => state.user); 
+  const user = userAuth((state) => state.user);
   const router = useRouter();
+  const hasHydrated = userAuth.persist.hasHydrated;
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    if (user?.role !== "Agent") {
-      router.push("/login"); // Redirect to login if not a user
-    }
-  }, [user, router]);
+    if (hasHydrated()) {
+      setIsHydrated(true);
 
-  // Render layout only if user.role === "User"
-  if (user?.role !== "Agent") {
-    return null; // Prevent rendering during the redirect
+      if (user?.role !== "Agent") {
+        router.push("/login");
+      }
+    }
+  }, [hasHydrated, user, router]);
+
+  if (!isHydrated) {
+    return <div>Loading...</div>;
   }
+
+  if (user?.role !== "Agent") {
+    return null;
+  }
+
   return (
     <div className="flex">
       <div className="">

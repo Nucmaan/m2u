@@ -1,213 +1,277 @@
 "use client";
-import { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import userAuth from "@/myStore/UserAuth";
+import toast from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
 export default function EditListingPage() {
-  // Sample property data to populate the form (replace with actual API call)
-  const [property, setProperty] = useState({
-    title: "Luxury Apartment",
-    description: "A spacious and luxurious apartment with modern amenities.",
-    address: "123 Main St, New York, NY",
-    city: "New York",
-    price: 3000,
-    deposit: 1500,
-    status: "Available",
-    houseType: "Rent",
-    bedrooms: 3,
-    bathrooms: 2,
-    parking: 1,
-    coverImage: "https://via.placeholder.com/400",
-    video: "https://www.youtube.com/watch?v=example",
-  });
+  const { id } = useParams();
+  const router = useRouter();
+  const user = userAuth((state) => state.user);
 
-  // Form state
-  const [formData, setFormData] = useState(property);
+  const [title, setTitle] = useState("");
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [price, setPrice] = useState("");
+  const [bedrooms, setBedrooms] = useState("");
+  const [bathrooms, setBathrooms] = useState("");
+  const [houseType, setHouseType] = useState("Rent");
+  const [status, setStatus] = useState("Available");
+  const [deposit, setDeposit] = useState("");
+  const [description, setDescription] = useState("");
+  const [images, setImages] = useState([]); // New images
+  const [imagePreviews, setImagePreviews] = useState([]); // Image previews for new images
+  const [currentImages, setCurrentImages] = useState([]); // Current images from the API
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Prefill the form with property data
-    setFormData(property);
-  }, [property]);
+    if (id) {
+      fetchListing();
+    }
+  }, [id]);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const fetchListing = async () => {
+    try {
+      const response = await axios.get(`/api/listings/${id}`);
+      const data = response.data.data;
+      console.log("Fetched data:", data);
+
+      // Set the state with fetched data
+      setTitle(data.title || "");
+      setCity(data.city || "");
+      setAddress(data.address || "");
+      setPrice(data.price || "");
+      setBedrooms(data.bedrooms || "");
+      setBathrooms(data.bathrooms || "");
+      setHouseType(data.houseType || "Rent");
+      setStatus(data.status || "Available");
+      setDeposit(data.deposit || "");
+      setDescription(data.description || "");
+      setCurrentImages(data.images || []);
+    } catch (error) {
+      console.error("Error fetching listing:", error);
+      toast.error("Failed to fetch listing details.");
+    }
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    const files = e.target.files;
+    if (files) {
+      const newImages = [...images, ...Array.from(files)];
+      const newPreviews = [
+        ...imagePreviews,
+        ...Array.from(files).map((file) => URL.createObjectURL(file)),
+      ];
+      setImages(newImages);
+      setImagePreviews(newPreviews);
+    }
+  };
+
+  const handleImageRemove = (index) => {
+    const updatedImages = images.filter((_, i) => i !== index);
+    const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
+    setImages(updatedImages);
+    setImagePreviews(updatedPreviews);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated property data:", formData);
-    // Make an API call here to save the updated property details
+    setLoading(true);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", title);
+    formDataToSend.append("city", city);
+    formDataToSend.append("address", address);
+    formDataToSend.append("price", price);
+    formDataToSend.append("bedrooms", bedrooms);
+    formDataToSend.append("bathrooms", bathrooms);
+    formDataToSend.append("houseType", houseType);
+    formDataToSend.append("status", status);
+    formDataToSend.append("deposit", deposit);
+    formDataToSend.append("description", description);
+
+    // Append only new images
+    images.forEach((image) => formDataToSend.append("images", image));
+
+    try {
+      const response = await axios.put(`/api/listings/${id}`, formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        router.push("/agent");
+      } else {
+        toast.error("Failed to update property. Please try again.");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] p-6">
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-6">
-        Edit Property Listing
-      </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md space-y-4"
-      >
-        {/* Title */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg space-y-6"
+    >
+      {/* Title Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Title</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* Description */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="4"
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
+      {/* City Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">City</label>
+        <input
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* Cover Image */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Cover Image URL
-          </label>
-          <input
-            type="text"
-            name="coverImage"
-            value={formData.coverImage}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-          {formData.coverImage && (
-            <img
-              src={formData.coverImage}
-              alt="Cover Preview"
-              className="mt-2 w-full h-48 object-cover rounded-lg border border-[#E0E0E0]"
-            />
-          )}
-        </div>
+      {/* Address Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Address</label>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* Video */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Video URL (YouTube or other)
-          </label>
-          <input
-            type="text"
-            name="video"
-            value={formData.video}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-          {formData.video && (
-            <div className="mt-2">
-              <iframe
-                width="100%"
-                height="200"
-                src={formData.video.replace("watch?v=", "embed/")}
-                title="Property Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="rounded-lg border border-[#E0E0E0]"
-              />
-            </div>
-          )}
-        </div>
+      {/* Price Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Price</label>
+        <input
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* Address */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Address
-          </label>
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
+      {/* Bedrooms Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Bedrooms</label>
+        <input
+          type="number"
+          value={bedrooms}
+          onChange={(e) => setBedrooms(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* City */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            City
-          </label>
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
+      {/* Bathrooms Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Bathrooms</label>
+        <input
+          type="number"
+          value={bathrooms}
+          onChange={(e) => setBathrooms(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-        {/* Price */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Price
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
-
-        {/* Deposit */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Deposit
-          </label>
-          <input
-            type="number"
-            name="deposit"
-            value={formData.deposit}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          />
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className="block text-[#333333] font-medium mb-2">
-            Status
-          </label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full border border-[#E0E0E0] rounded p-2"
-          >
-            <option value="Available">Available</option>
-            <option value="Pending">Pending</option>
-            <option value="Sold">Sold</option>
-            <option value="Rented">Rented</option>
-          </select>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-[#1A3B5D] text-white font-bold py-2 px-4 rounded hover:bg-[#16324A]"
+      {/* House Type Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">House Type</label>
+        <select
+          value={houseType}
+          onChange={(e) => setHouseType(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
         >
-          Save Changes
-        </button>
-      </form>
-    </div>
+          <option value="Rent">Rent</option>
+          <option value="Buy">Buy</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      {/* Status Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Status</label>
+        <select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="Available">Available</option>
+          <option value="Pending">Pending</option>
+          <option value="Sold">Sold</option>
+          <option value="Rented">Rented</option>
+        </select>
+      </div>
+
+      {/* Deposit Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Deposit</label>
+        <input
+          type="number"
+          value={deposit}
+          onChange={(e) => setDeposit(e.target.value)}
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Description Field */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Description</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows="4"
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Image upload */}
+      <div>
+        <label className="block text-gray-600 font-semibold">Images</label>
+        <input
+          type="file"
+          onChange={handleImageChange}
+          multiple
+          accept="image/*"
+          className="w-full mt-1 p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="mt-4">
+          {imagePreviews.map((preview, index) => (
+            <div key={index} className="relative inline-block mr-4">
+              <img
+                src={preview}
+                alt={`Preview ${index}`}
+                className="w-24 h-24 object-cover rounded-md"
+              />
+              <button
+                type="button"
+                onClick={() => handleImageRemove(index)}
+                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        className="w-full mt-6 bg-blue-600 text-white p-3 rounded-md shadow-sm"
+        disabled={loading}
+      >
+        {loading ? "Saving..." : "Update Listing"}
+      </button>
+    </form>
   );
 }

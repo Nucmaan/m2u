@@ -32,7 +32,7 @@ export default function PropertyList() {
   );
 
    const rentedOrSoldProperties = listings.filter(
-    (listing) => listing.houseType === "Rented" || listing.houseType === "Sold"
+    (listing) => listing.status != "Available"
   );
 
   return (
