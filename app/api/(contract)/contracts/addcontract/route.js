@@ -15,19 +15,11 @@ export async function POST(req) {
       endDate,
       monthlyRent,
       deposit,
+      houseStatus,
       termsAndConditions,
     } = await req.json();
 
-    if (
-      !bookingId ||
-      !propertyId ||
-      !userId ||
-      !ownerId ||
-      !startDate ||
-      !endDate ||
-      !monthlyRent ||
-      !deposit
-    ) {
+    if (!(bookingId && propertyId && userId && ownerId && startDate && endDate && monthlyRent && deposit)) {
       return NextResponse.json(
         { message: "All required fields must be provided" },
         { status: 400 }
@@ -45,12 +37,18 @@ export async function POST(req) {
     }
 
     const propertyExists = await Listings.findById(propertyId);
+
     if (!propertyExists) {
       return NextResponse.json(
         { message: "Property not found" },
         { status: 404 }
       );
     }
+
+    propertyExists.status = houseStatus;
+
+    await propertyExists.save();
+
 
     const newContract = new Contract({
       booking: bookingId,
@@ -67,9 +65,13 @@ export async function POST(req) {
     await newContract.save();
 
     return NextResponse.json(
-      { message: "Contract created successfully", contract: newContract },
+      { 
+        message: "Contract created successfully", 
+        contract: newContract 
+      },
       { status: 201 }
     );
+
   } catch (error) {
     return NextResponse.json(
       { message: error.message || "An error occurred" },

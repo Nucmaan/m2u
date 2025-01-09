@@ -10,11 +10,16 @@ const ViewProperty = () => {
   const [list, setList] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const user = userAuth((state) => state.user);
+  const [owner, setOwner] = useState("");
+  const [notes, setNotes] = useState("");
+  const [visitingDate, setVisitingDate] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchList = async () => {
     try {
       const response = await axios.get(`/api/listings/${id}`);
       setList(response.data.data);
+      setOwner(response.data.data.owner);
     } catch (error) {
       console.error(error);
     }
@@ -41,21 +46,46 @@ const ViewProperty = () => {
   };
 
   const handleBookNow = () => {
-    
     if (!user) {
-      toast.success("Please login to book this property.");
+      toast.error("Please login to book this property.");
       return;
     }
 
     if (user?.role === "Admin" || user?.role === "Agent") {
-      toast.success("Admin or Agent can't book property.");
+      toast.error("Admin or Agent can't book property.");
       return;
     }
-  
-    // Continue booking logic here
-    toast.success("Booking successful!"); // Placeholder for successful booking logic
+
+    setIsModalOpen(true); 
   };
+
   
+  const handleConfirmBooking = async () => {
+    if (!visitingDate) {
+      toast.error("Please select a visiting date.");
+      return;
+    }
+
+    if (!notes) {
+      toast.error("Please add comments for your booking.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/api/booking/addBooking`, {
+        user: user._id,
+        owner: owner,
+        listing: id,
+        visitingDate: visitingDate,
+        notes: notes,
+      });
+
+      toast.success(response.data.message);
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
@@ -127,13 +157,58 @@ const ViewProperty = () => {
           </div>
 
           <button
-           onClick={handleBookNow}
+            onClick={handleBookNow}
             className="w-full py-3 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200"
           >
             Book Now
           </button>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Confirm Booking
+            </h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Visiting Date
+              </label>
+              <input
+                type="date"
+                value={visitingDate}
+                onChange={(e) => setVisitingDate(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Notes / Comments
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg"
+                rows="4"
+              />
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmBooking}
+                className="px-4 py-2 bg-[#4C8492] text-white rounded-lg hover:bg-[#3b6d78]"
+              >
+                Confirm Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

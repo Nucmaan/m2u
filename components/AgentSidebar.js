@@ -8,6 +8,8 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { BsHouseLockFill } from "react-icons/bs";
+import { RiSecurePaymentFill } from "react-icons/ri";
+
 
 export default function AdminSidebar() {
   return (
@@ -83,6 +85,20 @@ export default function AdminSidebar() {
           Bills
         </Link>
       </div>
+
+      <div className="flex gap-2 items-center justify-center md:justify-start mb-4 px-3 md:px-5">
+      <Link href="/agent/payments">
+        <RiSecurePaymentFill className="text-xl md:text-2xl text-primary cursor-pointer hover:text-accent transition-all" />
+      </Link>
+      <Link
+        href="/agent/payments"
+        className="hidden md:block font-medium text-base md:text-lg text-primary hover:text-accent transition-all"
+      >
+        Payments
+      </Link>
+    </div>
+
+
 
       <div className="flex gap-2 items-center justify-center md:justify-start mb-4 px-3 md:px-5">
         <Link href="/agent/invoice">

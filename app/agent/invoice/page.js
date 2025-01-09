@@ -1,141 +1,94 @@
 "use client";
 
+import userAuth from "@/myStore/UserAuth";
+import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-// Sample data with additional fields: paymentType, paid/unpaid status, dueDate
-const invoicesData = [
-  {
-    id: 1,
-    user: "John Doe",
-    amount: 500,
-    paymentType: "MasterCard",
-    status: "Paid",
-    invoiceDate: "2024-11-20",
-    dueDate: "2024-12-20",
-  },
-  {
-    id: 2,
-    user: "Jane Smith",
-    amount: 400,
-    paymentType: "Cash",
-    status: "Unpaid",
-    invoiceDate: "2024-11-18",
-    dueDate: "2024-12-18",
-  },
-];
+export default function Page() {
+  
+  const [ownerPayments, setOwnerPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const owner = userAuth((state) => state.user);
 
-export default function AgentInvoiceList() {
-  const [invoices, setInvoices] = useState(invoicesData);
+  useEffect(() => {
+    const fetchOwnerPayments = async () => {
+      try {
+        const response = await axios.get("/api/bill");
+        const filteredPayments = response.data.data.filter(
+          (payment) => payment.owner._id === owner._id && payment.status === "Paid"
+        );
+        setOwnerPayments(filteredPayments);
+      } catch (error) {
+        console.error("Error fetching owner payments:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleDownloadInvoice = (id) => {
-    alert(`Downloading invoice for user ID: ${id}`);
-  };
-
-  const handleEditInvoice = (id) => {
-    alert(`Editing invoice for user ID: ${id}`);
-  };
+    if (owner && owner._id) {
+      fetchOwnerPayments();
+    }
+  }, [owner]);
 
   return (
-    <div className="p-6" style={{ backgroundColor: "#F7F7F9" }}>
-      <h1
-        className="text-3xl font-semibold"
-        style={{ color: "#1A3B5D", marginBottom: "24px" }}
-      >
-        Agent Invoice List
-      </h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F7F9] to-[#E8EBF3] p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-[#1A3B5D] mb-8 text-center">
+          Agent Invoice
+        </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {invoices.map((invoice) => (
-          <div
-            key={invoice.id}
-            className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300 ease-in-out"
-            style={{ border: "1px solid #E0E0E0" }}
-          >
-            <h2
-              className="text-xl font-semibold"
-              style={{ color: "#333333", marginBottom: "16px" }}
-            >
-              {invoice.user}
-            </h2>
-            <div
-              className="text-sm"
-              style={{ color: "#7A7A7A", marginBottom: "4px" }}
-            >
-              Invoice Date: {invoice.invoiceDate}
-            </div>
-            <div
-              className="text-sm"
-              style={{ color: "#7A7A7A", marginBottom: "4px" }}
-            >
-              Due Date: {invoice.dueDate}
-            </div>
-
-            <div
-              className="text-lg font-medium"
-              style={{ color: "#333333", marginBottom: "16px" }}
-            >
-              Amount: ${invoice.amount}
-            </div>
-
-            <div className="flex justify-between items-center mb-4">
-              <span
-                className={`px-4 py-2 rounded-full text-white ${
-                  invoice.status === "Paid"
-                    ? "bg-[#27AE60]"  // Success Green for paid invoices
-                    : invoice.status === "Unpaid"
-                    ? "bg-[#E74C3C]"  // Warning Red for unpaid invoices
-                    : "bg-gray-500"
-                }`}
+        {loading ? (
+          <div className="text-[#7A7A7A] text-center">Loading Invoices...</div>
+        ) : ownerPayments.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {ownerPayments.map((payment) => (
+              <div
+                key={payment._id}
+                className="bg-white border border-[#E0E0E0] p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300"
               >
-                {invoice.status}
-              </span>
-              <span
-                className={`px-4 py-2 rounded-full text-white ${
-                  invoice.paymentType === "MasterCard"
-                    ? "bg-[#4C8492]"  // Secondary Color for MasterCard
-                    : "bg-[#F47C48]"  // Accent Color for Cash
-                }`}
-              >
-                {invoice.paymentType}
-              </span>
-            </div>
+                <h2 className="text-2xl font-semibold text-[#1A3B5D] mb-2">
+                  {payment.user.username}
+                </h2>
+                <p className="text-[#7A7A7A] mb-4">{payment.user.email}</p>
+                <p className="text-[#333333] font-medium mb-2">
+                  Amount:{" "}
+                  <span className="font-bold text-[#F47C48]">
+                    ${payment.amount}
+                  </span>
+                </p>
+                <p className="text-[#333333] mb-2">
+                  Payment Date:{" "}
+                  <span className="text-[#4C8492] font-medium">
+                    {new Date(payment.paymentDate).toLocaleDateString()}
+                  </span>
+                </p>
+                <p className="text-[#333333]">
+                  Status:{" "}
+                  <span
+                    className={`${
+                      payment.status === "Pending"
+                        ? "text-[#E74C3C]"
+                        : "text-[#27AE60]"
+                    } font-bold`}
+                  >
+                    {payment.status}
+                  </span>
+                </p>
 
-            <div className="flex justify-between gap-4">
-              {/* Edit Button */}
-              <button
-                onClick={() => handleEditInvoice(invoice.id)}
-                className="px-4 py-2"
-                style={{
-                  backgroundColor: "#1A3B5D",  // Primary Color for Edit button
-                  color: "white",
-                  borderRadius: "8px",
-                  transition: "background-color 0.3s",
-                }}
-                onMouseOver={(e) => (e.target.style.backgroundColor = "#16324A")}  // Button Hover color
-                onMouseOut={(e) => (e.target.style.backgroundColor = "#1A3B5D")}
-              >
-                <Link href={`/agent/invoice/${invoice.id}`}>Edit</Link>
-              </button>
-
-              {/* Download Invoice Button */}
-              <button
-                onClick={() => handleDownloadInvoice(invoice.id)}
-                className="px-4 py-2"
-                style={{
-                  backgroundColor: "#F47C48",  // Accent Color for Download button
-                  color: "white",
-                  borderRadius: "8px",
-                  transition: "background-color 0.3s",
-                }}
-                onMouseOver={(e) => (e.target.style.backgroundColor = "#D86F3A")}  // Hover effect for Download button
-                onMouseOut={(e) => (e.target.style.backgroundColor = "#F47C48")}
-              >
-                <Link href={`/agent/invoice/view/${invoice.id}`}>view Invoice</Link>
-              </button>
-            </div>
+                <Link href={`/agent/invoice/${payment._id}`}>
+                  <button className="mt-6 w-full bg-[#F47C48] text-white px-4 py-2 rounded-md hover:bg-[#E76036] transition duration-200">
+                    View Invoice
+                  </button>
+                </Link>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <div className="text-[#7A7A7A] text-center">
+            No Bills found for this owner.
+          </div>
+        )}
       </div>
     </div>
   );

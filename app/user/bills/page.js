@@ -1,131 +1,94 @@
 "use client";
 
-import React, { useState } from "react";
+import userAuth from "@/myStore/UserAuth";
+import axios from "axios";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
-function BillsPage() {
-  // Sample data for contracts
-  const initialContracts = [
-    {
-      id: 1,
-      property: "Luxury Apartment",
-      status: "Rent",
-      monthlyRent: 1200,
-      deposit: 2400,
-      contractEndDate: "2025-01-01",
-      isPaid: false,
-    },
-    {
-      id: 2,
-      property: "Cozy Villa",
-      status: "Buy",
-      price: 400000,
-      isPaid: false,
-    },
-  ];
+export default function BillPage() {
+  const [userBill, setUserBill] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const user = userAuth((state) => state.user);
 
-  const [contracts, setContracts] = useState(initialContracts);
-  const [payments, setPayments] = useState([]);
-
-  const handlePay = (contractId) => {
-    const updatedContracts = contracts.map((contract) => {
-      if (contract.id === contractId) {
-        if (contract.status === "Buy") {
-          alert(`Paid $${contract.price} for buying ${contract.property}.`);
-        } else if (contract.status === "Rent") {
-          const paymentDate = new Date();
-          const newPayment = {
-            contractId,
-            property: contract.property,
-            amount: contract.monthlyRent,
-            date: paymentDate.toDateString(),
-          };
-
-          setPayments([...payments, newPayment]);
-          alert(
-            `Paid $${contract.monthlyRent} for ${contract.property} on ${paymentDate.toDateString()}.`
-          );
-        }
-        return { ...contract, isPaid: true };
-      }
-      return contract;
-    });
-
-    setContracts(updatedContracts);
+  const getOwnerContracts = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/bill`);
+      const unpaidBill = response.data.data.filter((bill) => bill.status !== "Paid");
+      setUserBill(unpaidBill);
+    } catch (error) {
+      setError("Failed to fetch bills. Please try again.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    if (user && user._id) {
+      getOwnerContracts();
+    }
+  }, [user._id]);
+
   return (
-    <div className="p-4 md:p-8 bg-[#F7F7F9] min-h-screen">
-      <h1 className="text-2xl font-bold text-[#1A3B5D] mb-6">All Bills</h1>
-
-      {/* Contracts List */}
-      <div className="space-y-6">
-        {contracts.map((contract) => (
-          <div
-            key={contract.id}
-            className="bg-white shadow-md rounded-lg p-4 flex justify-between items-center"
-          >
-            <div>
-              <h3 className="text-lg font-medium text-gray-800">
-                {contract.property}
-              </h3>
-              <p className="text-sm text-gray-500">
-                {contract.status === "Buy"
-                  ? `Price: $${contract.price}`
-                  : `Monthly Rent: $${contract.monthlyRent}`}
-              </p>
-              {contract.status === "Rent" && (
-                <p className="text-sm text-gray-500">
-                  Contract Expires:{" "}
-                  {new Date(contract.contractEndDate).toDateString()}
-                </p>
-              )}
-            </div>
-            <button
-              onClick={() => handlePay(contract.id)}
-              disabled={contract.isPaid}
-              className={`px-4 py-2 rounded-md transition ${
-                contract.isPaid
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F7F9] to-[#E0E0E0] flex flex-col items-center py-10 px-4">
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Manage Your Bills</h1>
+      {loading ? (
+        <div className="text-center">
+          <p className="text-[#7A7A7A] text-lg">Loading your bills...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center">
+          <p className="text-[#E74C3C] text-lg">{error}</p>
+        </div>
+      ) : userBill.length === 0 ? (
+        <div className="text-center">
+          <p className="text-[#7A7A7A] text-lg">No unpaid bills found.</p>
+        </div>
+      ) : (
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {userBill.map((bill) => (
+            <div
+              key={bill._id}
+              className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-all"
             >
-              {contract.isPaid ? "Paid" : contract.status === "Buy" ? "Pay One-Time" : "Pay Monthly Rent"}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* Payment History */}
-      {payments.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            Payment History
-          </h2>
-          <div className="space-y-4">
-            {payments.map((payment, index) => (
-              <div
-                key={index}
-                className="bg-gray-100 rounded-lg p-4 shadow-md flex justify-between items-center"
-              >
-                <div>
-                  <h3 className="text-gray-800 font-medium">
-                    {payment.property}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Amount Paid: ${payment.amount}
-                  </p>
-                  <p className="text-sm text-gray-600">Date: {payment.date}</p>
-                </div>
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
-                  Success
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-[#1A3B5D]">
+                  {bill.property.title}
+                </h2>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    bill.status === "Overdue"
+                      ? "bg-[#E74C3C] text-white"
+                      : "bg-[#F47C48] text-white"
+                  }`}
+                >
+                  {bill.status}
                 </span>
               </div>
-            ))}
-          </div>
+              <p className="text-[#7A7A7A] mb-2">
+                <strong>Address:</strong> {bill.property.address}
+              </p>
+              <p className="text-[#333333] mb-2">
+                <strong>Amount:</strong>{" "}
+                <span className="text-[#F47C48] font-semibold">${bill.amount}</span>
+              </p>
+              <p className="text-[#333333] mb-4">
+                <strong>Due Date:</strong>{" "}
+                <span className="text-[#4C8492]">
+                  {new Date(bill.dueDate).toLocaleDateString()}
+                </span>
+              </p>
+              <button
+                className="w-full bg-[#1A3B5D] text-white py-3 rounded-lg hover:bg-[#16324A] transition-all"
+              >
+                <Link href={`/user/bills/${bill._id}`} >Pay now</Link>
+              </button>
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
-
-export default BillsPage;

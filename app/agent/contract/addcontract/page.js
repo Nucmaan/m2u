@@ -1,46 +1,90 @@
 "use client";
 
+import userAuth from "@/myStore/UserAuth";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-
-const confirmedBookings = [
-  { id: 1, property: "Beachside Apartment", user: "John Doe" },
-  { id: 2, property: "Luxury Villa", user: "Jane Smith" },
-]; // Sample data
+import toast from "react-hot-toast";
 
 export default function AddContractPage() {
-  const [selectedBooking, setSelectedBooking] = useState("");
-  const [formData, setFormData] = useState({
-    startDate: "",
-    endDate: "",
-    monthlyRent: "",
-    deposit: "",
-  });
+  const [confirmedBookings, setConfirmedBookings] = useState([]);
+  const [bookingId, setBookingId] = useState("");
+  const [userId, setUserId] = useState("");
+  const ownerId = userAuth((state) => state.user);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [monthlyRent, setMonthlyRent] = useState("");
+  const [deposit, setDeposit] = useState("");
+  const [termsAndConditions, setTermsAndConditions] = useState("");
+  const [PropertyId, setPropertyId] = useState("");
+  const router = useRouter();
 
-  const handleBookingChange = (e) => {
-    setSelectedBooking(e.target.value);
+    const [houseStatus, setHouseStatus] = useState("Available");
+  
+
+  const fetchConfirmedBookings = async () => {
+    try {
+      const response = await axios.get(`/api/booking/ownerBooking/${ownerId._id}`);
+      const completedBookings = response.data.bookings.filter(
+        (booking) => booking.status === "completed"
+      );
+      setConfirmedBookings(completedBookings);
+    } catch (error) {
+      console.error("Error fetching confirmed bookings:", error);
+    }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  useEffect(() => {
+    if (ownerId?._id) {
+      fetchConfirmedBookings();
+    }
+  }, [ownerId?._id]);
+
+  const handleBookingSelection = (selectedBookingId) => {
+    const selectedBooking = confirmedBookings.find(
+      (booking) => booking._id === selectedBookingId
+    );
+    if (selectedBooking) {
+      setBookingId(selectedBooking._id);
+      setPropertyId(selectedBooking.listing._id);
+      setUserId(selectedBooking.user._id);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedBooking) {
-      alert("Please select a booking.");
+    if (!bookingId || !startDate || !endDate || !monthlyRent || !deposit) {
+      toast.error("All fields are required!");
       return;
     }
 
     const contractData = {
-      bookingId: selectedBooking,
-      ...formData,
+      bookingId :bookingId,
+      propertyId : PropertyId,
+      userId : userId,
+      ownerId: ownerId._id,
+      startDate: startDate,
+      endDate : endDate,
+      monthlyRent : monthlyRent,
+      deposit : deposit,
+      termsAndConditions,
+      houseStatus
     };
 
-    alert(`Contract Added:\n${JSON.stringify(contractData, null, 2)}`);
+    try {
+
+      const response = await axios.post("/api/contracts/addcontract",contractData);
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        router.push("/agent/contract");
+      } else {
+        toast.error(response.data.message);
+      }
+      
+    } catch (error) {
+      console.error("Error adding contract:", error);
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -60,16 +104,16 @@ export default function AddContractPage() {
           </label>
           <select
             id="booking"
-            value={selectedBooking}
-            onChange={handleBookingChange}
+            value={bookingId}
+            onChange={(e) => handleBookingSelection(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
           >
             <option value="" disabled>
               -- Select a Booking --
             </option>
             {confirmedBookings.map((booking) => (
-              <option key={booking.id} value={booking.id}>
-                {`${booking.property} - ${booking.user}`}
+              <option key={booking._id} value={booking._id}>
+                {`${booking.user.email} (${booking.listing.title})`}
               </option>
             ))}
           </select>
@@ -77,75 +121,94 @@ export default function AddContractPage() {
 
         {/* Start Date */}
         <div>
-          <label
-            htmlFor="startDate"
-            className="block text-sm font-medium text-[#333333] mb-2"
-          >
+          <label htmlFor="startDate" className="block text-sm font-medium text-[#333333] mb-2">
             Start Date
           </label>
           <input
             type="date"
             id="startDate"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleInputChange}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
           />
         </div>
 
         {/* End Date */}
         <div>
-          <label
-            htmlFor="endDate"
-            className="block text-sm font-medium text-[#333333] mb-2"
-          >
+          <label htmlFor="endDate" className="block text-sm font-medium text-[#333333] mb-2">
             End Date
           </label>
           <input
             type="date"
             id="endDate"
-            name="endDate"
-            value={formData.endDate}
-            onChange={handleInputChange}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
           />
         </div>
 
         {/* Monthly Rent */}
         <div>
-          <label
-            htmlFor="monthlyRent"
-            className="block text-sm font-medium text-[#333333] mb-2"
-          >
+          <label htmlFor="monthlyRent" className="block text-sm font-medium text-[#333333] mb-2">
             Monthly Rent
           </label>
           <input
             type="number"
             id="monthlyRent"
-            name="monthlyRent"
-            value={formData.monthlyRent}
-            onChange={handleInputChange}
+            value={monthlyRent}
+            onChange={(e) => setMonthlyRent(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
           />
         </div>
 
         {/* Deposit */}
         <div>
-          <label
-            htmlFor="deposit"
-            className="block text-sm font-medium text-[#333333] mb-2"
-          >
+          <label htmlFor="deposit" className="block text-sm font-medium text-[#333333] mb-2">
             Deposit
           </label>
           <input
             type="number"
             id="deposit"
-            name="deposit"
-            value={formData.deposit}
-            onChange={handleInputChange}
+            value={deposit}
+            onChange={(e) => setDeposit(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
           />
         </div>
+
+          {/* Status */}
+          <div className="mb-4">
+          <label
+            htmlFor="status"
+            className="block text-sm font-semibold text-[#333333] mb-1"
+          >
+           house Status
+          </label>
+          <select
+            id="status"
+            name="status"
+            value={houseStatus}
+            onChange={(e) => setHouseStatus(e.target.value)}
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+          >
+            <option value="Available">Available</option>
+            <option value="Sold">Sold</option>
+            <option value="Rented">Rented</option>
+          </select>
+        </div>
+
+         {/* termsAndConditions */}
+         <div>
+         <label htmlFor="deposit" className="block text-sm font-medium text-[#333333] mb-2">
+         Terms And Conditions
+         </label>
+         <input
+           type="text"
+           id="termsAndConditions"
+           value={termsAndConditions}
+           onChange={(e) => setTermsAndConditions(e.target.value)}
+           className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
+         />
+       </div>
 
         {/* Submit Button */}
         <button

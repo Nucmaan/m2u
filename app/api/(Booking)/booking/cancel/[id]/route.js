@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(req, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(

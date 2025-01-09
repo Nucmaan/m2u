@@ -9,7 +9,6 @@ export async function POST(req) {
     const body = await req.json();
     const { user, owner, listing, visitingDate, notes } = body;
 
-    // Validate required fields
     if (!user || !owner || !listing || !visitingDate) {
       return NextResponse.json(
         { message: "User, owner, listing, and visiting date are required" },
@@ -17,22 +16,18 @@ export async function POST(req) {
       );
     }
 
-    // Connect to the database
     await ConnectDb();
 
-    // Check if the user exists
     const existingUser = await User.findById(user);
     if (!existingUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Check if the owner exists
     const existingOwner = await User.findById(owner);
     if (!existingOwner) {
       return NextResponse.json({ message: "Owner not found" }, { status: 404 });
     }
 
-    // Check if the listing exists
     const existingListing = await Listings.findById(listing);
     if (!existingListing) {
       return NextResponse.json(
@@ -41,7 +36,22 @@ export async function POST(req) {
       );
     }
 
-    // Create a new booking
+    const existingBooking = await Booking.findOne({
+      user: existingUser._id,
+      listing: existingListing._id,
+      visitingDate: {
+        $gte: new Date(visitingDate).setHours(0, 0, 0, 0), // Start of the day
+        $lte: new Date(visitingDate).setHours(23, 59, 59, 999), // End of the day
+      },
+    });
+
+    if (existingBooking) {
+      return NextResponse.json(
+        { message: "you have already scheduled a visit" },
+        { status: 400 }
+      );
+    }
+
     const newVisit = new Booking({
       user: existingUser._id,
       owner: existingOwner._id,

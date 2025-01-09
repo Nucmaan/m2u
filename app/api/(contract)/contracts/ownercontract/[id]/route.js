@@ -6,9 +6,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   try {
-    const ownerId = await params.id;
+    const { id } = await params;
 
-    if (!ownerId) {
+    if (!id) {
       return NextResponse.json(
         { message: "Owner ID is required" },
         { status: 400 }
@@ -18,11 +18,10 @@ export async function GET(req, { params }) {
     await ConnectDb();
 
 
-    // Find contracts for the specified owner
-    const contracts = await Contract.find({ owner: ownerId })
-      .populate("property", "title address city price") // Populate property details
-      .populate("user", "username email") // Populate user details
-      .populate("owner", "username email") // Populate owner details
+    const contracts = await Contract.find({ owner: id })
+      .populate("property", "title address city price")
+      .populate("user", "username email") 
+      .populate("owner", "username email") 
       .sort({ createdAt: -1 }); // Sort by latest contracts
 
     // Check if contracts are found

@@ -1,75 +1,112 @@
 "use client";
 
+import userAuth from "@/myStore/UserAuth";
+import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
-
-const contractData = [
-  // Sample contract data with status "active"
-  {
-    id: 1,
-    user: "John Doe",
-    property: "Beachside Apartment",
-    amountDue: 1200,
-    dueDate: "2024-12-01",
-    status: "Active",
-  },
-  {
-    id: 2,
-    user: "Jane Smith",
-    property: "Luxury Villa",
-    amountDue: 1500,
-    dueDate: "2024-12-10",
-    status: "Active",
-  },
-  {
-    id: 3,
-    user: "Emily Davis",
-    property: "Mountain Retreat",
-    amountDue: 950,
-    dueDate: "2024-11-30",
-    status: "Expired",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { FiDollarSign, FiCalendar, FiUser, FiHome } from "react-icons/fi";
 
 export default function BillPage() {
-  const [contracts, setContracts] = useState(contractData);
+  
+  const [ownerContracts, setOwnerContracts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const user = userAuth((state) => state.user);
+  
 
-  const handleAddMoneyClick = (userId) => {
-    alert(`Add money to user with contract ID: ${userId}`);
+  const getOwnerContracts = async () => {
+    try {
+      const response = await axios.get(
+        `/api/contracts/ownercontract/${user._id}`
+      );
+      const activeContracts = response.data.contracts
+        .filter((contract) => contract.status === "Active")
+        .map((contract) => ({
+          _id: contract._id,
+          user: contract.user.username,
+          property: contract.property.title,
+          startDate: new Date(contract.startDate).toLocaleDateString(),
+          endDate: new Date(contract.endDate).toLocaleDateString(),
+          monthlyRent: contract.monthlyRent,
+          status: contract.status,
+        }));
+      setOwnerContracts(activeContracts);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
-      <h1 className="text-2xl font-bold text-[#1A3B5D] mb-6">User Contracts & Bill Management</h1>
-      
-      {/* Bill List */}
-      <div className="bg-white w-full max-w-4xl p-6 rounded-lg shadow-md space-y-4">
-        {contracts.filter(contract => contract.status === "Active").length > 0 ? (
-          contracts
-            .filter(contract => contract.status === "Active") // Filter only active contracts
-            .map((contract) => (
-              <div
-                key={contract.id}
-                className="flex justify-between items-center bg-gray-50 p-4 rounded-lg mb-4 shadow-sm hover:bg-gray-100 transition"
-              >
-                <div className="text-[#333333] font-medium">
-                  <p>{contract.user}</p>
-                  <p className="text-sm text-secondary-text">{contract.property}</p>
-                </div>
-                <div className="text-[#1A3B5D] font-semibold">${contract.amountDue}</div>
-                <div className="text-sm text-secondary-text">{contract.dueDate}</div>
+  useEffect(() => {
+    if (user && user._id) {
+      getOwnerContracts();
+    }
+  }, [user._id]);
 
-                {/* Add Money Button */}
-                <button
-                  onClick={() => handleAddMoneyClick(contract.id)}
-                  className="ml-4 bg-[#F47C48] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex flex-col items-center py-10 px-4">
+      <h1 className="text-4xl font-bold text-gray-800 mb-10 text-center">
+        Manage Bills & Contracts
+      </h1>
+
+      <div className="w-full max-w-6xl">
+        {loading ? (
+          <div className="text-center text-gray-600 font-medium">
+            Loading active contracts...
+          </div>
+        ) : ownerContracts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {ownerContracts.map((contract) => (
+              <div
+                key={contract._id}
+                className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1"
+              >
+                <h3 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                  <FiHome className="mr-2 text-indigo-600" />
+                  {contract.property}
+                </h3>
+                <p className="text-sm text-gray-500 flex items-center mb-2">
+                  <FiUser className="mr-2 text-green-500" />
+                  User: <span className="ml-1 text-gray-700">{contract.user}</span>
+                </p>
+                <p className="text-sm text-gray-500 flex items-center mb-2">
+                  <FiDollarSign className="mr-2 text-yellow-500" />
+                  Monthly Rent:{" "}
+                  <span className="ml-1 text-gray-700 font-semibold">
+                    ${contract.monthlyRent}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-500 flex items-center mb-2">
+                  <FiCalendar className="mr-2 text-blue-500" />
+                  Start: <span className="ml-1">{contract.startDate}</span>
+                </p>
+                <p className="text-sm text-gray-500 flex items-center mb-2">
+                  <FiCalendar className="mr-2 text-red-500" />
+                  End: <span className="ml-1">{contract.endDate}</span>
+                </p>
+                <p
+                  className={`text-sm font-medium mt-3 ${
+                    contract.status === "Active"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
                 >
-                  <Link href={`/agent/bills/addbill`}>Add Money</Link>
-                </button>
+                  Status: {contract.status}
+                </p>
+                <div className="mt-4">
+                  <Link
+                    href={`/agent/bills/addbill/${contract._id}`}
+                    className="mt-4 bg-[#F47C48] text-white px-4 py-2 rounded-md hover:bg-[#D76A3A] transition"                  >
+                    Add Money
+                  </Link>
+                </div>
               </div>
-            ))
+            ))}
+          </div>
         ) : (
-          <p className="text-secondary-text">No active contracts available.</p>
+          <div className="text-center text-gray-600 font-medium">
+            No active contracts available.
+          </div>
         )}
       </div>
     </div>

@@ -61,16 +61,29 @@ export default function Page() {
       <div ref={invoiceRef} className="bg-white border border-gray-300 p-6 rounded-lg shadow-md">
         {/* User Details */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-blue-800 mb-2">User Information</h2>
+          <h2 className="text-lg font-semibold text-blue-800 mb-2">Owner Information</h2>
           <div className="text-gray-700 space-y-1">
             <p>
-              <span className="font-bold">Name:</span> {user.username}
+              <span className="font-bold">Name:</span> {owner.username}
             </p>
             <p>
-              <span className="font-bold">Email:</span> {user.email}
+              <span className="font-bold">Email:</span> {owner.email}
             </p>
           </div>
         </section>
+
+         {/* User Details */}
+         <section className="mb-8">
+         <h2 className="text-lg font-semibold text-blue-800 mb-2">User Information</h2>
+         <div className="text-gray-700 space-y-1">
+           <p>
+             <span className="font-bold">Name:</span> {user.username}
+           </p>
+           <p>
+             <span className="font-bold">Email:</span> {user.email}
+           </p>
+         </div>
+       </section>
 
         {/* Property Details */}
         <section className="mb-8">
