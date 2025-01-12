@@ -24,7 +24,7 @@ function UserBookingPage() {
     }
   }, [user?._id]);
 
-  const handleCancelBooking  = async (id) => {
+  const handleCancelBooking = async (id) => {
     try {
       const response = await axios.delete(`/api/booking/cancel/${id}`);
       toast.success(response.data.message);
@@ -38,25 +38,24 @@ function UserBookingPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 bg-[#F7F7F9] min-h-screen">
-      <h1 className="text-2xl font-bold text-[#1A3B5D] mb-4">All Bookings</h1>
+    <div className="p-6 md:p-8 bg-[#F7F7F9] min-h-screen">
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-6">My Bookings</h1>
 
       {["pending", "processing", "completed", "cancelled"].map((status) => (
-        <div key={status} className="mb-6">
-          <h2 className="text-xl font-semibold text-[#1A3B5D] mb-2 capitalize">
+        <div key={status} className="mb-8">
+          <h2 className="text-2xl font-semibold text-[#1A3B5D] mb-4 capitalize">
             {status} Bookings
           </h2>
-          <div className="space-y-4">
-
+          <div className="space-y-6">
             {userBookings
               .filter((booking) => booking.status === status)
               .map((booking) => (
                 <div
                   key={booking._id || "unknown-id"}
-                  className="bg-white shadow-md rounded-lg p-4 md:flex md:justify-between md:items-center"
+                  className="bg-white shadow-lg rounded-xl p-5 md:flex md:justify-between md:items-center transition-transform transform hover:scale-105 duration-300"
                 >
                   <div>
-                    <h3 className="text-lg font-medium text-gray-800">
+                    <h3 className="text-xl font-semibold text-gray-800">
                       {booking.listing?.title || "Not Available"}
                     </h3>
                     <p className="text-sm text-gray-500">
@@ -82,17 +81,18 @@ function UserBookingPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="mt-2 md:mt-0 flex items-center space-x-4">
+
+                  <div className="mt-4 md:mt-0 flex items-center space-x-4">
                     <div
                       className={`px-3 py-1 text-sm font-medium rounded-full ${
                         status === "pending"
-                          ? "bg-yellow-100 text-yellow-700"
+                          ? "bg-yellow-200 text-yellow-800"
                           : status === "completed"
-                          ? "bg-green-100 text-green-700"
+                          ? "bg-green-200 text-green-800"
                           : status === "processing"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                          ? "bg-blue-200 text-blue-800"
+                          : "bg-red-200 text-red-800"
+                      } transition-all duration-300`}
                     >
                       {status}
                     </div>
@@ -100,9 +100,9 @@ function UserBookingPage() {
                     {status === "pending" && (
                       <button
                         onClick={() => handleCancelBooking(booking._id)}
-                        className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600"
+                        className="px-5 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-all duration-300"
                       >
-                        Delete
+                        Cancel
                       </button>
                     )}
                   </div>
