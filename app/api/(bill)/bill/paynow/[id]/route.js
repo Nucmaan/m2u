@@ -25,7 +25,7 @@ export async function PUT(req, { params }) {
 
     return NextResponse.json(
       {
-        message: "Bill updated successfully",
+        message: "you have paid the bill successfully",
         data: {
           amount: bill.amount,
           comment: bill.comment,

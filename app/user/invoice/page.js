@@ -29,36 +29,51 @@ const AllInvoicesPage = () => {
   }, [user]);
 
   return (
-    <div className="p-4 md:p-8 bg-[#F7F7F9] min-h-screen">
-      <h1 className="text-2xl font-bold text-[#1A3B5D] mb-6">All Invoices</h1>
+    <div className="p-6 md:p-12 bg-[#F7F7F9] min-h-screen">
+      <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">All Invoices</h1>
 
       <div className="space-y-6">
-        {ownerPayments.map((invoice) => (
-          <div
-            key={invoice._id}
-            className="bg-white shadow-md rounded-lg p-4 flex flex-col md:flex-row md:justify-between items-start md:items-center"
-          >
-            <div>
-              <h3 className="text-lg font-medium text-gray-800">
-                {invoice.property.title}
-              </h3>
-              <p className="text-sm text-gray-500">
-              Address: {invoice.property.address}
-              </p>
-              <p className="text-sm text-gray-500">Amount: ${invoice.amount}</p>
-              <p className="text-sm text-gray-500">
-                Payment Date: {new Date(invoice.paymentDate).toDateString()}
-              </p>
-              <p className="text-sm text-gray-500">
-                Invoice Number: {invoice._id}
-              </p>
-            </div>
-
-            <button className="mt-4 md:mt-0 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-              <Link href={`/user/invoice/${invoice._id}`}>View Invoice</Link>
-            </button>
+        {ownerPayments.length === 0 ? (
+          <div className="text-center">
+            <p className="text-[#7A7A7A] text-lg">No invoices found.</p>
           </div>
-        ))}
+        ) : (
+          ownerPayments.map((invoice) => (
+            <div
+              key={invoice._id}
+              className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 hover:shadow-lg transition-shadow duration-300"
+            >
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-[#1A3B5D]">
+                    {invoice.property.title}
+                  </h3>
+                  <p className="text-sm text-[#7A7A7A]">
+                    <strong>Address:</strong> {invoice.property.address}
+                  </p>
+                  <p className="text-sm text-[#7A7A7A]">
+                    <strong>Amount:</strong>{" "}
+                    <span className="text-[#F47C48] font-semibold">${invoice.amount}</span>
+                  </p>
+                  <p className="text-sm text-[#7A7A7A]">
+                    <strong>Payment Date:</strong>{" "}
+                    {new Date(invoice.paymentDate).toDateString()}
+                  </p>
+                  <p className="text-sm text-[#7A7A7A]">
+                    <strong>Invoice Number:</strong> {invoice._id}
+                  </p>
+                </div>
+
+                <Link
+                  href={`/user/invoice/${invoice._id}`}
+                  className="mt-6 md:mt-0 px-6 py-2 bg-[#1A3B5D] text-white rounded-md hover:bg-[#16324A] transition-colors duration-200 text-center"
+                >
+                  View Invoice
+                </Link>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

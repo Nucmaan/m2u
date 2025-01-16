@@ -32,7 +32,7 @@ export default function BillPage() {
   }, [user._id]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F7F9] to-[#E0E0E0] flex flex-col items-center py-12 px-6">
+    <div className="min-h-screen bg-[#F7F7F9] flex flex-col items-center py-12 px-6">
       <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">Manage Your Bills</h1>
 
       {loading ? (
@@ -52,10 +52,12 @@ export default function BillPage() {
           {userBill.map((bill) => (
             <div
               key={bill._id}
-              className="bg-white shadow-lg rounded-lg p-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out"
+              className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 hover:shadow-lg transition-shadow duration-300"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-[#1A3B5D]">{bill.property.title}</h2>
+                <h2 className="text-xl font-semibold text-[#1A3B5D]">
+                  {bill.property.title}
+                </h2>
                 <span
                   className={`px-4 py-2 rounded-full text-sm font-medium ${
                     bill.status === "Overdue"
@@ -66,23 +68,27 @@ export default function BillPage() {
                   {bill.status}
                 </span>
               </div>
-              <p className="text-[#7A7A7A] mb-3">
-                <strong>Address:</strong> {bill.property.address}
-              </p>
-              <p className="text-[#333333] mb-3">
-                <strong>Amount:</strong>{" "}
-                <span className="text-[#F47C48] font-semibold">${bill.amount}</span>
-              </p>
-              <p className="text-[#333333] mb-4">
-                <strong>Due Date:</strong>{" "}
-                <span className="text-[#4C8492]">
-                  {new Date(bill.dueDate).toLocaleDateString()}
-                </span>
-              </p>
-              <div className="flex justify-end">
+
+              <div className="space-y-4">
+                <p className="text-sm text-[#7A7A7A]">
+                  <strong>Address:</strong> {bill.property.address}
+                </p>
+                <p className="text-sm text-[#7A7A7A]">
+                  <strong>Amount:</strong>{" "}
+                  <span className="text-[#F47C48] font-semibold">${bill.amount}</span>
+                </p>
+                <p className="text-sm text-[#7A7A7A]">
+                  <strong>Due Date:</strong>{" "}
+                  <span className="text-[#4C8492]">
+                    {new Date(bill.dueDate).toLocaleDateString()}
+                  </span>
+                </p>
+              </div>
+
+              <div className="mt-6">
                 <Link
                   href={`/user/bills/${bill._id}`}
-                  className="w-full bg-[#1A3B5D] text-white pl-2 py-3 rounded-lg hover:bg-[#16324A] transition-colors duration-200"
+                  className="w-full block text-center bg-[#1A3B5D] text-white px-4 py-2 rounded-md hover:bg-[#16324A] transition-colors duration-200"
                 >
                   Pay Now
                 </Link>

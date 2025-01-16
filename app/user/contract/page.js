@@ -25,38 +25,38 @@ function ContractPage() {
 
   return (
     <div className="p-6 md:p-12 bg-[#F7F7F9] min-h-screen">
-      <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-6">Your Contracts</h1>
+      <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">Your Contracts</h1>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {userContracts.map((contract) => (
           <div
             key={contract._id}
-            className="bg-white shadow-lg rounded-lg p-6 md:flex md:justify-between md:items-center hover:shadow-xl transition-shadow duration-300"
+            className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 hover:shadow-lg transition-shadow duration-300"
           >
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-[#1A3B5D]">{contract.property.title}</h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#7A7A7A]">
                 Contract Period:{" "}
                 <span className="font-medium text-[#1A3B5D]">
                   {new Date(contract.startDate).toDateString()} - {new Date(contract.endDate).toDateString()}
                 </span>
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#7A7A7A]">
                 Monthly Rent:{" "}
                 <span className="font-medium text-[#1A3B5D]">${contract.monthlyRent}</span>
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#7A7A7A]">
                 Deposit:{" "}
                 <span className="font-medium text-[#1A3B5D]">${contract.deposit}</span>
               </p>
 
-              <div className="text-sm text-gray-700 mt-4">
+              <div className="text-sm text-[#7A7A7A] mt-4">
                 <p><strong>Owner:</strong> {contract.owner.username}</p>
                 <p>
                   <strong>Phone:</strong>{" "}
                   <a
                     href={`tel:${contract.owner.phone || "N/A"}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-[#4C8492] hover:underline"
                   >
                     {contract.owner.phone || "Not Available"}
                   </a>
@@ -65,7 +65,7 @@ function ContractPage() {
                   <strong>Email:</strong>{" "}
                   <a
                     href={`mailto:${contract.owner.email}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-[#4C8492] hover:underline"
                   >
                     {contract.owner.email}
                   </a>
@@ -73,20 +73,20 @@ function ContractPage() {
               </div>
             </div>
 
-            <div className="mt-4 md:mt-0 flex items-center space-x-4">
+            <div className="mt-6 flex items-center space-x-4">
               <div
                 className={`px-4 py-2 text-sm font-medium rounded-full ${
                   contract.status === "Active"
-                    ? "bg-green-100 text-green-700"
+                    ? "bg-[#27AE60] text-white"
                     : contract.status === "Pending"
-                    ? "bg-yellow-100 text-yellow-700"
+                    ? "bg-[#F47C48] text-white"
                     : contract.status === "Completed"
-                    ? "bg-blue-100 text-blue-700"
+                    ? "bg-[#4C8492] text-white"
                     : contract.status === "Cancelled"
-                    ? "bg-red-100 text-red-700"
+                    ? "bg-[#E74C3C] text-white"
                     : contract.status === "Expired"
-                    ? "bg-gray-100 text-gray-700"
-                    : "bg-gray-100 text-gray-700"
+                    ? "bg-[#7A7A7A] text-white"
+                    : "bg-[#E0E0E0] text-[#333333]"
                 }`}
               >
                 {contract.status}

@@ -11,6 +11,7 @@ const s3 = new S3Client({
   },
 });
 
+
 async function uploadImageToS3(buffer, fileName) {
   const uniqueFileName = `myhome2uFolder/${fileName}-${Date.now()}`;
   const params = {

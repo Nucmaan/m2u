@@ -2,79 +2,136 @@
 
 import userAuth from "@/myStore/UserAuth";
 import React, { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const UserSettings = () => {
   const user1 = userAuth((state) => state.user);
+
   const [username, setUsername] = useState(user1.username);
-  const [email, setEmail] = useState(user1.email);
-  const [password, setPassword] = useState(
-    user1.password || "********************"
-  );
+  const [email] = useState(user1.email); 
+  const [password, setPassword] = useState('');
+  const [mobile, setMobile] = useState(user1.mobile || "");
+  const [avatarPreview, setAvatarPreview] = useState(user1.avatar || "/profileImage.jpg");
+  const [avatarFile, setAvatarFile] = useState(null);
 
-  if (!user1) return null; // If use
+  const id = user1._id;
 
-  const handleUserInfoChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "username") setUsername(value);
-    if (name === "email") setEmail(value);
-    if (name === "password") setPassword(value);
+  const router = useRouter();
+
+  if (!user1) return null;
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+      // Preview the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    const formData = new FormData();
+
+    formData.append("id", id); 
+
+    if (username) {
+      formData.append("username", username);
+    }
+    if (password) {
+      formData.append("password", password);
+    }
+    if (mobile) {
+      formData.append("mobile", mobile);
+    }
+    if (avatarFile) {
+      formData.append("avatar", avatarFile);
+    }
+
+    try {
+      const response = await axios.put("/api/user", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        router.replace("/user/profile");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
-    <div className="bg-gray-100 transition duration-300">
-      <div className="max-w-7xl mx-auto p-5">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 dark:text-white">
-          User Settings
-        </h1>
+    <div className="bg-[#F7F7F9] min-h-screen p-6 md:p-12">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">User Settings</h1>
 
-        {/* Profile Section */}
-        <div className="bg-white p-6 rounded-lg shadow-xl mb-8 dark:bg-gray-800 dark:text-white">
-          <h2 className="text-2xl font-semibold mb-4">Profile Information</h2>
-          <div className="flex items-center space-x-6">
-            <img
-              src={"https://via.placeholder.com/150"}
-              alt="User Avatar"
-              className="w-24 h-24 rounded-full object-cover"
-            />
-            <div className="flex-1">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="font-medium text-gray-700 dark:text-gray-300">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={username}
-                    onChange={handleUserInfoChange}
-                    className="p-3 w-full border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <label className="font-medium text-gray-700 dark:text-gray-300">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={handleUserInfoChange}
-                    className="p-3 w-full border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                  />
-                </div>
+        <div className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-[#1A3B5D] mb-6">Profile Information</h2>
+          <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6">
+            <div className="relative">
+              <img
+                src={avatarPreview}
+                alt="User Avatar"
+                className="w-24 h-24 rounded-full object-cover border-2 border-[#E0E0E0]"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="flex-1 space-y-4 w-full">
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Username</label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+                />
+              </div>
 
-                <div className="flex items-center justify-between">
-                  <label className="font-medium text-gray-700 dark:text-gray-300">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={password}
-                    onChange={handleUserInfoChange}
-                    className="p-3 w-full border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                  />
-                </div>
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  disabled
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg bg-[#F7F7F9] focus:outline-none transition duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Mobile</label>
+                <input
+                  type="text"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+                />
               </div>
             </div>
           </div>
@@ -82,17 +139,17 @@ const UserSettings = () => {
 
         <div className="flex justify-end space-x-4">
           <button
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
-            onClick={() => alert("Settings saved")}
+            className="px-6 py-3 bg-[#1A3B5D] text-white rounded-lg hover:bg-[#16324A] focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+            onClick={handleSaveChanges}
           >
-            <i className="fas fa-save mr-2"></i> Save Changes
+            Save Changes
           </button>
-          <button
-            className="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 focus:outline-none transition duration-200"
-            onClick={() => alert("Changes discarded")}
+          <Link
+            href="/user/profile"
+            className="px-6 py-3 bg-[#E0E0E0] text-[#1A3B5D] rounded-lg hover:bg-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
           >
-            <i className="fas fa-times mr-2"></i> Cancel
-          </button>
+            Cancel
+          </Link>
         </div>
       </div>
     </div>

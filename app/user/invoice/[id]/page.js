@@ -39,7 +39,11 @@ export default function Page() {
   };
 
   if (loading) {
-    return <div className="text-center text-lg text-gray-600">Loading Invoice details...</div>;
+    return (
+      <div className="text-center text-lg text-[#7A7A7A] py-12">
+        Loading Invoice details...
+      </div>
+    );
   }
 
   const {
@@ -54,15 +58,18 @@ export default function Page() {
   } = invoice;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-blue-900 mb-8">Invoice Details</h1>
+    <div className="min-h-screen bg-[#F7F7F9] p-6 md:p-12">
+      <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">Invoice Details</h1>
 
       {/* Invoice Content */}
-      <div ref={invoiceRef} className="bg-white border border-gray-300 p-6 rounded-lg shadow-md">
-        {/* User Details */}
+      <div
+        ref={invoiceRef}
+        className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 md:p-8"
+      >
+        {/* Owner Information */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-blue-800 mb-2">Owner Information</h2>
-          <div className="text-gray-700 space-y-1">
+          <h2 className="text-xl font-semibold text-[#1A3B5D] mb-4">Owner Information</h2>
+          <div className="text-[#7A7A7A] space-y-2">
             <p>
               <span className="font-bold">Name:</span> {owner.username}
             </p>
@@ -72,23 +79,23 @@ export default function Page() {
           </div>
         </section>
 
-         {/* User Details */}
-         <section className="mb-8">
-         <h2 className="text-lg font-semibold text-blue-800 mb-2">User Information</h2>
-         <div className="text-gray-700 space-y-1">
-           <p>
-             <span className="font-bold">Name:</span> {user.username}
-           </p>
-           <p>
-             <span className="font-bold">Email:</span> {user.email}
-           </p>
-         </div>
-       </section>
-
-        {/* Property Details */}
+        {/* User Information */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-blue-800 mb-2">Property Information</h2>
-          <div className="text-gray-700 space-y-1">
+          <h2 className="text-xl font-semibold text-[#1A3B5D] mb-4">User Information</h2>
+          <div className="text-[#7A7A7A] space-y-2">
+            <p>
+              <span className="font-bold">Name:</span> {user.username}
+            </p>
+            <p>
+              <span className="font-bold">Email:</span> {user.email}
+            </p>
+          </div>
+        </section>
+
+        {/* Property Information */}
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold text-[#1A3B5D] mb-4">Property Information</h2>
+          <div className="text-[#7A7A7A] space-y-2">
             <p>
               <span className="font-bold">Title:</span> {property.title}
             </p>
@@ -102,7 +109,7 @@ export default function Page() {
               <span className="font-bold">Status:</span>{" "}
               <span
                 className={`font-bold ${
-                  property.status === "Sold" ? "text-red-500" : "text-green-600"
+                  property.status === "Sold" ? "text-[#E74C3C]" : "text-[#27AE60]"
                 }`}
               >
                 {property.status}
@@ -113,21 +120,21 @@ export default function Page() {
 
         {/* Payment Details */}
         <section>
-          <h2 className="text-lg font-semibold text-blue-800 mb-2">Payment Details</h2>
-          <div className="text-gray-700 space-y-1">
+          <h2 className="text-xl font-semibold text-[#1A3B5D] mb-4">Payment Details</h2>
+          <div className="text-[#7A7A7A] space-y-2">
             <p>
               <span className="font-bold">Amount:</span>{" "}
-              <span className="text-orange-600 font-bold">${amount}</span>
+              <span className="text-[#F47C48] font-bold">${amount}</span>
             </p>
             <p>
               <span className="font-bold">Due Date:</span>{" "}
-              <span className="text-red-600 font-bold">
+              <span className="text-[#E74C3C] font-bold">
                 {new Date(dueDate).toLocaleDateString()}
               </span>
             </p>
             <p>
               <span className="font-bold">Payment Date:</span>{" "}
-              <span className="text-green-600 font-bold">
+              <span className="text-[#27AE60] font-bold">
                 {new Date(paymentDate).toLocaleDateString()}
               </span>
             </p>
@@ -135,7 +142,7 @@ export default function Page() {
               <span className="font-bold">Status:</span>{" "}
               <span
                 className={`font-bold ${
-                  status === "Overdue" ? "text-red-600" : "text-green-600"
+                  status === "Overdue" ? "text-[#E74C3C]" : "text-[#27AE60]"
                 }`}
               >
                 {status}
@@ -149,15 +156,15 @@ export default function Page() {
       </div>
 
       {/* Auto-Generated Message */}
-      <div className="text-gray-500 mt-8 text-sm text-center">
+      <div className="text-[#7A7A7A] mt-8 text-sm text-center">
         This is an auto-generated invoice. No signature is required.
       </div>
 
       {/* Download Button */}
-      <div className="mt-4 text-center">
+      <div className="mt-8 text-center">
         <button
           onClick={handleDownload}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
+          className="px-6 py-3 bg-[#1A3B5D] text-white rounded-lg hover:bg-[#16324A] focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
         >
           Download Invoice
         </button>

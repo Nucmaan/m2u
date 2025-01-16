@@ -34,7 +34,7 @@ function Layout({ children }) {
       <div className="">
         <Sidebar />
       </div>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 bg-gray-100">{children}</div>
     </div>
   );
 }

@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    mobile: {
+      type: String,
+      default: null,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

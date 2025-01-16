@@ -73,38 +73,7 @@ const UserDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-lg rounded-lg">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">
-            Recent Activity
-          </h3>
-          <ul className="space-y-4">
-            {user.recentActivity.map((activity) => (
-              <li key={activity.id} className="text-sm text-gray-600">
-                <span className="font-semibold">{activity.action}</span>
-                <span className="text-gray-500">
-                  {" "}
-                  on {new Date(activity.date).toLocaleDateString()}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="bg-white p-6 shadow-lg rounded-lg">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">
-            Upcoming Tasks
-          </h3>
-          <ul className="space-y-4">
-            <li className="text-sm text-gray-600">
-              <span className="font-semibold">Pay Rent</span> - Due on
-              2024-11-15
-            </li>
-            <li className="text-sm text-gray-600">
-              <span className="font-semibold">Sign Lease Renewal</span> - Due on
-              2024-12-01
-            </li>
-          </ul>
-        </div>
+       
       </div>
     </div>
   );

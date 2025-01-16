@@ -26,11 +26,12 @@ function BillPaymentPage() {
   // Handle payment
   const handlePayBill = async () => {
     try {
+  
       setLoading(true);
-      const { data } = await axios.put(`/api/bill/paynow/${id}`, { amount: billInfo.amount, comment });
+      const response = await axios.put(`/api/bill/paynow/${id}`, { amount: billInfo.amount, comment });
 
-      if (data.success) {
-        toast.success(data.message);
+      if (response.status === 200) {
+        toast.success(response.data.message);
         router.push("/user/bills");
         setComment('');
         fetchBillInfo(); 
