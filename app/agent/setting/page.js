@@ -1,114 +1,159 @@
 "use client";
 
+import userAuth from "@/myStore/UserAuth";
 import React, { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function AgentSettings() {
-  const [formData, setFormData] = useState({
-    name: "John Doe",
-    email: "johndoe@example.com",
-    password: "",
-    bio: "Experienced real estate agent passionate about helping clients.",
-  });
+const UserSettings = () => {
+  const user1 = userAuth((state) => state.user);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const [username, setUsername] = useState(user1.username);
+  const [email] = useState(user1.email); 
+  const [password, setPassword] = useState('');
+  const [mobile, setMobile] = useState(user1.mobile || "");
+  const [avatarPreview, setAvatarPreview] = useState(user1.avatar || "/profileImage.jpg");
+  const [avatarFile, setAvatarFile] = useState(null);
+
+  const id = user1._id;
+
+  const router = useRouter();
+
+  if (!user1) return null;
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatarFile(file);
+      // Preview the image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Implement form submission logic here
-    alert("Your information has been updated.");
+  const handleSaveChanges = async () => {
+    const formData = new FormData();
+
+    formData.append("id", id); 
+
+    if (username) {
+      formData.append("username", username);
+    }
+    if (password) {
+      formData.append("password", password);
+    }
+    if (mobile) {
+      formData.append("mobile", mobile);
+    }
+    if (avatarFile) {
+      formData.append("avatar", avatarFile);
+    }
+
+    try {
+      const response = await axios.put("/api/user", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        router.replace("/agent/profile");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="bg-white rounded-lg shadow-md max-w-4xl mx-auto p-6">
-        <h1 className="text-3xl font-semibold text-[#1A3B5D] mb-6">
-          Update Your Information
-        </h1>
-        <form onSubmit={handleSubmit}>
-          {/* Name */}
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-[#333333] font-medium">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="mt-2 p-3 w-full border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
-              required
-            />
-          </div>
+    <div className="bg-[#F7F7F9] min-h-screen p-6 md:p-12">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">User Settings</h1>
 
-          {/* Email */}
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-[#333333] font-medium">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-2 p-3 w-full border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
-              required
-            />
-          </div>
+        <div className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-[#1A3B5D] mb-6">Profile Information</h2>
+          <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6">
+            <div className="relative">
+              <img
+                src={avatarPreview}
+                alt="User Avatar"
+                className="w-24 h-24 rounded-full object-cover border-2 border-[#E0E0E0]"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={handleFileChange}
+              />
+            </div>
+            <div className="flex-1 space-y-4 w-full">
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Username</label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+                />
+              </div>
 
-          {/* Password */}
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-[#333333] font-medium"
-            >
-              New Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-2 p-3 w-full border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
-              placeholder="Enter a new password"
-            />
-          </div>
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  disabled
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg bg-[#F7F7F9] focus:outline-none transition duration-200"
+                />
+              </div>
 
-          {/* Bio */}
-          <div className="mb-4">
-            <label htmlFor="bio" className="block text-[#333333] font-medium">
-              Bio
-            </label>
-            <textarea
-              id="bio"
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              className="mt-2 p-3 w-full border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition"
-              placeholder="Tell us a bit about yourself"
-              rows="4"
-            ></textarea>
-          </div>
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+                />
+              </div>
 
-          {/* Save Button */}
-          <div className="mt-6 flex justify-end">
-            <button
-              type="submit"
-              className="px-6 py-3 bg-primary text-white rounded-md hover:bg-opacity-80 transition"
-            >
-              Save Changes
-            </button>
+              <div>
+                <label className="block font-medium text-[#1A3B5D] mb-2">Mobile</label>
+                <input
+                  type="text"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  className="w-full p-3 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+                />
+              </div>
+            </div>
           </div>
-        </form>
+        </div>
+
+        <div className="flex justify-end space-x-4">
+          <button
+            className="px-6 py-3 bg-[#1A3B5D] text-white rounded-lg hover:bg-[#16324A] focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+            onClick={handleSaveChanges}
+          >
+            Save Changes
+          </button>
+          <Link
+            href="/agent/profile"
+            className="px-6 py-3 bg-[#E0E0E0] text-[#1A3B5D] rounded-lg hover:bg-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
+          >
+            Cancel
+          </Link>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default UserSettings;

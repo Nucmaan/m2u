@@ -32,58 +32,83 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-6">Agent Payments</h1>
+      {/* Heading */}
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Agent Payments</h1>
 
+      {/* Payment Cards */}
       {loading ? (
-        <div className="text-[#7A7A7A]">Loading payments...</div>
+        <div className="text-center text-[#7A7A7A] font-medium">
+          Loading payments...
+        </div>
       ) : ownerPayments.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {ownerPayments.map((payment) => (
             <div
               key={payment._id}
-              className="bg-white border border-[#E0E0E0] p-6 rounded-lg shadow hover:shadow-lg transition"
+              className="bg-white rounded-lg shadow-lg border border-[#E0E0E0] p-6 hover:shadow-xl transition duration-300"
             >
-              <h2 className="text-xl font-semibold text-[#1A3B5D]">
+              {/* Property Title */}
+              <h2 className="text-xl font-bold text-[#1A3B5D] mb-4">
                 {payment.property.title}
               </h2>
-              <p className="text-[#7A7A7A] mb-2">{payment.property.address}</p>
-              <p className="text-[#333333] font-medium">
-                Amount: <span className="font-bold">${payment.amount}</span>
+
+              {/* Property Address */}
+              <p className="text-sm text-[#7A7A7A] mb-2">
+                {payment.property.address}
               </p>
-              <p className="text-[#333333]">
-                Due Date:{" "}
+
+              {/* Amount */}
+              <p className="text-sm text-[#7A7A7A] mb-2">
+                <span className="font-medium">Amount:</span>{" "}
+                <span className="text-[#333333] font-semibold">
+                  ${payment.amount}
+                </span>
+              </p>
+
+              {/* Due Date */}
+              <p className="text-sm text-[#7A7A7A] mb-2">
+                <span className="font-medium">Due Date:</span>{" "}
                 <span className="text-[#4C8492] font-medium">
                   {new Date(payment.dueDate).toLocaleDateString()}
                 </span>
               </p>
-              <p className="text-[#333333]">
-                Status:{" "}
+
+              {/* Status */}
+              <p className="text-sm text-[#7A7A7A] mb-2">
+                <span className="font-medium">Status:</span>{" "}
                 <span
-                  className={`${
+                  className={`font-semibold ${
                     payment.status === "Pending"
-                      ? "text-[#E74C3C]"
-                      : "text-[#27AE60]"
-                  } font-bold`}
+                      ? "text-[#E74C3C]" // Warning Red
+                      : "text-[#27AE60]" // Success Green
+                  }`}
                 >
                   {payment.status}
                 </span>
               </p>
-              <p className="text-[#7A7A7A] italic mt-2">
-                Comment: {payment.comment}
+
+              {/* Comment */}
+              <p className="text-sm text-[#7A7A7A] italic mb-2">
+                <span className="font-medium">Comment:</span> {payment.comment}
               </p>
-              <p className="text-sm text-[#7A7A7A] mt-2">
-                Created: {new Date(payment.createdAt).toLocaleDateString()}
+
+              {/* Created Date */}
+              <p className="text-sm text-[#7A7A7A] mb-4">
+                <span className="font-medium">Created:</span>{" "}
+                {new Date(payment.createdAt).toLocaleDateString()}
               </p>
-              <button className="mt-4 bg-[#F47C48] text-white px-4 py-2 rounded-md hover:bg-[#E76036] transition">
-                <Link href={`/agent/payments/${payment._id}`}>
-                  Edit Payment
-                </Link>
+
+              {/* Edit Payment Button */}
+              <button className="w-full py-2 bg-[#F47C48] text-white font-semibold rounded-lg hover:bg-[#e86d3f] transition duration-200">
+                <Link href={`/agent/payments/${payment._id}`}>Edit Payment</Link>
               </button>
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-[#7A7A7A]">No payments found for this owner.</div>
+        <div className="text-center text-[#7A7A7A] font-medium">
+          No payments found for this owner.
+        </div>
       )}
     </div>
   );

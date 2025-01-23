@@ -5,7 +5,6 @@ import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
 
 const AddListing = () => {
-  
   const user = userAuth((state) => state.user);
 
   const [title, setTitle] = useState("");
@@ -20,8 +19,7 @@ const AddListing = () => {
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
-
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     const files = e.target.files;
@@ -45,7 +43,7 @@ const AddListing = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when submission starts
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("owner", user._id);
@@ -88,22 +86,23 @@ const AddListing = () => {
     } catch (error) {
       toast.error(`Failed to add property. Please try again. ${error.message}`);
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-4xl mx-auto bg-gray-100 p-8 rounded-lg shadow-md space-y-6"
+      className="max-w-4xl mx-auto bg-white p-8 mt-3 rounded-lg shadow-lg border border-[#E0E0E0] space-y-6"
     >
-      <h2 className="text-2xl font-semibold text-center text-black">
+      <h2 className="text-2xl font-bold text-center text-[#1A3B5D]">
         Add New Property Listing
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Title */}
         <div className="flex flex-col">
-          <label htmlFor="title" className="text-gray-700 font-medium">
+          <label htmlFor="title" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Title
           </label>
           <input
@@ -111,14 +110,15 @@ const AddListing = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter property title"
             required
           />
         </div>
 
+        {/* City */}
         <div className="flex flex-col">
-          <label htmlFor="city" className="text-gray-700 font-medium">
+          <label htmlFor="city" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             City
           </label>
           <input
@@ -126,14 +126,15 @@ const AddListing = () => {
             type="text"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter city"
             required
           />
         </div>
 
+        {/* Address */}
         <div className="flex flex-col">
-          <label htmlFor="address" className="text-gray-700 font-medium">
+          <label htmlFor="address" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Address
           </label>
           <input
@@ -141,14 +142,15 @@ const AddListing = () => {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter address"
             required
           />
         </div>
 
+        {/* Price */}
         <div className="flex flex-col">
-          <label htmlFor="price" className="text-gray-700 font-medium">
+          <label htmlFor="price" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Price
           </label>
           <input
@@ -156,14 +158,15 @@ const AddListing = () => {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter price"
             required
           />
         </div>
 
+        {/* Bedrooms */}
         <div className="flex flex-col">
-          <label htmlFor="bedrooms" className="text-gray-700 font-medium">
+          <label htmlFor="bedrooms" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Bedrooms
           </label>
           <input
@@ -171,14 +174,15 @@ const AddListing = () => {
             type="number"
             value={bedrooms}
             onChange={(e) => setBedrooms(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter number of bedrooms"
             required
           />
         </div>
 
+        {/* Bathrooms */}
         <div className="flex flex-col">
-          <label htmlFor="bathrooms" className="text-gray-700 font-medium">
+          <label htmlFor="bathrooms" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Bathrooms
           </label>
           <input
@@ -186,36 +190,38 @@ const AddListing = () => {
             type="number"
             value={bathrooms}
             onChange={(e) => setBathrooms(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter number of bathrooms"
             required
           />
         </div>
 
+        {/* House Type */}
         <div className="flex flex-col">
-          <label htmlFor="houseType" className="text-gray-700 font-medium">
+          <label htmlFor="houseType" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             House Type
           </label>
           <select
             id="houseType"
             value={houseType}
             onChange={(e) => setHouseType(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
           >
             <option value="Rent">Rent</option>
             <option value="Buy">Buy</option>
           </select>
         </div>
 
+        {/* Status */}
         <div className="flex flex-col">
-          <label htmlFor="status" className="text-gray-700 font-medium">
+          <label htmlFor="status" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Status
           </label>
           <select
             id="status"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
           >
             <option value="Available">Available</option>
             <option value="Sold">Sold</option>
@@ -223,8 +229,9 @@ const AddListing = () => {
           </select>
         </div>
 
+        {/* Deposit */}
         <div className="flex flex-col">
-          <label htmlFor="deposit" className="text-gray-700 font-medium">
+          <label htmlFor="deposit" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Deposit
           </label>
           <input
@@ -232,27 +239,29 @@ const AddListing = () => {
             type="number"
             value={deposit}
             onChange={(e) => setDeposit(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter deposit amount"
           />
         </div>
 
+        {/* Description */}
         <div className="flex flex-col col-span-2">
-          <label htmlFor="description" className="text-gray-700 font-medium">
+          <label htmlFor="description" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Description
           </label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
             placeholder="Enter property description"
             rows={4}
           />
         </div>
 
+        {/* Images */}
         <div className="flex flex-col col-span-2">
-          <label htmlFor="images" className="text-gray-700 font-medium">
+          <label htmlFor="images" className="text-sm font-semibold text-[#1A3B5D] mb-2">
             Images
           </label>
           <input
@@ -261,7 +270,7 @@ const AddListing = () => {
             accept="image/*"
             multiple
             onChange={handleImageChange}
-            className="p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            className="p-3 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
           />
           <div className="flex flex-wrap gap-4 mt-4">
             {imagePreviews.map((preview, index) => (
@@ -274,7 +283,7 @@ const AddListing = () => {
                 <button
                   type="button"
                   onClick={() => handleImageRemove(index)}
-                  className="absolute top-0 right-0 bg-red-600 text-white text-sm px-2 py-1 rounded-full"
+                  className="absolute top-0 right-0 bg-[#E74C3C] text-white text-sm px-2 py-1 rounded-full hover:bg-[#C0392B] transition duration-200"
                 >
                   &times;
                 </button>
@@ -284,9 +293,11 @@ const AddListing = () => {
         </div>
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 bg-black text-white font-semibold rounded-md hover:bg-gray-800 transition duration-300"
+        className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-md hover:bg-[#16324A] transition duration-200"
+        disabled={loading}
       >
         {loading ? "Loading..." : "Add Property"}
       </button>

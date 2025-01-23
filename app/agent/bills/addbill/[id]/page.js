@@ -24,6 +24,7 @@ export default function AddBillPage() {
       setProperty(response.data.existingContract.property);
     } catch (error) {
       console.error("Error fetching contract:", error);
+      toast.error("Failed to fetch contract details. Please try again.");
     }
   };
 
@@ -38,11 +39,6 @@ export default function AddBillPage() {
       toast.error("All fields are required.");
       return;
     }
-    setAmount("");
-    setDueDate("");
-    setUser("");
-    setComment("");
-    setProperty("");
 
     try {
       const response = await axios.post(`/api/bill/addbill`, {
@@ -57,43 +53,50 @@ export default function AddBillPage() {
       if (response.status === 201) {
         toast.success(response.data.message);
         router.replace("/agent/bills");
-        
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to add bill. Please try again.");
+    } finally {
+      setAmount("");
+      setDueDate("");
+      setComment("");
     }
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
-      <h1 className="text-2xl font-bold text-[#1A3B5D] mb-6">Add Bill</h1>
+    <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">
+      {/* Heading */}
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Add Bill</h1>
 
-      <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-md">
-        <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Form */}
+      <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-lg border border-[#E0E0E0]">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Amount */}
           <div>
             <label
               htmlFor="amount"
-              className="block text-[#333333] font-medium"
+              className="block text-sm font-semibold text-[#1A3B5D] mb-2"
             >
-              Amount{" "}
+              Amount ($)
             </label>
             <input
               id="amount"
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md"
+              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
               placeholder="Enter amount"
               required
             />
           </div>
 
+          {/* Due Date */}
           <div>
             <label
               htmlFor="dueDate"
-              className="block text-[#333333] font-medium"
+              className="block text-sm font-semibold text-[#1A3B5D] mb-2"
             >
               Due Date
             </label>
@@ -102,15 +105,16 @@ export default function AddBillPage() {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md"
+              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
               required
             />
           </div>
 
+          {/* Comment */}
           <div>
             <label
               htmlFor="comment"
-              className="block text-[#333333] font-medium"
+              className="block text-sm font-semibold text-[#1A3B5D] mb-2"
             >
               Comment
             </label>
@@ -118,15 +122,16 @@ export default function AddBillPage() {
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md"
+              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
               placeholder="Enter any comments or notes"
               rows="3"
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-[#F47C48] text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition"
+            className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
           >
             Add Bill
           </button>

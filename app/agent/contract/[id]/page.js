@@ -10,21 +10,22 @@ export default function EditContractPage() {
   const [endDate, setEndDate] = useState("");
   const [monthlyRent, setMonthlyRent] = useState("");
   const [deposit, setDeposit] = useState("");
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("Pending");
   const { id } = useParams();
   const router = useRouter();
-  
 
   const fetchContract = async () => {
     try {
       const response = await axios.get(`/api/contracts/${id}`);
-      setStartDate(response.data.existingContract.startDate.split("T")[0]);
-      setEndDate(response.data.existingContract.endDate.split("T")[0]);
-      setMonthlyRent(response.data.existingContract.monthlyRent);
-      setDeposit(response.data.existingContract.deposit);
-      setStatus(response.data.existingContract.status);
+      const contract = response.data.existingContract;
+      setStartDate(contract.startDate.split("T")[0]);
+      setEndDate(contract.endDate.split("T")[0]);
+      setMonthlyRent(contract.monthlyRent);
+      setDeposit(contract.deposit);
+      setStatus(contract.status);
     } catch (error) {
       console.error("Error fetching contract:", error);
+      toast.error("Failed to fetch contract details. Please try again.");
     }
   };
 
@@ -32,10 +33,9 @@ export default function EditContractPage() {
     fetchContract();
   }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-
       const response = await axios.put(`/api/contracts/${id}`, {
         startDate,
         endDate,
@@ -43,33 +43,29 @@ export default function EditContractPage() {
         deposit,
         status,
       });
-      
 
       toast.success(response.data.message);
-      setStartDate("");
-      setEndDate("");
-      setMonthlyRent("");
-      setDeposit("");
-      setStatus("pending");
       router.push("/agent/contract");
-      
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to update contract. Please try again.");
     }
   };
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">
+      {/* Heading */}
       <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Edit Contract</h1>
+
+      {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white w-full max-w-lg p-8 rounded-lg shadow-lg space-y-6"
+        className="bg-white w-full max-w-lg p-8 rounded-lg shadow-lg border border-[#E0E0E0] space-y-6"
       >
         {/* Start Date */}
         <div>
           <label
             htmlFor="startDate"
-            className="block text-sm font-semibold text-[#333333] mb-1"
+            className="block text-sm font-semibold text-[#1A3B5D] mb-2"
           >
             Start Date
           </label>
@@ -79,7 +75,7 @@ export default function EditContractPage() {
             name="startDate"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
           />
         </div>
 
@@ -87,7 +83,7 @@ export default function EditContractPage() {
         <div>
           <label
             htmlFor="endDate"
-            className="block text-sm font-semibold text-[#333333] mb-1"
+            className="block text-sm font-semibold text-[#1A3B5D] mb-2"
           >
             End Date
           </label>
@@ -97,7 +93,7 @@ export default function EditContractPage() {
             name="endDate"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
           />
         </div>
 
@@ -105,7 +101,7 @@ export default function EditContractPage() {
         <div>
           <label
             htmlFor="monthlyRent"
-            className="block text-sm font-semibold text-[#333333] mb-1"
+            className="block text-sm font-semibold text-[#1A3B5D] mb-2"
           >
             Monthly Rent ($)
           </label>
@@ -115,7 +111,7 @@ export default function EditContractPage() {
             name="monthlyRent"
             value={monthlyRent}
             onChange={(e) => setMonthlyRent(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
           />
         </div>
 
@@ -123,7 +119,7 @@ export default function EditContractPage() {
         <div>
           <label
             htmlFor="deposit"
-            className="block text-sm font-semibold text-[#333333] mb-1"
+            className="block text-sm font-semibold text-[#1A3B5D] mb-2"
           >
             Deposit ($)
           </label>
@@ -133,7 +129,7 @@ export default function EditContractPage() {
             name="deposit"
             value={deposit}
             onChange={(e) => setDeposit(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
           />
         </div>
 
@@ -141,7 +137,7 @@ export default function EditContractPage() {
         <div>
           <label
             htmlFor="status"
-            className="block text-sm font-semibold text-[#333333] mb-1"
+            className="block text-sm font-semibold text-[#1A3B5D] mb-2"
           >
             Status
           </label>
@@ -150,7 +146,7 @@ export default function EditContractPage() {
             name="status"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F47C48] text-[#333333]"
           >
             <option value="Pending">Pending</option>
             <option value="Active">Active</option>
@@ -162,7 +158,7 @@ export default function EditContractPage() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-[#F47C48] text-white px-4 py-3 rounded-lg text-lg font-semibold hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[#F47C48] transition"
+          className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
         >
           Update Contract
         </button>

@@ -11,7 +11,6 @@ async function fetchListings() {
   }
 }
 
-
 export default async function PropertyListing() {
   const listings = await fetchListings();
 
@@ -22,7 +21,7 @@ export default async function PropertyListing() {
       </h1>
 
       {listings.length === 0 ? (
-        <div className="text-center text-lg text-gray-600">
+        <div className="text-center text-lg text-[#7A7A7A]">
           No properties are available at the moment.
         </div>
       ) : (
@@ -30,22 +29,22 @@ export default async function PropertyListing() {
           {listings.map((listing) => (
             <div
               key={listing._id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-200"
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-200 border border-[#E0E0E0]"
             >
               <img
                 src={listing.images[0]}
                 alt={listing.title}
                 className="w-full h-48 object-cover"
               />
-              <div className="p-4">
+              <div className="p-6">
                 <h2 className="text-xl font-semibold text-[#1A3B5D] mb-2">
                   {listing.title}
                 </h2>
-                <p className="text-sm text-gray-600 mb-2">{listing.address}</p>
+                <p className="text-sm text-[#7A7A7A] mb-2">{listing.address}</p>
                 <p className="text-lg font-bold text-[#F47C48]">
                   {listing.price}
                 </p>
-                <div className="mt-2 flex justify-between items-center text-sm text-gray-700">
+                <div className="mt-2 flex justify-between items-center text-sm text-[#7A7A7A]">
                   <span>{listing.bedrooms} Beds</span>
                   <span>{listing.bathrooms} Baths</span>
                 </div>
@@ -58,8 +57,8 @@ export default async function PropertyListing() {
                 >
                   {listing.houseType}
                 </div>
-                <button className="mt-4 w-full py-2 bg-[#4C8492] text-white font-semibold rounded-md hover:bg-[#3b6d78] transition duration-200">
-                  <Link href={`/listings/${listing._id}`}> View Details</Link>
+                <button className="mt-4 w-full py-2 bg-[#1A3B5D] text-white font-semibold rounded-md hover:bg-[#16324A] transition duration-200">
+                  <Link href={`/listings/${listing._id}`}>View Details</Link>
                 </button>
               </div>
             </div>

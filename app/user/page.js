@@ -1,10 +1,58 @@
 "use client";
 
 import userAuth from "@/myStore/UserAuth";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const UserDashboard = () => {
   const userName = userAuth((state) => state.user); 
+  const [userContracts, setUserContracts] = useState([]);
+  const [userBookings, setUserBookings] = useState([]);
+  
+  const [totalUnpaidAmount, setTotalUnpaidAmount] = useState(0);
+
+  const getOwnerBills = async () => {
+    try {
+      const response = await axios.get(`/api/bill`);
+      const unpaidBill = response.data.data.filter(
+        (bill) => bill.status !== "Paid" && bill.user._id === userName._id
+      );  
+      // Calculate total unpaid amount
+      const totalAmount = unpaidBill.reduce((sum, bill) => sum + bill.amount, 0);
+      setTotalUnpaidAmount(totalAmount);
+    } catch (error) {
+      setError("Failed to fetch bills. Please try again.");
+      console.error(error);
+    }
+  };
+
+   const fetchUserBookings = async () => {
+      try {
+        const response = await axios.get(`/api/booking/userBooking/${userName._id}`);
+        setUserBookings(response.data.bookings);
+      } catch (error) {
+        console.error("Error fetching user bookings:", error);
+      }
+    };
+
+   const getOwnerContracts = async () => {
+      try {
+        const response = await axios.get(`/api/contracts/usercontract/${userName._id}`);
+        const activeContracts = response.data.contracts.filter((contract) => contract.status === "Active");
+        setUserContracts(activeContracts);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => {
+      if (userName && userName._id) {
+        getOwnerContracts();
+        fetchUserBookings();
+        getOwnerBills();
+      }
+    }, [userName._id]);
+
 
   const user = {
     name: "John Doe",
@@ -42,7 +90,7 @@ const UserDashboard = () => {
                 Total Bookings
               </h3>
               <p className="text-2xl font-bold text-blue-600">
-                {user.stats.totalBookings}
+                {userBookings.length || 0}
               </p>
             </div>
             <div className="text-blue-600 text-4xl">📅</div>
@@ -54,7 +102,7 @@ const UserDashboard = () => {
                 Active Contracts
               </h3>
               <p className="text-2xl font-bold text-blue-600">
-                {user.stats.activeContracts}
+                {userContracts.length || 0} 
               </p>
             </div>
             <div className="text-blue-600 text-4xl">📝</div>
@@ -66,7 +114,7 @@ const UserDashboard = () => {
                 Outstanding Payments
               </h3>
               <p className="text-2xl font-bold text-blue-600">
-                {user.stats.outstandingPayments}
+                {totalUnpaidAmount || 0}
               </p>
             </div>
             <div className="text-blue-600 text-4xl">💸</div>

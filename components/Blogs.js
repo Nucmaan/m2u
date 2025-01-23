@@ -27,13 +27,13 @@ export default function BlogSection() {
       image: "https://images.pexels.com/photos/12969293/pexels-photo-12969293.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       link: "#",
     },
-   
   ];
 
   return (
-    <div className="pt-8 pb-10 bg-[#F7F7F9]">
+    <div className="pt-12 pb-16 bg-[#F7F7F9]">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold text-center text-[#333333] mb-4">
+        {/* Heading */}
+        <h2 className="text-3xl font-bold text-center text-[#1A3B5D] mb-4">
           Our Latest Blogs
         </h2>
         <p className="text-center text-[#7A7A7A] mb-8">
@@ -41,11 +41,11 @@ export default function BlogSection() {
         </p>
 
         {/* Blog Grid */}
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col"
+              className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col border border-[#E0E0E0] hover:shadow-xl transition duration-300"
             >
               {/* Blog Image */}
               <img
@@ -55,16 +55,16 @@ export default function BlogSection() {
               />
 
               {/* Blog Details */}
-              <div className="p-4 flex flex-col justify-between flex-1">
-                <h3 className="text-lg font-semibold text-[#333333] mb-2">
+              <div className="p-6 flex flex-col justify-between flex-1">
+                <h3 className="text-xl font-semibold text-[#1A3B5D] mb-4">
                   {post.title}
                 </h3>
-                <p className="text-sm text-[#7A7A7A] mb-4">{post.description}</p>
+                <p className="text-sm text-[#7A7A7A] mb-6">{post.description}</p>
 
                 {/* Read More Button */}
                 <a
                   href={post.link}
-                  className="text-[#1A3B5D] hover:text-[#16324A] flex items-center"
+                  className="text-[#4C8492] hover:text-[#3b6d78] flex items-center font-medium"
                 >
                   <span className="mr-2">Read More</span>
                   <FaArrowRight />

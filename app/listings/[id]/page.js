@@ -56,10 +56,9 @@ const ViewProperty = () => {
       return;
     }
 
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
-  
   const handleConfirmBooking = async () => {
     if (!visitingDate) {
       toast.error("Please select a visiting date.");
@@ -89,7 +88,7 @@ const ViewProperty = () => {
 
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden border border-[#E0E0E0]">
         <div className="relative">
           {list.images?.length > 0 ? (
             <img
@@ -106,14 +105,14 @@ const ViewProperty = () => {
           )}
           <button
             onClick={prevImage}
-            className="absolute top-1/2 left-6 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 hover:bg-gray-700 transition shadow-lg"
+            className="absolute top-1/2 left-6 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition shadow-lg"
             aria-label="Previous Image"
           >
             ❮
           </button>
           <button
             onClick={nextImage}
-            className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-3 hover:bg-gray-700 transition shadow-lg"
+            className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition shadow-lg"
             aria-label="Next Image"
           >
             ❯
@@ -124,7 +123,7 @@ const ViewProperty = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1A3B5D] mb-4">
             {list.title || "Loading..."}
           </h1>
-          <p className="text-sm text-gray-600 mb-2">{list.address}</p>
+          <p className="text-sm text-[#7A7A7A] mb-2">{list.address}</p>
           <p className="text-lg font-bold text-[#F47C48] mb-6">{list.price}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -137,17 +136,17 @@ const ViewProperty = () => {
               { label: "Status", value: list.status || "N/A" },
               { label: "Owner", value: list.owner || "N/A" },
             ].map((item, index) => (
-              <div key={index} className="text-sm text-gray-700">
-                <span className="font-semibold">{item.label}: </span>
+              <div key={index} className="text-sm text-[#7A7A7A]">
+                <span className="font-semibold text-[#333333]">{item.label}: </span>
                 {item.value}
               </div>
             ))}
           </div>
 
-          <p className="text-gray-600 mb-6">{list.description || "N/A"}</p>
+          <p className="text-[#7A7A7A] mb-6">{list.description || "N/A"}</p>
 
-          <div className="text-sm text-gray-700 mb-6">
-            <span className="font-semibold">Contact: </span>
+          <div className="text-sm text-[#7A7A7A] mb-6">
+            <span className="font-semibold text-[#333333]">Contact: </span>
             <a
               href="#"
               className="text-[#4C8492] font-medium hover:text-[#F47C48] underline"
@@ -158,50 +157,51 @@ const ViewProperty = () => {
 
           <button
             onClick={handleBookNow}
-            className="w-full py-3 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200"
+            className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200"
           >
             Book Now
           </button>
         </div>
       </div>
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            <h2 className="text-xl font-semibold text-[#1A3B5D] mb-4">
               Confirm Booking
             </h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                 Visiting Date
               </label>
               <input
                 type="date"
                 value={visitingDate}
                 onChange={(e) => setVisitingDate(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                 Notes / Comments
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg"
                 rows="4"
               />
             </div>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                className="px-4 py-2 bg-[#E0E0E0] text-[#333333] rounded-lg hover:bg-[#D0D0D0]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmBooking}
-                className="px-4 py-2 bg-[#4C8492] text-white rounded-lg hover:bg-[#3b6d78]"
+                className="px-4 py-2 bg-[#1A3B5D] text-white rounded-lg hover:bg-[#16324A]"
               >
                 Confirm Booking
               </button>
