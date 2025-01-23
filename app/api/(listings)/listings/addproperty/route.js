@@ -4,11 +4,11 @@ import ConnectDb from "@/Database/dbConfig";
 import Listings from "@/Models/listingsModel";
 
 const s3 = new S3Client({
-  region: process.env.AWS_REGION,
+  region: process.env.NEXT_PUBLIC_AWS_REGION,
 
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -20,7 +20,7 @@ async function uploadImageToS3(file, fileName) {
   const uniqueFileName = `myhome2uFolder/${fileName}-${Date.now()}`;
 
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
     Key: uniqueFileName,
     Body: fileBuffer,
     ContentType: "image/jpeg",
@@ -31,7 +31,7 @@ async function uploadImageToS3(file, fileName) {
   await s3.send(command);
 
   // Generate S3 object URL
-  const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${uniqueFileName}`;
+  const fileUrl = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${uniqueFileName}`;
   //return fileUrl;
   return fileUrl;
 }
