@@ -1,5 +1,6 @@
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 
 async function fetchListings() {
   try {
@@ -31,11 +32,14 @@ export default async function PropertyListing() {
               key={listing._id}
               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-200 border border-[#E0E0E0]"
             >
-              <img
-                src={listing.images[0]}
-                alt={listing.title}
-                className="w-full h-48 object-cover"
-              />
+              <div className="relative w-full h-48">
+                <Image
+                  src={listing.images[0]}
+                  alt={listing.title}
+                  layout="fill" 
+                  objectFit="cover" 
+                />
+              </div>
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-[#1A3B5D] mb-2">
                   {listing.title}

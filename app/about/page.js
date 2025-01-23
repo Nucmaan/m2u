@@ -1,13 +1,14 @@
 import Image from "next/image";
 
 const AboutUs = () => {
-
   const defaultImage = "/images/nasri.jpg";
-  const  defualtAboutImage = "https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-  const  defaultValue = "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  const defaultAboutImage = "https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+  const defaultValue = "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+
   return (
     <section className="bg-[#F7F7F9] py-12 px-6 md:px-12 lg:px-20">
       <div className="max-w-5xl mx-auto space-y-12">
+        
         {/* About Us Section */}
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-[#1A3B5D] mb-4">
@@ -15,7 +16,7 @@ const AboutUs = () => {
           </h2>
           <p className="text-lg text-[#7A7A7A] max-w-2xl mx-auto">
             Welcome to MyHome2U! We connect people with their dream properties.
-            Whether you're looking to rent or buy, our platform offers a seamless
+            Whether you&apos;re looking to rent or buy, our platform offers a seamless
             and personalized experience to find the perfect home.
           </p>
         </div>
@@ -23,9 +24,11 @@ const AboutUs = () => {
         {/* Mission Section */}
         <div className="md:flex md:items-center md:space-x-8">
           <div className="md:w-1/2">
-            <img
-              src={defualtAboutImage}
+            <Image
+              src={defaultAboutImage}
               alt="Mission Image"
+              width={600}
+              height={400}
               className="rounded-lg shadow-md"
             />
           </div>
@@ -54,23 +57,23 @@ const AboutUs = () => {
                 on trust.
               </li>
               <li>
-                ✨{" "}
-                <span className="font-medium text-[#1A3B5D]">Transparency:</span>{" "}
+                ✨ <span className="font-medium text-[#1A3B5D]">Transparency:</span>{" "}
                 All processes are clear and straightforward, with no hidden fees
                 or surprises.
               </li>
               <li>
-                💼{" "}
-                <span className="font-medium text-[#1A3B5D]">Professionalism:</span>{" "}
+                💼 <span className="font-medium text-[#1A3B5D]">Professionalism:</span>{" "}
                 Our team is dedicated to providing expert advice and guidance
                 throughout your journey.
               </li>
             </ul>
           </div>
           <div className="mt-6 md:mt-0 md:w-1/2">
-          <img
-          src={defaultValue}
-          alt="Values Image"
+            <Image
+              src={defaultValue}
+              alt="Values Image"
+              width={600}
+              height={400}
               className="rounded-lg shadow-md"
             />
           </div>
@@ -90,11 +93,11 @@ const AboutUs = () => {
           <div className="flex flex-wrap justify-center gap-6">
             {/* Team Member 1 */}
             <div className="w-32 text-center">
-              <img
-              src={defaultImage}
-              alt="Team Member"
-              width={150}
-              height={150}
+              <Image
+                src={defaultImage}
+                alt="Team Member"
+                width={150}
+                height={150}
                 className="w-24 h-24 mx-auto rounded-full mb-2 border-2 border-[#4C8492]"
               />
               <h4 className="text-lg font-semibold text-[#1A3B5D]">Nasri</h4>
@@ -103,11 +106,11 @@ const AboutUs = () => {
 
             {/* Team Member 2 */}
             <div className="w-32 text-center">
-              <img
-              src={defaultImage}
-              alt="Team Member"
-              width={150}
-              height={150}
+              <Image
+                src={defaultImage}
+                alt="Team Member"
+                width={150}
+                height={150}
                 className="w-24 h-24 mx-auto rounded-full mb-2 border-2 border-[#4C8492]"
               />
               <h4 className="text-lg font-semibold text-[#1A3B5D]">Xasan</h4>
@@ -117,10 +120,10 @@ const AboutUs = () => {
             {/* Team Member 3 */}
             <div className="w-32 text-center">
               <Image
-              src={defaultImage}
-              alt="Team Member"
-              width={150}
-              height={150}
+                src={defaultImage}
+                alt="Team Member"
+                width={150}
+                height={150}
                 className="w-24 h-24 mx-auto rounded-full mb-2 border-2 border-[#4C8492]"
               />
               <h4 className="text-lg font-semibold text-[#1A3B5D]">Ramsey</h4>
