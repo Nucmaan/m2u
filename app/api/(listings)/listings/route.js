@@ -7,7 +7,7 @@ export async function GET(req) {
     
     await ConnectDb();
 
-    const listings = await Listings.find({});
+    const listings = await Listings.find({}).populate("owner");
 
     if (listings.length === 0) {
       return NextResponse.json(
@@ -15,6 +15,7 @@ export async function GET(req) {
         { status: 400 } 
       );
     }
+
 
     return NextResponse.json(
       { 

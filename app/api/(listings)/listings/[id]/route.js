@@ -2,6 +2,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import ConnectDb from "@/Database/dbConfig";
 import Listings from "@/Models/listingsModel";
 import { NextResponse } from "next/server";
+import User from "@/Models/authModel";
 
 const s3 = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION,
@@ -37,7 +38,6 @@ export async function GET(req, { params }) {
         { status: 400 }
       );
     }
-
 
     const listing = await Listings.findById(id).populate("owner");
     

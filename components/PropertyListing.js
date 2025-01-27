@@ -3,13 +3,22 @@ import Link from "next/link";
 import { FaBed, FaBath, FaMapMarkerAlt, FaMoneyBillWave } from "react-icons/fa";
 
 async function fetchListings() {
-  try {
-    const response = await axios.get("http://localhost:3000/api/listings");
-    return response.data.Listings;
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    return [];
-  }
+ try {
+     const response = await axios.get("http://localhost:3000/api/listings");
+ 
+     if (!response.data || !response.data.Listings) {
+       throw new Error("Invalid response from server");
+     }
+ 
+     const validListings = response.data.Listings.filter(
+       (listing) => listing.owner !== null
+     );
+ 
+     return validListings;
+   } catch (error) {
+     console.error("Error fetching listings:", error);
+     return [];
+   }
 }
 
 export default async function PropertyListing() {
@@ -27,7 +36,6 @@ export default async function PropertyListing() {
           A collection of our top properties
         </p>
 
-        {/* Property Listings */}
         {listings.length === 0 ? (
           <div className="text-center text-lg text-[#7A7A7A]">
             No properties are available at the moment.
@@ -39,14 +47,12 @@ export default async function PropertyListing() {
                 key={list._id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col justify-between border border-[#E0E0E0]"
               >
-                {/* Property Image */}
                 <img
                   src={list.images[0]}
                   alt={list.title}
                   className="w-full h-48 object-cover"
                 />
 
-                {/* Property Details */}
                 <div className="p-6 flex flex-col justify-between flex-1">
                   <div>
                     <h3 className="text-xl font-semibold text-[#1A3B5D] truncate mb-2">
@@ -72,7 +78,6 @@ export default async function PropertyListing() {
                     </div>
                   </div>
 
-                  {/* View Details Button */}
                   <button className="mt-6 w-full bg-[#1A3B5D] text-white py-2 rounded-md hover:bg-[#16324A] transition duration-300">
                     <Link href={`/listings/${list._id}`}>View Details</Link>
                   </button>

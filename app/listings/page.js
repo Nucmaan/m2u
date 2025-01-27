@@ -5,7 +5,18 @@ import Image from "next/image";
 async function fetchListings() {
   try {
     const response = await axios.get("http://localhost:3000/api/listings");
-    return response.data.Listings;
+
+    // Validate the response
+    if (!response.data || !response.data.Listings) {
+      throw new Error("Invalid response from server");
+    }
+
+    // Filter out listings where owner is null
+    const validListings = response.data.Listings.filter(
+      (listing) => listing.owner !== null
+    );
+
+    return validListings;
   } catch (error) {
     console.error("Error fetching listings:", error);
     return [];
@@ -34,24 +45,33 @@ export default async function PropertyListing() {
             >
               <div className="relative w-full h-48">
                 <Image
-                  src={listing.images[0]}
+                  src={listing.images[0] || "https://via.placeholder.com/600"} // Fallback image if no image is available
                   alt={listing.title}
-                  layout="fill" 
-                  objectFit="cover" 
+                  layout="fill"
+                  objectFit="cover"
                 />
               </div>
+
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-[#1A3B5D] mb-2">
                   {listing.title}
                 </h2>
                 <p className="text-sm text-[#7A7A7A] mb-2">{listing.address}</p>
                 <p className="text-lg font-bold text-[#F47C48]">
-                  {listing.price}
+                  ${listing.price}
                 </p>
+
+                <p className="text-sm text-[#7A7A7A] mb-2">
+                  Owner: {listing.owner?.name || "N/A"}
+                </p>
+
+                {/* Bedrooms and Bathrooms */}
                 <div className="mt-2 flex justify-between items-center text-sm text-[#7A7A7A]">
                   <span>{listing.bedrooms} Beds</span>
                   <span>{listing.bathrooms} Baths</span>
                 </div>
+
+                {/* House Type Badge */}
                 <div
                   className={`mt-2 inline-block px-3 py-1 text-xs font-semibold rounded-full ${
                     listing.houseType === "Rent"
@@ -61,6 +81,7 @@ export default async function PropertyListing() {
                 >
                   {listing.houseType}
                 </div>
+
                 <button className="mt-4 w-full py-2 bg-[#1A3B5D] text-white font-semibold rounded-md hover:bg-[#16324A] transition duration-200">
                   <Link href={`/listings/${listing._id}`}>View Details</Link>
                 </button>
