@@ -25,7 +25,7 @@ export async function POST(req) {
 
     const existingOwner = await User.findById(owner);
     if (!existingOwner) {
-      return NextResponse.json({ message: "Owner not found" }, { status: 404 });
+      return NextResponse.json({ message: "you can not book this property" }, { status: 404 });
     }
 
     const existingListing = await Listings.findById(listing);

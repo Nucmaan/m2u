@@ -1,12 +1,37 @@
+"use client";
+import axios from "axios";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function UserList() {
-  const users = [
-    { id: 1, name: "John Doe", email: "john.doe@example.com", role: "Admin" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com", role: "User" },
-    { id: 3, name: "Alex Johnson", email: "alex.johnson@example.com", role: "Agent" },
-  ];
+  
+  const [usersInfo, setUsersInfo] = useState([]);
+
+  const getAllUsers = async () => {
+    try {
+      const response = await axios.get("/api/userInfo");
+      setUsersInfo(response.data.Users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  const handleDelete = async (userId) => {
+    try {
+      await axios.delete(`/api/userInfo/${userId}`);
+      const updatedUsers = usersInfo.filter((user) => user._id!== userId);
+      setUsersInfo(updatedUsers);
+      toast.success("User deleted successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message || "Couldn't delete user.");
+    }
+  }
+
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] text-[#333333]">
@@ -21,19 +46,21 @@ export default function UserList() {
 
         {/* User Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {users.map((user) => (
+          {usersInfo.map((user) => (
             <div
-              key={user.id}
+              key={user._id}
               className="bg-white shadow-md rounded-lg p-4 border border-[#E0E0E0]"
             >
-              <h3 className="text-lg font-bold text-[#1A3B5D]">{user.name}</h3>
+              <h3 className="text-lg font-bold text-[#1A3B5D]">{user.username}</h3>
               <p className="text-sm text-[#7A7A7A]">{user.email}</p>
               <p className="text-sm text-[#4C8492] font-semibold">{user.role}</p>
               <div className="mt-4 flex justify-between">
                 <button className="bg-[#4C8492] text-white px-3 py-1 rounded hover:bg-[#16324A]">
-                  <Link href={`/admin/users/${user.id}`}>Edit</Link>
+                  <Link href={`/admin/users/${user._id}`}>Edit</Link>
                 </button>
-                <button className="bg-[#E74C3C] text-white px-3 py-1 rounded hover:bg-red-600">
+                <button
+                onClick={handleDelete(user._id)}
+                className="bg-[#E74C3C] text-white px-3 py-1 rounded hover:bg-red-600">
                   Delete
                 </button>
               </div>

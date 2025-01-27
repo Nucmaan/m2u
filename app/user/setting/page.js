@@ -63,11 +63,10 @@ const UserSettings = () => {
       if (response.status === 201) {
         toast.success(response.data.message);
         router.replace("/user/profile");
-      } else {
-        toast.error(response.data.message);
-      }
+      } 
     } catch (error) {
-      toast.error(error.response.data.message);
+
+      toast.error(error.response.data.message || "Failed to update profile. Please try again.");
     }
   };
 

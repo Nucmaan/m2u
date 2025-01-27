@@ -53,7 +53,7 @@ export default function AgentProfilePage() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-[#4C8492] font-medium">Phone:</span>
-              <span className="text-[#333333]">{user.phone || "N/A"}</span>
+              <span className="text-[#333333]">{user.mobile || "N/A"}</span>
             </div>
           </div>
         </div>

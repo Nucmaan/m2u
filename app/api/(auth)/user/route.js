@@ -15,7 +15,7 @@ const s3 = new S3Client({
 async function uploadImageToS3(buffer, fileName) {
   const uniqueFileName = `myhome2uFolder/${fileName}-${Date.now()}`;
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
     Key: uniqueFileName,
     Body: buffer,
     ContentType: "image/jpeg",
@@ -91,6 +91,7 @@ export async function PUT(req) {
       { status: 201 }
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

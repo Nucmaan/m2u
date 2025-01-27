@@ -8,27 +8,19 @@ export async function GET(req) {
     try {
         await ConnectDb();
 
-        
-
         // Fetch bills and populate user, owner, and property fields
         const bills = await Bill.find({})
-            .populate("user", "username email") // Populate specific fields from the User model
-            .populate("owner", "username email") // Populate specific fields from the User model
-            .populate("property", "title address"); // Populate specific fields from the Listings model
-
-        if (bills.length === 0) {
-            return NextResponse.json(
-                { message: "No bills found" },
-                { status: 400 }
-            );
-        }
+            .populate("user", "username email") 
+            .populate("owner", "username email") 
+            .populate("property", "title address"); 
 
         return NextResponse.json(
-            { message: "Bills fetched successfully", data: bills }
+            { message: bills.length > 0 ? "Bills fetched successfully" : "No bills found", data: bills }, 
+            { status: 200 }
         );
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json("Internal Server Error", { status: 500 });
+        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }

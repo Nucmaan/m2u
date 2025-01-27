@@ -1,16 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import userAuth from "@/myStore/UserAuth";
-import toast from "react-hot-toast";
+ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
-
-const EditListing = () => {
+export default function EditListingPage() {
   const { id } = useParams();
   const router = useRouter();
-  const user = userAuth((state) => state.user);
-
-  // State for each field
+ 
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
@@ -104,7 +100,7 @@ const EditListing = () => {
 
       if (response.status === 200) {
         toast.success(response.data.message);
-        router.push("/admin");
+        router.push("/admin/listings");
       } else {
         toast.error("Failed to update property. Please try again.");
       }
@@ -276,6 +272,4 @@ const EditListing = () => {
       </button>
     </form>
   );
-};
-
-export default EditListing;
+}

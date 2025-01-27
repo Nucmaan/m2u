@@ -7,24 +7,44 @@ import React, { useEffect, useState } from "react";
 
 const AllInvoicesPage = () => {
   const [ownerPayments, setOwnerPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const user = userAuth((state) => state.user);
 
   useEffect(() => {
     const fetchOwnerPayments = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         const response = await axios.get("/api/bill");
+
+        // Ensure response has data before filtering
+        if (!response.data || !Array.isArray(response.data.data)) {
+          throw new Error("Invalid API response format.");
+        }
+
+        // Filter invoices safely
         const filteredPayments = response.data.data.filter(
           (payment) =>
-            payment.user._id === user._id && payment.status === "Paid"
+            payment.user && 
+            payment.user._id === user?._id && 
+            payment.status === "Paid"
         );
+
         setOwnerPayments(filteredPayments);
       } catch (error) {
         console.error("Error fetching user payments:", error);
-      } 
+        setError("Failed to fetch invoices. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (user && user._id) {
       fetchOwnerPayments();
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
@@ -33,10 +53,14 @@ const AllInvoicesPage = () => {
       <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">All Invoices</h1>
 
       <div className="space-y-6">
-        {ownerPayments.length === 0 ? (
-          <div className="text-center">
-            <p className="text-[#7A7A7A] text-lg">No invoices found.</p>
-          </div>
+        {loading ? (
+          <p className="text-center text-[#7A7A7A] text-lg">Fetching invoices...</p>
+        ) : error ? (
+          <p className="text-center text-red-500 text-lg">{error}</p>
+        ) : ownerPayments.length === 0 ? (
+          <p className="text-center text-[#7A7A7A] text-lg font-semibold">
+            You don't have any invoices.
+          </p>
         ) : (
           ownerPayments.map((invoice) => (
             <div
@@ -46,10 +70,10 @@ const AllInvoicesPage = () => {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold text-[#1A3B5D]">
-                    {invoice.property.title}
+                    {invoice.property?.title || "Unknown Property"}
                   </h3>
                   <p className="text-sm text-[#7A7A7A]">
-                    <strong>Address:</strong> {invoice.property.address}
+                    <strong>Address:</strong> {invoice.property?.address || "N/A"}
                   </p>
                   <p className="text-sm text-[#7A7A7A]">
                     <strong>Amount:</strong>{" "}
@@ -57,7 +81,7 @@ const AllInvoicesPage = () => {
                   </p>
                   <p className="text-sm text-[#7A7A7A]">
                     <strong>Payment Date:</strong>{" "}
-                    {new Date(invoice.paymentDate).toDateString()}
+                    {invoice.paymentDate ? new Date(invoice.paymentDate).toDateString() : "N/A"}
                   </p>
                   <p className="text-sm text-[#7A7A7A]">
                     <strong>Invoice Number:</strong> {invoice._id}

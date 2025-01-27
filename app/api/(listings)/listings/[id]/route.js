@@ -38,7 +38,9 @@ export async function GET(req, { params }) {
       );
     }
 
-    const listing = await Listings.findById(id);
+
+    const listing = await Listings.findById(id).populate("owner");
+    
     if (!listing) {
       return NextResponse.json(
         { message: "Listing not found" },

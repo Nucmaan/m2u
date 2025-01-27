@@ -151,7 +151,9 @@ const ViewProperty = () => {
               href="#"
               className="text-[#4C8492] font-medium hover:text-[#F47C48] underline"
             >
-              0616500191
+
+            {list.owner ? list.owner.mobile || "N/A" : "N/A"}
+
             </a>
           </div>
 

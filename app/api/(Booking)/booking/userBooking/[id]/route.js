@@ -17,15 +17,8 @@ export async function GET(req, { params }) {
     await ConnectDb();
 
     const bookings = await Booking.find({ user: id })
-      .populate("owner", "name email") // Populate owner details (optional)
-      .populate("listing", "title address price"); // Populate listing details (optional)
-
-    if (!bookings.length) {
-      return NextResponse.json(
-        { message: "No bookings found for this user" },
-        { status: 404 }
-      );
-    }
+      .populate("owner", "name email") 
+      .populate("listing", "title address price");
 
     return NextResponse.json({ bookings }, { status: 200 });
   } catch (error) {

@@ -1,14 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import userAuth from "@/myStore/UserAuth";
-import toast from "react-hot-toast";
+ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 export default function EditListingPage() {
   const { id } = useParams();
   const router = useRouter();
-  const user = userAuth((state) => state.user);
-
+ 
   const [title, setTitle] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
