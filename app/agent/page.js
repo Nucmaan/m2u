@@ -15,49 +15,75 @@ async function fetchListings() {
 }
 
 const AgentDashboard = () => {
-
-  const [listings, setListings] = useState([]);
   const user = userAuth((state) => state.user);
-
+  const [listings, setListings] = useState([]);
   const [ownerContracts, setOwnerContracts] = useState([]);
 
-   const [ownerBookings, setOwnerBookings] = useState([]);
+  const [ownerBookings, setOwnerBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   
-  
-    const fetchOwnerBookings = async () => {
-      try {
-        const response = await axios.get(`/api/booking/ownerBooking/${user._id}`);
-        const pendingBookings = response.data.bookings.filter(
-          (booking) => booking.status === "pending"
-        )
-        setOwnerBookings(pendingBookings);
-      } catch (error) {
-        console.error("Error fetching owner bookings:", error);
+  const fetchOwnerBookings = async () => {
+    try {
+      if (!user?._id) {
+        console.log("User ID missing!");
+        return;
       }
-    };
   
-    const getOwnerContracts = async () => {
-      try {
-        const response = await axios.get(
-          `/api/contracts/ownercontract/${user._id}`
-        );
+      const response = await axios.get(`/api/booking/ownerBooking/${user._id}`);
+  
+      if (response.status === 200) {
+        setOwnerBookings(response.data.bookings);
+        setError(""); // Clear errors
+      } else {
+        setOwnerBookings([]);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to fetch bookings.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const getOwnerContracts = async () => {
+    try {
+      const response = await axios.get(
+        `/api/contracts/ownercontract/${user._id}`
+      );
+
+      if (response.status === 404) {
+        setOwnerContracts([]);
+      } else {
         setOwnerContracts(response.data.contracts);
-      } catch (error) {
-        console.error(error);
       }
-    };
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to fetch contracts.");
+    }
+  };
 
   useEffect(() => {
     async function loadListings() {
       const data = await fetchListings();
-      const filteredListings = data.filter((listing) => listing.owner === user._id && listing.status === "Available");
+      const filteredListings = data.filter(
+        (listing) => listing.owner?._id === user._id
+      );
       setListings(filteredListings);
     }
     loadListings();
-    getOwnerContracts();
-    fetchOwnerBookings();
+    if (user && user._id) {
+      getOwnerContracts();
+      fetchOwnerBookings();
+    }
   }, [user._id]);
 
+  const availableProperties = listings.filter(
+    (listing) => listing.status === "Available"
+  );
+
+  const pendingBooking = ownerBookings.filter(
+    (booking) => booking.status === "Pending"
+  )
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
@@ -71,20 +97,28 @@ const AgentDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {/* Active Properties Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
-          <h2 className="text-lg font-bold text-[#1A3B5D]">Active Properties</h2>
-          <p className="text-2xl font-bold text-[#4C8492] mt-2">{listings.length || 0}</p>
+          <h2 className="text-lg font-bold text-[#1A3B5D]">
+            Active Properties
+          </h2>
+          <p className="text-2xl font-bold text-[#4C8492] mt-2">
+            {availableProperties.length || 0}
+          </p>
         </div>
 
         {/* Pending Bookings Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
           <h2 className="text-lg font-bold text-[#1A3B5D]">Pending Bookings</h2>
-          <p className="text-2xl font-bold text-[#F47C48] mt-2">{ownerBookings.length || 0}</p>
+          <p className="text-2xl font-bold text-[#F47C48] mt-2">
+            {pendingBooking.length || 0}
+          </p>
         </div>
 
         {/* Contracts Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
           <h2 className="text-lg font-bold text-[#1A3B5D]">Contracts</h2>
-          <p className="text-2xl font-bold text-[#27AE60] mt-2">{ownerContracts.length || 0}</p>
+          <p className="text-2xl font-bold text-[#27AE60] mt-2">
+            {ownerContracts.length || 0}
+          </p>
         </div>
       </div>
 
@@ -94,7 +128,7 @@ const AgentDashboard = () => {
           <Link href="/agent/listings/addproperty">Add New Property</Link>
         </button>
         <button className="w-full sm:w-auto px-6 py-2 bg-[#F47C48] text-white font-bold rounded hover:bg-[#e86d3f] transition duration-300">
-        <Link href="/agent/booking">View Bookings</Link>
+          <Link href="/agent/booking">View Bookings</Link>
         </button>
         <button className="w-full sm:w-auto px-6 py-2 bg-[#4C8492] text-white font-bold rounded hover:bg-[#3b6d78] transition duration-300">
           <Link href="/agent/contract">Manage Contracts</Link>

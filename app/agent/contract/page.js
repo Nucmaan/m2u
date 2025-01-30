@@ -10,14 +10,22 @@ import toast from "react-hot-toast";
 export default function ContractListPage() {
   const user = userAuth((state) => state.user);
   const [ownerContracts, setOwnerContracts] = useState([]);
+const [error, setError] = useState("");
 
   const getOwnerContracts = async () => {
     try {
       const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
-      setOwnerContracts(response.data.contracts);
+
+      if(response.status === 404) {
+        setOwnerContracts([]);
+
+      }else{
+        setOwnerContracts(response.data.contracts);
+
+      }
+
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to fetch contracts. Please try again.");
+      setError(error.response?.data?.message || "Failed to fetch contracts.");
     }
   };
 

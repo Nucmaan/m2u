@@ -1,4 +1,5 @@
 import ConnectDb from "@/Database/dbConfig";
+import User from "@/Models/authModel";
 import Listings from "@/Models/listingsModel";
 import { NextResponse } from "next/server";
 

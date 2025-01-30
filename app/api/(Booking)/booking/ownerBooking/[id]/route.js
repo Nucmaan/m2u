@@ -23,7 +23,6 @@ export async function GET(req, { params }) {
       .populate("listing", "title city address price"); // Populate listing details (optional)
 
 
-
     if (!bookings.length) {
       return NextResponse.json(
         { message: "No bookings found for this owner" },
@@ -32,6 +31,7 @@ export async function GET(req, { params }) {
     }
 
     return NextResponse.json({ bookings }, { status: 200 });
+
   } catch (error) {
     return NextResponse.json(
       { message: error.message },

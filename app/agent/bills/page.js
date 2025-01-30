@@ -10,7 +10,7 @@ export default function BillPage() {
   const [ownerContracts, setOwnerContracts] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = userAuth((state) => state.user);
-
+ const [error, setError] = useState("");
   const getOwnerContracts = async () => {
     try {
       const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
@@ -27,7 +27,7 @@ export default function BillPage() {
         }));
       setOwnerContracts(activeContracts);
     } catch (error) {
-      console.error(error);
+      setError("Failed to fetch contracts. Please try again." | error.message);
     } finally {
       setLoading(false);
     }

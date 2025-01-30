@@ -9,17 +9,18 @@ export default function Page() {
   const [ownerPayments, setOwnerPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const owner = userAuth((state) => state.user);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchOwnerPayments = async () => {
       try {
         const response = await axios.get("/api/bill");
         const filteredPayments = response.data.data.filter(
-          (payment) => payment.owner._id === owner._id
+          (payment) => payment.owner?._id === owner._id
         );
         setOwnerPayments(filteredPayments);
       } catch (error) {
-        console.error("Error fetching owner payments:", error);
+        setError("Error fetching owner payments." || error.message);
       } finally {
         setLoading(false);
       }

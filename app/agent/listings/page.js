@@ -15,6 +15,7 @@ async function fetchListings() {
   }
 }
 
+
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
   const user = userAuth((state) => state.user);
@@ -22,7 +23,7 @@ export default function PropertyList() {
   useEffect(() => {
     async function loadListings() {
       const data = await fetchListings();
-      const filteredListings = data.filter((listing) => listing.owner === user._id);
+      const filteredListings = data.filter((listing) => listing.owner?._id === user._id);
       setListings(filteredListings);
     }
     loadListings();
