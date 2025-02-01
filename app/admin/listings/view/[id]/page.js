@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 export default function ViewDetailsPage() {
   const { id } = useParams();
@@ -56,9 +57,10 @@ export default function ViewDetailsPage() {
               className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
             />
           ) : (
-            <img
+            <Image
               src="https://via.placeholder.com/600"
               alt="Placeholder"
+               width={500} height={300}
               className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
             />
           )}

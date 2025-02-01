@@ -1,6 +1,7 @@
 "use client";
 
 import userAuth from "@/myStore/UserAuth";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -18,7 +19,7 @@ export default function AgentProfilePage() {
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-center space-y-6 sm:space-y-0 sm:space-x-3">
           {/* Profile Image */}
-          <img
+          <Image
           src={avatarSrc}
           alt="Agent Avatar"
           width={150}

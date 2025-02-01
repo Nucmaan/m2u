@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
  import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 export default function EditListingPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -246,9 +247,10 @@ export default function EditListingPage() {
         <div className="mt-4">
           {imagePreviews.map((preview, index) => (
             <div key={index} className="relative inline-block mr-4">
-              <img
+              <Image
                 src={preview}
                 alt={`Preview ${index}`}
+                width={500} height={300}
                 className="w-24 h-24 object-cover rounded-md"
               />
               <button

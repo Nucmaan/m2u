@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ViewDetailsPage() {
@@ -33,9 +34,10 @@ export default function ViewDetailsPage() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Property Image */}
         <div className="lg:w-1/2">
-          <img
+          <Image
             src={property.image}
             alt={property.title}
+            width={500} height={300}
             className="w-full h-auto rounded-lg shadow"
           />
         </div>

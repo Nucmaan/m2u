@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const ViewProperty = () => {
   const { id } = useParams();
@@ -97,9 +98,10 @@ const ViewProperty = () => {
               className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
             />
           ) : (
-            <img
+            <Image
               src="https://via.placeholder.com/600"
               alt="Placeholder"
+              width={500} height={300}
               className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
             />
           )}

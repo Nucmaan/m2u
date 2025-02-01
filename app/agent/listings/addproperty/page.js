@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const AddListing = () => {
   const user = userAuth((state) => state.user);
@@ -275,9 +276,10 @@ const AddListing = () => {
           <div className="flex flex-wrap gap-4 mt-4">
             {imagePreviews.map((preview, index) => (
               <div key={index} className="relative">
-                <img
+                <Image
                   src={preview}
                   alt={`preview-${index}`}
+                   width={500} height={300}
                   className="w-24 h-24 object-cover rounded-md shadow-md"
                 />
                 <button

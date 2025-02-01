@@ -35,7 +35,7 @@ function UserBookingPage() {
         prevBookings.filter((booking) => booking._id !== id)
       );
     } catch (error) {
-      console.error("Error cancelling booking:", error);
+     // console.error("Error cancelling booking:", error);
       toast.error(error.response?.data?.message || "Failed to cancel booking");
     }
   };

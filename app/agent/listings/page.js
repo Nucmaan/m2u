@@ -2,6 +2,7 @@
 
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -54,9 +55,10 @@ export default function PropertyList() {
                 key={listing._id}
                 className="bg-white rounded-lg shadow-lg border border-[#E0E0E0] overflow-hidden hover:shadow-xl transition duration-300"
               >
-                <img
+                <Image
                   src={listing.images[0]}
                   alt={listing.title}
+                   width={500} height={300}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6">

@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const UserSettings = () => {
   const user1 = userAuth((state) => state.user);
@@ -80,9 +81,10 @@ const UserSettings = () => {
           <h2 className="text-2xl font-semibold text-[#1A3B5D] mb-6">Profile Information</h2>
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6">
             <div className="relative">
-              <img
+              <Image
                 src={avatarPreview}
                 alt="User Avatar"
+                width={500} height={300}
                 className="w-24 h-24 rounded-full object-cover border-2 border-[#E0E0E0]"
               />
               <input
