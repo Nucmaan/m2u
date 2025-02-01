@@ -23,7 +23,6 @@ export default function PropertyList() {
   useEffect(() => {
     async function loadListings() {
       const data = await fetchListings();
-      //const filteredListings = data.filter((listing) => listing.owner === user._id);
       setListings(data);
     }
     loadListings();
@@ -43,7 +42,6 @@ export default function PropertyList() {
       <section>
         <h2 className="text-2xl font-bold text-[#1A3B5D] mb-4 flex items-center justify-between">
           Available Properties
-          
         </h2>
         {availableProperties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -52,9 +50,11 @@ export default function PropertyList() {
                 key={listing._id}
                 className="bg-white rounded-lg shadow-lg border border-[#E0E0E0] overflow-hidden hover:shadow-xl transition duration-300"
               >
-                <img
+                <Image
                   src={listing.images[0]}
                   alt={listing.title}
+                  width={500}
+                  height={300}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6">
@@ -104,7 +104,8 @@ export default function PropertyList() {
                 <Image
                   src={listing.images[0]}
                   alt={listing.title}
-                   width={500} height={300}
+                  width={500}
+                  height={300}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6">
@@ -144,9 +145,7 @@ export default function PropertyList() {
             ))}
           </div>
         ) : (
-          <p className="text-[#7A7A7A]">
-            No rented or sold properties to display.
-          </p>
+          <p className="text-[#7A7A7A]">No rented or sold properties to display.</p>
         )}
       </section>
     </div>

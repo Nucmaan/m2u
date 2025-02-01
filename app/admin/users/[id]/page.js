@@ -2,14 +2,6 @@
 import React, { useState, useEffect } from "react";
 
 export default function EditUser({ userId = 1 }) {
-  // Simulated fetched user data (replace with an actual API call)
-  const fetchedUser = {
-    id: userId,
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Admin",
-  };
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,9 +10,16 @@ export default function EditUser({ userId = 1 }) {
 
   // Simulate fetching user data on component mount
   useEffect(() => {
-    // Fetch user by ID from backend here, then set the form data
+    // Simulate fetching user data from an API
+    const fetchedUser = {
+      id: userId,
+      name: "John Doe",
+      email: "john.doe@example.com",
+      role: "Admin",
+    };
+
     setFormData(fetchedUser);
-  }, [userId]);
+  }, [userId]); // Only depend on userId
 
   const handleChange = (e) => {
     const { name, value } = e.target;

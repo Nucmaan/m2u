@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
  import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
@@ -23,13 +23,11 @@ export default function EditListingPage() {
   const [currentImages, setCurrentImages] = useState([]); // Current images from the API
   const [loading, setLoading] = useState(false);
 
-  const fetchListing = async () => {
+  const fetchListing = useCallback(async () => {
     try {
       const response = await axios.get(`/api/listings/${id}`);
       const data = response.data.data;
-      //console.log("Fetched data:", data);
   
-      // Set the state with fetched data
       setTitle(data.title || "");
       setCity(data.city || "");
       setAddress(data.address || "");
@@ -42,16 +40,15 @@ export default function EditListingPage() {
       setDescription(data.description || "");
       setCurrentImages(data.images || []);
     } catch (error) {
-      //console.error("Error fetching listing:", error);
-      toast.error("Failed to fetch listing details." + error.message);
+      toast.error("Failed to fetch listing details: " + error.message);
     }
-  };
+  }, [id]);
   
   useEffect(() => {
     if (id) {
       fetchListing();
     }
-  }, [id]); // ✅ Only runs when 'id' changes
+  }, [id, fetchListing]); 
   
 
   const handleImageChange = (e) => {
