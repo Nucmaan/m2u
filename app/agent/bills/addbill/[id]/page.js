@@ -3,7 +3,7 @@
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 
 export default function AddBillPage() {
@@ -17,7 +17,7 @@ export default function AddBillPage() {
   const { id } = useParams();
   const router = useRouter();
 
-  const fetchContract = async () => {
+  const fetchContract = useCallback(async () => {
     try {
       const response = await axios.get(`/api/contracts/${id}`);
       setUser(response.data.existingContract.user);
@@ -26,11 +26,11 @@ export default function AddBillPage() {
       console.error("Error fetching contract:", error);
       toast.error("Failed to fetch contract details. Please try again.");
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchContract();
-  }, []);
+  }, [fetchContract]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,13 +67,10 @@ export default function AddBillPage() {
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">
-      {/* Heading */}
       <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Add Bill</h1>
 
-      {/* Form */}
       <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-lg border border-[#E0E0E0]">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Amount */}
           <div>
             <label
               htmlFor="amount"
@@ -92,7 +89,6 @@ export default function AddBillPage() {
             />
           </div>
 
-          {/* Due Date */}
           <div>
             <label
               htmlFor="dueDate"
@@ -110,7 +106,6 @@ export default function AddBillPage() {
             />
           </div>
 
-          {/* Comment */}
           <div>
             <label
               htmlFor="comment"
@@ -128,7 +123,6 @@ export default function AddBillPage() {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#F47C48]"

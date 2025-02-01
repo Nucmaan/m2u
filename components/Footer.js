@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image"; // Import Image component
 
 const Footer = () => {
   return (
@@ -9,11 +10,16 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
       
         <div className="flex items-center space-x-3">
-          <img src="/logo.png" alt="MyHome2U Logo" className="h-10 w-20" />
+          <Image
+            src="/logo.png"
+            alt="MyHome2U Logo"
+            width={80} // Adjust width
+            height={40} // Adjust height
+            className="h-10 w-20"
+          />
           <span className="text-2xl font-semibold">MyHome2U</span>
         </div>
 
-        
         <div className="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
           <Link href="/listings" className="hover:text-[#F47C48] transition duration-300">
             Property List
@@ -26,7 +32,6 @@ const Footer = () => {
           </Link>
         </div>
 
-      
         <div className="text-center md:text-right">
           <span className="text-sm">
             &copy; 2024 MyHome2U. All rights reserved.

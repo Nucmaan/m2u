@@ -12,7 +12,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const loginUser = userAuth((state) => state.loginUser); 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -28,16 +28,15 @@ const Login = () => {
 
       loginUser(response.data.user);
 
-      if(response.data.user.role==="User") {
+      if (response.data.user.role === "User") {
         router.replace("/user");
       }
 
-      if(response.data.user.role==="Admin") {
+      if (response.data.user.role === "Admin") {
         router.replace("/admin");
       }
 
-
-      if(response.data.user.role==="Agent") {
+      if (response.data.user.role === "Agent") {
         router.replace("/agent");
       }
 
@@ -51,7 +50,7 @@ const Login = () => {
       toast.error(message);
       console.error("Login Error:", error);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
@@ -112,7 +111,7 @@ const Login = () => {
             {loading ? "Processing..." : "Login"}
           </button>
           <p className="text-sm text-center text-gray-600 mt-4">
-            Don't have an account?{" "}
+            Don&apos;t have an account? {" "}
             <Link
               href="/register"
               className="text-[#4C8492] font-medium hover:text-[#F47C48]"

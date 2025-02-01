@@ -3,7 +3,7 @@
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 
 export default function AddContractPage() {
@@ -18,11 +18,9 @@ export default function AddContractPage() {
   const [termsAndConditions, setTermsAndConditions] = useState("");
   const [PropertyId, setPropertyId] = useState("");
   const router = useRouter();
+  const [houseStatus, setHouseStatus] = useState("Available");
 
-    const [houseStatus, setHouseStatus] = useState("Available");
-  
-
-  const fetchConfirmedBookings = async () => {
+  const fetchConfirmedBookings = useCallback(async () => {
     try {
       const response = await axios.get(`/api/booking/ownerBooking/${ownerId._id}`);
       const completedBookings = response.data.bookings.filter(
@@ -32,13 +30,13 @@ export default function AddContractPage() {
     } catch (error) {
       console.error("Error fetching confirmed bookings:", error);
     }
-  };
+  }, [ownerId._id]);
 
   useEffect(() => {
     if (ownerId?._id) {
       fetchConfirmedBookings();
     }
-  }, [ownerId?._id]);
+  }, [ownerId._id, fetchConfirmedBookings]);
 
   const handleBookingSelection = (selectedBookingId) => {
     const selectedBooking = confirmedBookings.find(
@@ -59,31 +57,29 @@ export default function AddContractPage() {
     }
 
     const contractData = {
-      bookingId :bookingId,
-      propertyId : PropertyId,
-      userId : userId,
+      bookingId,
+      propertyId: PropertyId,
+      userId,
       ownerId: ownerId._id,
-      startDate: startDate,
-      endDate : endDate,
-      monthlyRent : monthlyRent,
-      deposit : deposit,
+      startDate,
+      endDate,
+      monthlyRent,
+      deposit,
       termsAndConditions,
-      houseStatus
+      houseStatus,
     };
 
     try {
-
-      const response = await axios.post("/api/contracts/addcontract",contractData);
+      const response = await axios.post("/api/contracts/addcontract", contractData);
       if (response.status === 201) {
         toast.success(response.data.message);
         router.push("/agent/contract");
       } else {
         toast.error(response.data.message);
       }
-      
     } catch (error) {
       console.error("Error adding contract:", error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -96,10 +92,7 @@ export default function AddContractPage() {
       >
         {/* Select Booking */}
         <div>
-          <label
-            htmlFor="booking"
-            className="block text-sm font-medium text-[#333333] mb-2"
-          >
+          <label htmlFor="booking" className="block text-sm font-medium text-[#333333] mb-2">
             Select Booking (Confirmed)
           </label>
           <select
@@ -175,20 +168,16 @@ export default function AddContractPage() {
           />
         </div>
 
-          {/* Status */}
-          <div className="mb-4">
-          <label
-            htmlFor="status"
-            className="block text-sm font-semibold text-[#333333] mb-1"
-          >
-           house Status
+        {/* Status */}
+        <div>
+          <label htmlFor="status" className="block text-sm font-semibold text-[#333333] mb-1">
+            House Status
           </label>
           <select
             id="status"
-            name="status"
             value={houseStatus}
             onChange={(e) => setHouseStatus(e.target.value)}
-            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492] text-[#333333]"
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
           >
             <option value="Available">Available</option>
             <option value="Sold">Sold</option>
@@ -196,19 +185,19 @@ export default function AddContractPage() {
           </select>
         </div>
 
-         {/* termsAndConditions */}
-         <div>
-         <label htmlFor="deposit" className="block text-sm font-medium text-[#333333] mb-2">
-         Terms And Conditions
-         </label>
-         <input
-           type="text"
-           id="termsAndConditions"
-           value={termsAndConditions}
-           onChange={(e) => setTermsAndConditions(e.target.value)}
-           className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
-         />
-       </div>
+        {/* Terms and Conditions */}
+        <div>
+          <label htmlFor="termsAndConditions" className="block text-sm font-medium text-[#333333] mb-2">
+            Terms And Conditions
+          </label>
+          <input
+            type="text"
+            id="termsAndConditions"
+            value={termsAndConditions}
+            onChange={(e) => setTermsAndConditions(e.target.value)}
+            className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4C8492]"
+          />
+        </div>
 
         {/* Submit Button */}
         <button

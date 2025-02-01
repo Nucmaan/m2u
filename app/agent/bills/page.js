@@ -3,15 +3,18 @@
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FiDollarSign, FiCalendar, FiUser, FiHome } from "react-icons/fi";
 
 export default function BillPage() {
   const [ownerContracts, setOwnerContracts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const user = userAuth((state) => state.user);
- const [error, setError] = useState("");
-  const getOwnerContracts = async () => {
+
+  const getOwnerContracts = useCallback(async () => {
+    if (!user || !user._id) return;
+
     try {
       const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
       const activeContracts = response.data.contracts
@@ -27,17 +30,15 @@ export default function BillPage() {
         }));
       setOwnerContracts(activeContracts);
     } catch (error) {
-      setError("Failed to fetch contracts. Please try again." | error.message);
+      setError(`Failed to fetch contracts. Please try again. ${error.message}`);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
-    if (user && user._id) {
-      getOwnerContracts();
-    }
-  }, [user._id]);
+    getOwnerContracts();
+  }, [getOwnerContracts]);
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] flex flex-col items-center py-10 px-4">

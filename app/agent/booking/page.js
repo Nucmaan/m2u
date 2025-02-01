@@ -2,40 +2,39 @@
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 export default function BookingPage() {
   const user = userAuth((state) => state.user);
-const [ownerBookings, setOwnerBookings] = useState([]);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState("");
+  const [ownerBookings, setOwnerBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-const fetchOwnerBookings = async () => {
-  try {
-    if (!user?._id) {
-      console.log("User ID missing!");
-      return;
+  const fetchOwnerBookings = useCallback(async () => {
+    try {
+      if (!user?._id) {
+        console.log("User ID missing!");
+        return;
+      }
+
+      const response = await axios.get(`/api/booking/ownerBooking/${user._id}`);
+
+      if (response.status === 200) {
+        setOwnerBookings(response.data.bookings);
+        setError(""); // Clear errors
+      } else {
+        setOwnerBookings([]);
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to fetch bookings.");
+    } finally {
+      setLoading(false);
     }
+  }, [user?._id]);
 
-    const response = await axios.get(`/api/booking/ownerBooking/${user._id}`);
-
-    if (response.status === 200) {
-      setOwnerBookings(response.data.bookings);
-      setError(""); // Clear errors
-    } else {
-      setOwnerBookings([]);
-    }
-  } catch (error) {
-    setError(error.response?.data?.message || "Failed to fetch bookings.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-useEffect(() => {
-  if (user?._id) fetchOwnerBookings();
-}, [user?._id]);
-
+  useEffect(() => {
+    if (user?._id) fetchOwnerBookings();
+  }, [user?._id, fetchOwnerBookings]);
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen">
@@ -60,13 +59,16 @@ useEffect(() => {
                 {booking.listing?.title || "No title available"}
               </h2>
               <p className="text-sm text-[#7A7A7A] mb-2">
-                <span className="font-medium">Address:</span> {booking.listing?.address || "N/A"}
+                <span className="font-medium">Address:</span>{" "}
+                {booking.listing?.address || "N/A"}
               </p>
               <p className="text-sm text-[#7A7A7A] mb-2">
-                <span className="font-medium">City:</span> {booking.listing?.city || "N/A"}
+                <span className="font-medium">City:</span>{" "}
+                {booking.listing?.city || "N/A"}
               </p>
               <p className="text-sm text-[#7A7A7A] mb-2">
-                <span className="font-medium">Price:</span> ${booking.listing?.price || "N/A"}
+                <span className="font-medium">Price:</span> $
+                {booking.listing?.price || "N/A"}
               </p>
               <p className="text-sm text-[#7A7A7A] mb-2">
                 <span className="font-medium">User Email:</span>{" "}

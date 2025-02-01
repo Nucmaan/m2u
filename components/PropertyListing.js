@@ -1,24 +1,21 @@
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 import { FaBed, FaBath, FaMapMarkerAlt, FaMoneyBillWave } from "react-icons/fa";
 
 async function fetchListings() {
- try {
-     const response = await axios.get("http://localhost:3000/api/listings");
- 
-     if (!response.data || !response.data.Listings) {
-       throw new Error("Invalid response from server");
-     }
- 
-     const validListings = response.data.Listings.filter(
-       (listing) => listing.owner !== null
-     );
- 
-     return validListings;
-   } catch (error) {
-     console.error("Error fetching listings:", error);
-     return [];
-   }
+  try {
+    const response = await axios.get("http://localhost:3000/api/listings");
+
+    if (!response.data || !response.data.Listings) {
+      throw new Error("Invalid response from server");
+    }
+
+    return response.data.Listings.filter((listing) => listing.owner !== null);
+  } catch (error) {
+    console.error("Error fetching listings:", error);
+    return [];
+  }
 }
 
 export default async function PropertyListing() {
@@ -28,7 +25,6 @@ export default async function PropertyListing() {
   return (
     <div className="pt-10 pb-3 bg-[#F7F7F9]">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Heading */}
         <h2 className="text-3xl font-bold text-center text-[#1A3B5D] mb-4">
           Explore Our Properties
         </h2>
@@ -47,11 +43,16 @@ export default async function PropertyListing() {
                 key={list._id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col justify-between border border-[#E0E0E0]"
               >
-                <img
-                  src={list.images[0]}
-                  alt={list.title}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative w-full h-48">
+                  <Image
+                    src={list.images[0]}
+                    alt={list.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-t-lg"
+                    priority
+                  />
+                </div>
 
                 <div className="p-6 flex flex-col justify-between flex-1">
                   <div>

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 
 export default function EditContractPage() {
@@ -14,7 +14,7 @@ export default function EditContractPage() {
   const { id } = useParams();
   const router = useRouter();
 
-  const fetchContract = async () => {
+  const fetchContract = useCallback(async () => {
     try {
       const response = await axios.get(`/api/contracts/${id}`);
       const contract = response.data.existingContract;
@@ -27,11 +27,11 @@ export default function EditContractPage() {
       console.error("Error fetching contract:", error);
       toast.error("Failed to fetch contract details. Please try again.");
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchContract();
-  }, []);
+  }, [fetchContract]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

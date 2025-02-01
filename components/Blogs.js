@@ -1,4 +1,5 @@
 import { FaArrowRight } from "react-icons/fa";
+import Image from "next/image"; // Import Image component
 
 export default function BlogSection() {
   // Sample blog posts data
@@ -48,9 +49,11 @@ export default function BlogSection() {
               className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col border border-[#E0E0E0] hover:shadow-xl transition duration-300"
             >
               {/* Blog Image */}
-              <img
+              <Image
                 src={post.image}
                 alt={post.title}
+                width={500} // Set appropriate width
+                height={300} // Set appropriate height
                 className="w-full h-48 object-cover"
               />
 
