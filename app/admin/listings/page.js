@@ -29,12 +29,14 @@ export default function PropertyList() {
   }, []);
 
   useEffect(() => {
-    async function loadListings() {
-      const data = await fetchListings();
-      setListings(data);
+    if (hasHydrated) {
+      async function loadListings() {
+        const data = await fetchListings();
+        setListings(data);
+      }
+      loadListings();
     }
-    loadListings();
-  }, [user._id]);
+  }, [hasHydrated, user._id]);
 
   const availableProperties = listings.filter(
     (listing) => listing.status === "Available"
@@ -45,7 +47,7 @@ export default function PropertyList() {
   );
 
   // Render nothing or a loading spinner until hydration is complete
-  if (!hasHydrated) return null;
+  if (!hasHydrated) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
