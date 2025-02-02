@@ -16,7 +16,6 @@ async function fetchListings() {
   }
 }
 
-
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
   const user = userAuth((state) => state.user);
@@ -58,17 +57,13 @@ export default function PropertyList() {
                 <Image
                   src={listing.images[0]}
                   alt={listing.title}
-                   width={500} height={300}
+                  width={500} height={300}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6">
-                  <h2 className="text-xl font-bold text-[#1A3B5D]">
-                    {listing.title}
-                  </h2>
+                  <h2 className="text-xl font-bold text-[#1A3B5D]">{listing.title}</h2>
                   <p className="text-sm text-[#7A7A7A] mt-1">{listing.address}</p>
-                  <p className="text-lg font-bold text-[#4C8492] mt-2">
-                    ${listing.price}
-                  </p>
+                  <p className="text-lg font-bold text-[#4C8492] mt-2">${listing.price}</p>
                   <div className="flex items-center mt-2 text-sm text-[#7A7A7A]">
                     <span>{listing.bedrooms} Beds</span>
                     <span className="mx-2">·</span>
@@ -79,9 +74,7 @@ export default function PropertyList() {
                       <Link href={`/agent/listings/${listing._id}`}>Edit</Link>
                     </button>
                     <button className="flex-1 py-2 bg-[#F47C48] text-white font-bold rounded-lg hover:bg-[#e86d3f] transition duration-200">
-                      <Link href={`/agent/listings/view/${listing._id}`}>
-                        View Details
-                      </Link>
+                      <Link href={`/agent/listings/view/${listing._id}`}>View Details</Link>
                     </button>
                   </div>
                 </div>
@@ -95,9 +88,7 @@ export default function PropertyList() {
 
       {/* Rented/Sold Properties Section */}
       <section className="mt-12">
-        <h2 className="text-2xl font-bold text-[#1A3B5D] mb-4">
-          Rented/Sold Properties
-        </h2>
+        <h2 className="text-2xl font-bold text-[#1A3B5D] mb-4">Rented/Sold Properties</h2>
         {rentedOrSoldProperties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {rentedOrSoldProperties.map((listing) => (
@@ -105,26 +96,17 @@ export default function PropertyList() {
                 key={listing._id}
                 className="bg-white rounded-lg shadow-lg border border-[#E0E0E0] overflow-hidden hover:shadow-xl transition duration-300"
               >
-                <img
+                <Image
                   src={listing.images[0]}
                   alt={listing.title}
+                  width={500} height={300}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6">
-                  <h2 className="text-xl font-bold text-[#1A3B5D]">
-                    {listing.title}
-                  </h2>
+                  <h2 className="text-xl font-bold text-[#1A3B5D]">{listing.title}</h2>
                   <p className="text-sm text-[#7A7A7A] mt-1">{listing.address}</p>
-                  <p className="text-lg font-bold text-[#4C8492] mt-2">
-                    ${listing.price}
-                  </p>
-                  <p
-                    className={`mt-1 text-sm font-bold ${
-                      listing.houseType === "Rented"
-                        ? "text-[#F47C48]"
-                        : "text-[#4C8492]"
-                    }`}
-                  >
+                  <p className="text-lg font-bold text-[#4C8492] mt-2">${listing.price}</p>
+                  <p className={`mt-1 text-sm font-bold ${listing.houseType === "Rented" ? "text-[#F47C48]" : "text-[#4C8492]"}`}>
                     {listing.houseType}
                   </p>
                   <div className="flex items-center mt-2 text-sm text-[#7A7A7A]">
@@ -137,9 +119,7 @@ export default function PropertyList() {
                       <Link href={`/agent/listings/${listing._id}`}>Edit</Link>
                     </button>
                     <button className="flex-1 py-2 bg-[#F47C48] text-white font-bold rounded-lg hover:bg-[#e86d3f] transition duration-200">
-                      <Link href={`/agent/listings/view/${listing._id}`}>
-                        View Details
-                      </Link>
+                      <Link href={`/agent/listings/view/${listing._id}`}>View Details</Link>
                     </button>
                   </div>
                 </div>
@@ -147,9 +127,7 @@ export default function PropertyList() {
             ))}
           </div>
         ) : (
-          <p className="text-[#7A7A7A]">
-            No rented or sold properties to display.
-          </p>
+          <p className="text-[#7A7A7A]">No rented or sold properties to display.</p>
         )}
       </section>
     </div>

@@ -2,14 +2,15 @@
 
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 function ContractPage() {
   const [userContracts, setUserContracts] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = userAuth((state) => state.user);
 
-  const getOwnerContracts = async () => {
+  const getOwnerContracts = useCallback(async () => {
+    if (!user || !user._id) return;
     try {
       const response = await axios.get(`/api/contracts/usercontract/${user._id}`);
       setUserContracts(response.data.contracts);
@@ -19,13 +20,11 @@ function ContractPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
-    if (user && user._id) {
-      getOwnerContracts();
-    }
-  }, [user._id]);
+    getOwnerContracts();
+  }, [getOwnerContracts]);
 
   return (
     <div className="p-6 md:p-12 bg-[#F7F7F9] min-h-screen">
@@ -34,7 +33,7 @@ function ContractPage() {
       {loading ? (
         <p className="text-lg text-[#7A7A7A]">Loading...</p>
       ) : userContracts.length === 0 ? (
-        <p className="text-lg text-[#7A7A7A]">You don't have any contracts.</p>
+        <p className="text-lg text-[#7A7A7A]">You don&apos;t have any contracts.</p>
       ) : (
         <div className="space-y-6">
           {userContracts.map((contract) => (

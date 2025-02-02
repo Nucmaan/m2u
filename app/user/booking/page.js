@@ -1,7 +1,7 @@
 "use client";
 
 import userAuth from "@/myStore/UserAuth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -10,7 +10,8 @@ function UserBookingPage() {
   const [loading, setLoading] = useState(true);
   const user = userAuth((state) => state.user);
 
-  const fetchUserBookings = async () => {
+  const fetchUserBookings = useCallback(async () => {
+    if (!user?._id) return;
     try {
       const response = await axios.get(`/api/booking/userBooking/${user._id}`);
       setUserBookings(response.data.bookings);
@@ -19,13 +20,11 @@ function UserBookingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?._id]);
 
   useEffect(() => {
-    if (user?._id) {
-      fetchUserBookings();
-    }
-  }, [user?._id]);
+    fetchUserBookings();
+  }, [fetchUserBookings]);
 
   const handleCancelBooking = async (id) => {
     try {
@@ -35,7 +34,6 @@ function UserBookingPage() {
         prevBookings.filter((booking) => booking._id !== id)
       );
     } catch (error) {
-     // console.error("Error cancelling booking:", error);
       toast.error(error.response?.data?.message || "Failed to cancel booking");
     }
   };
@@ -47,7 +45,9 @@ function UserBookingPage() {
       {loading ? (
         <p className="text-center text-lg text-gray-600">Loading...</p>
       ) : userBookings.length === 0 ? (
-        <p className="text-center text-lg text-gray-600">You don't have any bookings.</p>
+        <p className="text-center text-lg text-gray-600">
+          You don&apos;t have any bookings.
+        </p>
       ) : (
         ["pending", "processing", "completed", "cancelled"].map((status) => {
           const filteredBookings = userBookings.filter(

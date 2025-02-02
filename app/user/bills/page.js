@@ -3,7 +3,7 @@
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 export default function BillPage() {
   const [userBill, setUserBill] = useState([]);
@@ -11,7 +11,9 @@ export default function BillPage() {
   const [error, setError] = useState("");
   const user = userAuth((state) => state.user);
 
-  const getOwnerContracts = async () => {
+  const getOwnerContracts = useCallback(async () => {
+    if (!user || !user._id) return;
+
     try {
       setLoading(true);
       const response = await axios.get(`/api/bill`);
@@ -27,13 +29,11 @@ export default function BillPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
-    if (user && user._id) {
-      getOwnerContracts();
-    }
-  }, [user._id]);
+    getOwnerContracts();
+  }, [getOwnerContracts]);
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] flex flex-col items-center py-12 px-6">

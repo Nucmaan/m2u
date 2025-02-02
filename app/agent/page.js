@@ -2,7 +2,7 @@
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 async function fetchListings() {
   try {
@@ -18,20 +18,19 @@ const AgentDashboard = () => {
   const user = userAuth((state) => state.user);
   const [listings, setListings] = useState([]);
   const [ownerContracts, setOwnerContracts] = useState([]);
-
   const [ownerBookings, setOwnerBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
-  const fetchOwnerBookings = async () => {
+
+  const fetchOwnerBookings = useCallback(async () => {
     try {
       if (!user?._id) {
         console.log("User ID missing!");
         return;
       }
-  
+
       const response = await axios.get(`/api/booking/ownerBooking/${user._id}`);
-  
+
       if (response.status === 200) {
         setOwnerBookings(response.data.bookings);
         setError(""); // Clear errors
@@ -43,14 +42,13 @@ const AgentDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?._id]);
 
-
-  const getOwnerContracts = async () => {
+  const getOwnerContracts = useCallback(async () => {
     try {
-      const response = await axios.get(
-        `/api/contracts/ownercontract/${user._id}`
-      );
+      if (!user?._id) return;
+
+      const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
 
       if (response.status === 404) {
         setOwnerContracts([]);
@@ -60,65 +58,51 @@ const AgentDashboard = () => {
     } catch (error) {
       setError(error.response?.data?.message || "Failed to fetch contracts.");
     }
-  };
+  }, [user?._id]);
 
   useEffect(() => {
     async function loadListings() {
       const data = await fetchListings();
-      const filteredListings = data.filter(
-        (listing) => listing.owner?._id === user._id
-      );
+      const filteredListings = data.filter((listing) => listing.owner?._id === user?._id);
       setListings(filteredListings);
     }
+
     loadListings();
-    if (user && user._id) {
+
+    if (user?._id) {
       getOwnerContracts();
       fetchOwnerBookings();
     }
-  }, [user._id]);
+  }, [user?._id, getOwnerContracts, fetchOwnerBookings]);
 
-  const availableProperties = listings.filter(
-    (listing) => listing.status === "Available"
-  );
+  const availableProperties = listings.filter((listing) => listing.status === "Available");
 
-  const pendingBooking = ownerBookings.filter(
-    (booking) => booking.status === "Pending"
-  )
+  const pendingBooking = ownerBookings.filter((booking) => booking.status === "Pending");
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
       {/* Heading */}
       <h1 className="text-3xl font-bold text-[#1A3B5D]">Agent Dashboard</h1>
-      <p className="text-[#7A7A7A] mt-2">
-        Welcome back! Here’s an overview of your activities.
-      </p>
+      <p className="text-[#7A7A7A] mt-2">Welcome back! Here’s an overview of your activities.</p>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {/* Active Properties Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
-          <h2 className="text-lg font-bold text-[#1A3B5D]">
-            Active Properties
-          </h2>
-          <p className="text-2xl font-bold text-[#4C8492] mt-2">
-            {availableProperties.length || 0}
-          </p>
+          <h2 className="text-lg font-bold text-[#1A3B5D]">Active Properties</h2>
+          <p className="text-2xl font-bold text-[#4C8492] mt-2">{availableProperties.length || 0}</p>
         </div>
 
         {/* Pending Bookings Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
           <h2 className="text-lg font-bold text-[#1A3B5D]">Pending Bookings</h2>
-          <p className="text-2xl font-bold text-[#F47C48] mt-2">
-            {pendingBooking.length || 0}
-          </p>
+          <p className="text-2xl font-bold text-[#F47C48] mt-2">{pendingBooking.length || 0}</p>
         </div>
 
         {/* Contracts Card */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
           <h2 className="text-lg font-bold text-[#1A3B5D]">Contracts</h2>
-          <p className="text-2xl font-bold text-[#27AE60] mt-2">
-            {ownerContracts.length || 0}
-          </p>
+          <p className="text-2xl font-bold text-[#27AE60] mt-2">{ownerContracts.length || 0}</p>
         </div>
       </div>
 
