@@ -22,8 +22,7 @@ export default function PropertyList() {
   const user = userAuth((state) => state.user);
 
   useEffect(() => {
-    // Avoid running this on server-side
-    if (typeof window !== "undefined") {
+     if (typeof window !== "undefined") {
       setHasHydrated(true);
     }
   }, []);
