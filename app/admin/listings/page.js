@@ -18,7 +18,15 @@ async function fetchListings() {
 
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
+  const [hasHydrated, setHasHydrated] = useState(false);
   const user = userAuth((state) => state.user);
+
+  useEffect(() => {
+    // Avoid running this on server-side
+    if (typeof window !== "undefined") {
+      setHasHydrated(true);
+    }
+  }, []);
 
   useEffect(() => {
     async function loadListings() {
@@ -35,6 +43,9 @@ export default function PropertyList() {
   const rentedOrSoldProperties = listings.filter(
     (listing) => listing.status !== "Available"
   );
+
+  // Render nothing or a loading spinner until hydration is complete
+  if (!hasHydrated) return null;
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
