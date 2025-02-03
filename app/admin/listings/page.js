@@ -6,36 +6,27 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-async function fetchListings() {
-  try {
-    const response = await axios.get("/api/listings");
-    return response.data.Listings;
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    return [];
-  }
-}
-
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
-  const [hasHydrated, setHasHydrated] = useState(false);
   const user = userAuth((state) => state.user);
 
-  useEffect(() => {
-     if (typeof window !== "undefined") {
-      setHasHydrated(true);
+  const fetchListings = async () => {
+    try {
+      const response = await axios.get("/api/listings");
+      return response.data.Listings;
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+      return [];
     }
-  }, []);
+  }
 
   useEffect(() => {
-    if (hasHydrated) {
-      async function loadListings() {
-        const data = await fetchListings();
-        setListings(data);
-      }
-      loadListings();
+    async function loadListings() {
+      const data = await fetchListings();
+      setListings(data);
     }
-  }, [hasHydrated, user._id]);
+    loadListings();
+  }, [user._id]);
 
   const availableProperties = listings.filter(
     (listing) => listing.status === "Available"
@@ -44,9 +35,6 @@ export default function PropertyList() {
   const rentedOrSoldProperties = listings.filter(
     (listing) => listing.status !== "Available"
   );
-
-  // Render nothing or a loading spinner until hydration is complete
-  if (!hasHydrated) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
