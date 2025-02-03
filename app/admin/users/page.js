@@ -7,13 +7,15 @@ import toast from "react-hot-toast";
 export default function UserList() {
   
   const [usersInfo, setUsersInfo] = useState([]);
+  const [error, setError] = useState("");
 
   const getAllUsers = async () => {
     try {
       const response = await axios.get("/api/userInfo");
       setUsersInfo(response.data.Users);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      //console.error("Error fetching users:", error);
+      setError(error.message);
     }
   };
 
