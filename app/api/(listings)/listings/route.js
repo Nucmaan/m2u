@@ -24,6 +24,7 @@ export async function GET(req) {
         Listings: listings 
       },
       { status: 200 }
+      
     );
   } catch (error) {
     

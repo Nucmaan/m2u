@@ -13,19 +13,19 @@ export default function PropertyList() {
   const fetchListings = async () => {
     try {
       const response = await axios.get("/api/listings");
-      return response.data.Listings;
+      if(response.status === 200) {
+        setListings( response.data.Listings);
+      }else{
+        setListings([]);
+      }
     } catch (error) {
       console.error("Error fetching listings:", error);
-      return [];
+      setListings([]);
     }
   }
 
   useEffect(() => {
-    async function loadListings() {
-      const data = await fetchListings();
-      setListings(data);
-    }
-    loadListings();
+      fetchListings();    
   }, [user._id]);
 
   const availableProperties = listings.filter(
