@@ -1,21 +1,16 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 const userAuth = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       loginUser: (user) => set({ user }),
       logoutUser: () => set({ user: null }),
-      hasHydrated: false, // Track hydration state
-      setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
     {
       name: "m2u-storage",
-      skipHydration: true, // 🚀 Avoid hydration issues during SSR
-      onRehydrateStorage: () => (state) => {
-        state.setHasHydrated(true); // Mark hydration as complete
-      },
+      storage: typeof window !== "undefined" ? createJSONStorage(() => localStorage) : undefined,
     }
   )
 );
