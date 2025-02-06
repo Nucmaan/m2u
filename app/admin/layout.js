@@ -7,12 +7,11 @@ import { useEffect, useState } from "react";
 function Layout({ children }) {
   const user = userAuth((state) => state.user);
   const router = useRouter();
-  const hasHydrated = userAuth.persist.hasHydrated;
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Wait for zustand to hydrate
-    if (hasHydrated()) {
+    // Wait for Zustand to hydrate
+    if (user) {
       setIsHydrated(true);
 
       // Redirect if user is not an admin
@@ -20,7 +19,7 @@ function Layout({ children }) {
         router.push("/login");
       }
     }
-  }, [hasHydrated, user, router]);
+  }, [user, router]);
 
   // Show a loading placeholder while hydration is in progress
   if (!isHydrated) {
@@ -29,7 +28,7 @@ function Layout({ children }) {
 
   // Prevent rendering for non-admin users
   if (user?.role !== "Admin") {
-    return null;
+    return null; // Or show a "Permission Denied" page/message
   }
 
   return (

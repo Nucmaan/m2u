@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 const userAuth = create(
   persist(
@@ -8,10 +8,10 @@ const userAuth = create(
       loginUser: (user) => set({ user }),
       logoutUser: () => set({ user: null }),
     }),
-    {
-      name: "m2u-storage",
-      storage: typeof window !== "undefined" ? createJSONStorage(() => localStorage) : undefined,
-    }
+    { name: "m2u-storage",
+      getStorage: () => localStorage, // Use localStorage
+    } // Automatically uses localStorage with this key
+    
   )
 );
 

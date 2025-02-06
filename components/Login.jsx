@@ -1,4 +1,5 @@
 "use client";
+
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -11,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const loginUser = userAuth((state) => state.loginUser); 
+  const loginUser = userAuth((state) => state.loginUser);
   const router = useRouter();
 
   const handleRegister = async (e) => {
@@ -28,16 +29,19 @@ const Login = () => {
 
       loginUser(response.data.user);
 
-      if (response.data.user.role === "User") {
-        router.replace("/user");
-      }
-
-      if (response.data.user.role === "Admin") {
-        router.replace("/admin");
-      }
-
-      if (response.data.user.role === "Agent") {
-        router.replace("/agent");
+      switch (response.data.user.role) {
+        case "User":
+          router.replace("/user");
+          break;
+        case "Admin":
+          router.replace("/admin");
+          break;
+        case "Agent":
+          router.replace("/agent");
+          break;
+        default:
+          toast.error("Invalid role.");
+          return;
       }
 
       toast.success(response.data.message);
@@ -62,10 +66,7 @@ const Login = () => {
         </h2>
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label
-              className="block text-gray-700 font-semibold mb-2"
-              htmlFor="username"
-            >
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="username">
               Username
             </label>
             <input
@@ -79,10 +80,7 @@ const Login = () => {
             />
           </div>
           <div>
-            <label
-              className="block text-gray-700 font-semibold mb-2"
-              htmlFor="password"
-            >
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="password">
               Password
             </label>
             <input
@@ -96,10 +94,7 @@ const Login = () => {
             />
           </div>
           <div className="text-right">
-            <Link
-              href="/forgetpassword"
-              className="text-sm text-[#4C8492] hover:text-[#F47C48]"
-            >
+            <Link href="/forgetpassword" className="text-sm text-[#4C8492] hover:text-[#F47C48]">
               Forget Password?
             </Link>
           </div>
@@ -111,11 +106,8 @@ const Login = () => {
             {loading ? "Processing..." : "Login"}
           </button>
           <p className="text-sm text-center text-gray-600 mt-4">
-            Don&apos;t have an account? {" "}
-            <Link
-              href="/register"
-              className="text-[#4C8492] font-medium hover:text-[#F47C48]"
-            >
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="text-[#4C8492] font-medium hover:text-[#F47C48]">
               Register here
             </Link>
           </p>

@@ -7,30 +7,33 @@ import { useEffect, useState } from "react";
 function Layout({ children }) {
   const user = userAuth((state) => state.user);
   const router = useRouter();
-  const hasHydrated = userAuth.persist.hasHydrated;
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    if (hasHydrated()) {
+    // Wait for Zustand to hydrate
+    if (user) {
       setIsHydrated(true);
 
+      // Redirect if user is not an agent
       if (user?.role !== "Agent") {
         router.push("/login");
       }
     }
-  }, [hasHydrated, user, router]);
+  }, [user, router]);
 
+  // Show a loading placeholder while hydration is in progress
   if (!isHydrated) {
     return <div>Loading...</div>;
   }
 
+  // Prevent rendering for non-agent users
   if (user?.role !== "Agent") {
-    return null;
+    return null; // Or show a "Permission Denied" page/message
   }
 
   return (
     <div className="flex">
-      <div className="">
+      <div className="w-1/5">
         <AgentSidebar />
       </div>
       <div className="flex-1 bg-gray-100">{children}</div>
