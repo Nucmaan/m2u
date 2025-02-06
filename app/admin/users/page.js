@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function UserList() {
-  
   const [usersInfo, setUsersInfo] = useState([]);
   const [error, setError] = useState("");
 
@@ -14,7 +13,6 @@ export default function UserList() {
       const response = await axios.get("/api/userInfo");
       setUsersInfo(response.data.Users);
     } catch (error) {
-      //console.error("Error fetching users:", error);
       setError(error.message);
     }
   };
@@ -26,14 +24,12 @@ export default function UserList() {
   const handleDelete = async (userId) => {
     try {
       await axios.delete(`/api/userInfo/${userId}`);
-      const updatedUsers = usersInfo.filter((user) => user._id!== userId);
-      setUsersInfo(updatedUsers);
+      setUsersInfo((prevUsers) => prevUsers.filter((user) => user._id !== userId));
       toast.success("User deleted successfully!");
     } catch (error) {
-      toast.error(error.response.data.message || "Couldn't delete user.");
+      toast.error(error.response?.data?.message || "Couldn't delete user.");
     }
-  }
-
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] text-[#333333]">
@@ -61,8 +57,9 @@ export default function UserList() {
                   <Link href={`/admin/users/${user._id}`}>Edit</Link>
                 </button>
                 <button
-                onClick={handleDelete(user._id)}
-                className="bg-[#E74C3C] text-white px-3 py-1 rounded hover:bg-red-600">
+                  onClick={() => handleDelete(user._id)}
+                  className="bg-[#E74C3C] text-white px-3 py-1 rounded hover:bg-red-600"
+                >
                   Delete
                 </button>
               </div>
