@@ -129,8 +129,11 @@ const ViewProperty = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1A3B5D] mb-4">
             {list.title || "Loading..."}
           </h1>
+          <p className="text-sm text-[#7A7A7A] mb-2">{list.city}</p>
           <p className="text-sm text-[#7A7A7A] mb-2">{list.address}</p>
-          <p className="text-lg font-bold text-[#F47C48] mb-6">{list.price}</p>
+          <p className="text-lg font-bold text-[#F47C48] mb-2">{list.price}</p>
+          <p className="text-sm text-[#7A7A7A] mb-5">{list.description}</p>
+
           <button
             onClick={handleBookNow}
             className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200"

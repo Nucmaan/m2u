@@ -1,105 +1,109 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import userAuth from "@/myStore/UserAuth";
+import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ViewDetailsPage() {
-  // Sample property data (replace with actual data from your API or props)
-  const property = {
-    title: "Luxury Apartment",
-    description:
-      "This luxury apartment offers a modern design, spacious interiors, and beautiful city views. Perfect for families or individuals looking for a premium living experience.",
-    address: "123 Main St, New York, NY",
-    city: "New York",
-    price: "$3000/month",
-    deposit: "$1500",
-    status: "Available",
-    houseType: "Rent",
-    bedrooms: 3,
-    bathrooms: 2,
-    parking: 1,
-    owner: "Agent Name",
-    image: "https://via.placeholder.com/400",
+const ViewProperty = () => {
+  const { id } = useParams();
+  const [list, setList] = useState({});
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const user = userAuth((state) => state.user);
+  const [owner, setOwner] = useState("");
+  const [notes, setNotes] = useState("");
+  const [visitingDate, setVisitingDate] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchList = useCallback(async () => {
+    try {
+      const response = await axios.get(`/api/listings/${id}`);
+      setList(response.data.data);
+      setOwner(response.data.data.owner);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchList();
+  }, [fetchList]);
+
+  const nextImage = () => {
+    if (list.images?.length) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === list.images.length - 1 ? 0 : prevIndex + 1
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (list.images?.length) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? list.images.length - 1 : prevIndex - 1
+      );
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#1A3B5D]">{property.title}</h1>
-        <p className="text-[#7A7A7A]">
-          {property.address}, {property.city}
-        </p>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Property Image */}
-        <div className="lg:w-1/2">
-          <Image
-            src={property.image}
-            alt={property.title}
-            width={500} height={300}
-            className="w-full h-auto rounded-lg shadow"
-          />
+    <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden border border-[#E0E0E0]">
+        <div className="relative">
+          {list.images?.length > 0 ? (
+            <Image
+              src={list.images[currentImageIndex]}
+              alt={list.title || "Property"}
+              width={800}
+              height={500}
+              className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
+            />
+          ) : (
+            <Image
+              src="https://via.placeholder.com/600"
+              alt="Placeholder"
+              width={500}
+              height={300}
+              className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
+            />
+          )}
+          <button
+            onClick={prevImage}
+            className="absolute top-1/2 left-6 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition shadow-lg"
+            aria-label="Previous Image"
+          >
+            ❮
+          </button>
+          <button
+            onClick={nextImage}
+            className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition shadow-lg"
+            aria-label="Next Image"
+          >
+            ❯
+          </button>
         </div>
 
-        {/* Property Details */}
-        <div className="lg:w-1/2 bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold text-[#333333]">Details</h2>
-          <p className="text-[#7A7A7A] mt-2">{property.description}</p>
+        <div className="p-6 lg:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1A3B5D] mb-4">
+            {list.title || "Loading..."}
+          </h1>
+          <p className="text-sm text-[#7A7A7A] mb-2">Address : {list.address}</p>
+          <p className="text-sm text-[#7A7A7A] mb-2">city : {list.city}</p>
+          <p className="text-sm text-[#7A7A7A] mb-2">HouseType : {list.houseType}</p>
+          <p className="text-lg font-bold text-[#F47C48] mb-2">price : {list.price}</p>
+          <p className="text-sm text-[#7A7A7A] mb-4">Details : {list.description}</p>
 
-          <div className="mt-4">
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Price:</span>
-              <span className="text-[#4C8492] font-bold">{property.price}</span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Deposit:</span>
-              <span className="text-[#4C8492]">{property.deposit}</span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Status:</span>
-              <span
-                className={`font-bold ${
-                  property.status === "Available"
-                    ? "text-[#27AE60]"
-                    : "text-[#E74C3C]"
-                }`}
-              >
-                {property.status}
-              </span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>House Type:</span>
-              <span>{property.houseType}</span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Bedrooms:</span>
-              <span>{property.bedrooms}</span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Bathrooms:</span>
-              <span>{property.bathrooms}</span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Parking Spaces:</span>
-              <span>{property.parking}</span>
-            </div>
-            <div className="flex justify-between text-[#333333] font-medium">
-              <span>Owner:</span>
-              <span>{property.owner}</span>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <button className="px-6 py-2 bg-[#1A3B5D] text-white font-bold rounded hover:bg-[#16324A] mr-4">
-              <Link href={`/agent/listings/1`}>Edit Listing</Link>
-            </button>
-            <button className="px-6 py-2 bg-[#F47C48] text-white font-bold rounded hover:bg-[#E74C3C]">
-              <Link href={`/agent/listings`}>Back to List</Link>
-            </button>
-          </div>
+          <button
+            className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200"
+          >
+          <Link href={`/admin/listings`}>Back to Properties</Link>
+          </button>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
+
+export default ViewProperty;

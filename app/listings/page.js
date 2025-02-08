@@ -63,7 +63,7 @@ export default async function PropertyListing() {
                 </p>
 
                 <p className="text-sm text-[#7A7A7A] mb-2">
-                  Owner: {listing.owner?.name || "N/A"}
+                  City: {listing.city || "N/A"}
                 </p>
 
                 {/* Bedrooms and Bathrooms */}
