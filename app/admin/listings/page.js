@@ -8,8 +8,18 @@ import React, { useEffect, useState } from "react";
 
 async function fetchListings() {
   try {
-    const response = await axios.get("/api/listings");
-    return response.data.Listings;
+    const response = await axios.get("http://localhost:3000/api/listings");
+
+    // Validate the response
+    if (!response.data || !response.data.Listings) {
+      throw new Error("Invalid response from server");
+    }
+
+    // Filter out listings where owner is null
+    const validListings = response.data.Listings.filter(
+      (listing) => listing.owner !== null
+    ); 
+    return validListings;
   } catch (error) {
     console.error("Error fetching listings:", error);
     return [];

@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "https://via.placeholder.com/150",
+      default: "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg",
     },
     verificationToken: {
       type: String,

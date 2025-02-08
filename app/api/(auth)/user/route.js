@@ -50,12 +50,13 @@ export async function PUT(req) {
     const avatarFile = formData.get("avatar"); 
 
     const defaultAvatar =
-      "https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+      "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg";
 
     const existingUser = await User.findById(id);
     if (!existingUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+
 
     if (username) {
       existingUser.username = username;

@@ -81,7 +81,7 @@ const UserSettings = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6">
             <div className="relative">
               <Image
-                src={avatarPreview}
+                src={ user1.avatar ? user1.avatar : "/profileImage.jpg"}
                 alt="User Avatar"
                 width={500} height={300}
                 className="w-24 h-24 rounded-full object-cover border-2 border-[#E0E0E0]"

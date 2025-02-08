@@ -12,7 +12,9 @@ const ProfilePage = () => {
   
   const user1 = userAuth((state) => state.user);
 
-  const avatarSrc = user1.avatar ? user1.avatar : "/profileImage.jpg";
+  console.log(user1);
+
+  //const profileImage = user1?.avatar ? user1?.avatar : "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg"
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] py-3  flex justify-center">
@@ -21,12 +23,11 @@ const ProfilePage = () => {
         <div className="relative bg-[#1A3B5D] h-40 rounded-t-lg">
           <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
           <Image
-          src={avatarSrc}
+          src={ user1.avatar ? user1.avatar : "/profileImage.jpg"}
           alt="User Avatar"
           width={150}
           height={150}
-          objectFit="cover"
-          unoptimized
+          objectFit="cover"          
         />
         
           </div>

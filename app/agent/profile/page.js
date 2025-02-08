@@ -2,71 +2,87 @@
 
 import userAuth from "@/myStore/UserAuth";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
-import { FaLinkedin, FaTwitter } from "react-icons/fa";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiMail, FiPhone, FiCalendar } from "react-icons/fi";
+import { FaUserCheck } from "react-icons/fa";
+import Link from "next/link";
 
 
-export default function AgentProfilePage() {
-  const user = userAuth((state) => state.user);
+const ProfilePage = () => {
+  
+  const user1 = userAuth((state) => state.user);
 
-  const avatarSrc = user.avatar ? user.avatar : "/profileImage.jpg";
+  console.log(user1);
+
+  //const profileImage = user1?.avatar ? user1?.avatar : "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg"
 
   return (
-    <div className="p-6 bg-[#F7F7F9] min-h-screen">
-      <div className="bg-white rounded-lg shadow-lg max-w-4xl mx-auto p-5 border border-[#E0E0E0]">
-        {/* Profile Header */}
-        <div className="flex flex-col sm:flex-row items-center space-y-6 sm:space-y-0 sm:space-x-3">
-          {/* Profile Image */}
+    <div className="min-h-screen bg-[#F7F7F9] py-3  flex justify-center">
+      <div className="w-full max-w-5xl bg-white rounded-lg shadow-lg border border-[#E0E0E0]">
+        {/* Header */}
+        <div className="relative bg-[#1A3B5D] h-40 rounded-t-lg">
+          <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
           <Image
-          src={avatarSrc}
-          alt="Agent Avatar"
+          src={ user1.avatar ? user1.avatar : "/profileImage.jpg"}
+          alt="User Avatar"
           width={150}
           height={150}
-            className="w-32 h-32 rounded-full border-4 border-[#1A3B5D]"
-          />
-
-          {/* Profile Details */}
-          <div className="text-center sm:text-left">
-            <h1 className="text-3xl font-bold text-[#1A3B5D]">
-              {user.username || "John Doe"}
-            </h1>
-            <p className="mt-2 text-lg text-[#4C8492] font-medium">
-              {user.title || "Real Estate Agent"}
-            </p>
+          objectFit="cover"          
+        />
+        
           </div>
         </div>
 
-        {/* Contact Information */}
-        <div className="mt-8 border-t border-[#E0E0E0] pt-8">
-          <h3 className="text-2xl font-bold text-[#1A3B5D] mb-6">
-            Contact Information
-          </h3>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <span className="text-[#4C8492] font-medium">Role:</span>
-              <span className="text-[#333333]">{user.role || "N/A"}</span>
+        {/* User Info */}
+        <div className="pt-20 pb-6 text-center px-6">
+          <h1 className="text-3xl font-bold text-[#333333]">
+            {user1.username || "John Doe"}
+          </h1>
+          <p className="text-sm text-[#7A7A7A] mt-2">{user1.email || "john.doe@example.com"}</p>
+        </div>
+
+        {/* Details Section */}
+        <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Phone */}
+          <div className="flex items-center gap-4 p-4 bg-[#F7F7F9] rounded-lg border border-[#E0E0E0]">
+            <FiPhone className="text-[#4C8492] text-xl" />
+            <div>
+              <h2 className="text-sm font-medium text-[#7A7A7A]">Phone</h2>
+              <p className="text-[#333333]">{user1.mobile || "N/A"}</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-[#4C8492] font-medium">Email:</span>
-              <span className="text-[#333333]">{user.email || "N/A"}</span>
+          </div>
+
+          {/* Address */}
+          <div className="flex items-center gap-4 p-4 bg-[#F7F7F9] rounded-lg border border-[#E0E0E0]">
+            <FaUserCheck className="text-[#4C8492] text-xl" />
+            <div>
+              <h2 className="text-sm font-medium text-[#7A7A7A]">Role</h2>
+              <p className="text-[#333333]">{user1.role || "N/A"}</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-[#4C8492] font-medium">Phone:</span>
-              <span className="text-[#333333]">{user.mobile || "N/A"}</span>
+          </div>
+
+          {/* Joined */}
+          <div className="flex items-center gap-4 p-4 bg-[#F7F7F9] rounded-lg border border-[#E0E0E0]">
+            <FiCalendar className="text-[#4C8492] text-xl" />
+            <div>
+              <h2 className="text-sm font-medium text-[#7A7A7A]">Joined</h2>
+              <p className="text-[#333333]">
+                {user1.createdAt ? new Date(user1.createdAt).toLocaleDateString() : "N/A"}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="pt-3 text-center ">
-        <button className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F47C48] text-white font-medium rounded-lg shadow-md hover:bg-[#d66a3b] transition duration-300 focus:outline-none focus:ring-4 focus:ring-[#f3a68b]">
-          <FiEdit />
-        <Link href="/agent/setting">Edit Profile</Link>
-        </button>
-      </div>
-
+        {/* Action Button */}
+        <div className="py-6 text-center ml-2">
+          <button className="flex items-center justify-center gap-2 px-6 py-3 bg-[#F47C48] text-white font-medium rounded-lg shadow-md hover:bg-[#d66a3b] transition duration-300 focus:outline-none focus:ring-4 focus:ring-[#f3a68b]">
+            <FiEdit />
+          <Link href="/agent/setting">Edit Profile</Link>
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default ProfilePage;

@@ -16,6 +16,7 @@ async function fetchListings() {
       (listing) => listing.owner !== null
     );
 
+    
     return validListings;
   } catch (error) {
     console.error("Error fetching listings:", error);
