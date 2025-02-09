@@ -16,7 +16,7 @@ const sendEmail = async (email, token, type) => {
   let text = "";
 
   if (type === "verify") {
-    url = `${process.env.DOMAIN}/verify/${token}`;
+    url = `${process.env.NEXT_PUBLIC_DOMAIN}/verify/${token}`;
     subject = "Verify Your Account";
     text = `
       <p>Welcome to Myhome2u!</p>
@@ -24,7 +24,7 @@ const sendEmail = async (email, token, type) => {
       <a href="${url}">${url}</a>
     `;
   } else if (type === "resetPassword") {
-    url = `${process.env.DOMAIN}/resetpassword/${token}`;
+    url = `${process.env.NEXT_PUBLIC_DOMAIN}/resetpassword/${token}`;
     subject = "Reset Your Password";
     text = `
       <p>We received a request to reset your password.</p>

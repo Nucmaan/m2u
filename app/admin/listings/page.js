@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 async function fetchListings() {
   try {
-    const response = await axios.get("http://localhost:3000/api/listings");
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
 
     // Validate the response
     if (!response.data || !response.data.Listings) {

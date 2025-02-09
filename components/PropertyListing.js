@@ -5,7 +5,7 @@ import { FaBed, FaBath, FaMapMarkerAlt, FaMoneyBillWave } from "react-icons/fa";
 
 async function fetchListings() {
   try {
-    const response = await axios.get("http://localhost:3000/api/listings");
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
 
     if (!response.data || !response.data.Listings) {
       throw new Error("Invalid response from server");

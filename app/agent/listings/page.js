@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 async function fetchListings() {
   try {
-    const response = await axios.get("/api/listings");
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
     return response.data.Listings;
   } catch (error) {
     console.error("Error fetching listings:", error);

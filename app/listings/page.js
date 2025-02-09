@@ -4,18 +4,15 @@ import Image from "next/image";
 
 async function fetchListings() {
   try {
-    const response = await axios.get("http://localhost:3000/api/listings");
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
 
-    // Validate the response
     if (!response.data || !response.data.Listings) {
       throw new Error("Invalid response from server");
     }
 
-    // Filter out listings where owner is null
     const validListings = response.data.Listings.filter(
       (listing) => listing.owner !== null
     );
-
     
     return validListings;
   } catch (error) {
