@@ -45,12 +45,13 @@ export default async function PropertyListing() {
               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-200 border border-[#E0E0E0]"
             >
               <div className="relative w-full h-48">
-                <Image
-                  src={listing.images[0] || "https://via.placeholder.com/600"} // Fallback image if no image is available
-                  alt={listing.title}
-                  layout="fill"
-                  objectFit="cover"
-                />
+              <Image
+              src={listing.images[0] || "/images/nasri.jpg"} 
+              alt={listing.title}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+            
               </div>
 
               <div className="p-6">
