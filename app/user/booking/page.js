@@ -83,9 +83,21 @@ function UserBookingPage() {
                             <strong>Owner Email:</strong>{" "}
                             {booking.owner?.email || "Not Available"}
                           </p>
+                           <p>
+                            <strong>Owner Mobile:</strong>{" "}
+                            {booking.owner?.mobile || "Not Available"}
+                          </p>
+                           <p>
+                            <strong>City:</strong>{" "}
+                            {booking.listing?.city || "Not Available"}
+                          </p>
                           <p>
                             <strong>Address:</strong>{" "}
                             {booking.listing?.address || "Not Available"}
+                          </p>
+                          <p>
+                            <strong>houseType:</strong>{" "}
+                            {booking.listing?.houseType || "Not Available"}
                           </p>
                           <p>
                             <strong>Price:</strong>{" "}

@@ -19,8 +19,8 @@ export async function GET(req, { params }) {
     await ConnectDb();
 
     const bookings = await Booking.find({ owner: id })
-      .populate("user", "name email") // Populate user details (optional)
-      .populate("listing", "title city address price"); // Populate listing details (optional)
+      .populate("user", "username email mobile") // Populate user details (optional)
+      .populate("listing", "title city address price houseType"); // Populate listing details (optional)
 
 
     if (!bookings.length) {

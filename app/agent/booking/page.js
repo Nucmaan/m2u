@@ -66,9 +66,17 @@ export default function BookingPage() {
                 <span className="font-medium">City:</span>{" "}
                 {booking.listing?.city || "N/A"}
               </p>
+               <p className="text-sm text-[#7A7A7A] mb-2">
+                <span className="font-medium">HouseType:</span>{" "}
+                {booking.listing?.houseType || "N/A"}
+              </p>
               <p className="text-sm text-[#7A7A7A] mb-2">
                 <span className="font-medium">Price:</span> $
                 {booking.listing?.price || "N/A"}
+              </p>
+               <p className="text-sm text-[#7A7A7A] mb-2">
+                <span className="font-medium">User Mobile:</span>{" "}
+                {booking.user?.mobile ? booking.user.mobile : "User not assigned"}
               </p>
               <p className="text-sm text-[#7A7A7A] mb-2">
                 <span className="font-medium">User Email:</span>{" "}
