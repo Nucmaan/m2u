@@ -47,10 +47,8 @@ export default async function PropertyListing() {
                   <Image
                     src={list.images[0]}
                     alt={list.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-t-lg"
-                    priority
+                    fill
+                 style={{ objectFit: "cover" }}
                   />
                 </div>
 
