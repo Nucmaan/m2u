@@ -1,7 +1,6 @@
 "use client";
-
 import { useParams } from "next/navigation";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
@@ -13,24 +12,24 @@ const ViewProperty = () => {
   const [list, setList] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const user = userAuth((state) => state.user);
-  const [owner, setOwner] = useState("");
+  const [owner, setOwner] = useState(null);
   const [notes, setNotes] = useState("");
   const [visitingDate, setVisitingDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchList = useCallback(async () => {
-    try {
-      const response = await axios.get(`/api/listings/${id}`);
-      setList(response.data.data);
-      setOwner(response.data.data.owner);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [id]);
-
   useEffect(() => {
+    const fetchList = async () => {
+      try {
+        const response = await axios.get(`/api/listings/${id}`);
+        setList(response.data.data);
+        setOwner(response.data.data.owner);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to fetch property details.");
+      }
+    };
     fetchList();
-  }, [fetchList]);
+  }, [id]);
 
   const nextImage = () => {
     if (list.images?.length) {
@@ -48,57 +47,60 @@ const ViewProperty = () => {
     }
   };
 
+
+
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden border border-[#E0E0E0]">
+      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-[#E0E0E0]">
+        {/* Property Image Section */}
         <div className="relative">
-          {list.images?.length > 0 ? (
-            <Image
-              src={list.images[currentImageIndex]}
-              alt={list.title || "Property"}
-              width={800}
-              height={500}
-              className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
-            />
-          ) : (
-            <Image
-              src="https://via.placeholder.com/600"
-              alt="Placeholder"
-              width={500}
-              height={300}
-              className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
-            />
-          )}
+          <Image
+            src={list.images?.[currentImageIndex] || "/images/nasri.jpg"}
+            alt={list.title || "Property"}
+            width={500} height={300}
+            className="w-full h-80 sm:h-96 lg:h-[500px] object-cover"
+          />
           <button
             onClick={prevImage}
-            className="absolute top-1/2 left-6 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition shadow-lg"
+            className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition"
             aria-label="Previous Image"
-          >
-            ❮
-          </button>
+          >❮</button>
           <button
             onClick={nextImage}
-            className="absolute top-1/2 right-6 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition shadow-lg"
+            className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-[#1A3B5D] text-white rounded-full p-3 hover:bg-[#16324A] transition"
             aria-label="Next Image"
-          >
-            ❯
-          </button>
+          >❯</button>
         </div>
 
+        {/* Property Details */}
         <div className="p-6 lg:p-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#1A3B5D] mb-4">
-            {list.title || "Loading..."}
-          </h1>
-          <p className="text-sm text-[#7A7A7A] mb-2">Address : {list.address}</p>
-          <p className="text-sm text-[#7A7A7A] mb-2">city : {list.city}</p>
-          <p className="text-sm text-[#7A7A7A] mb-2">HouseType : {list.houseType}</p>
-          <p className="text-lg font-bold text-[#F47C48] mb-2">price : {list.price}</p>
-          <p className="text-sm text-[#7A7A7A] mb-4">Details : {list.description}</p>
+          <h1 className="text-3xl font-bold text-[#1A3B5D] mb-4">{list.title || "Loading..."}</h1>
+          <p className="text-[#7A7A7A] mb-2">City: {list.city || "N/A"}</p>
+          <p className="text-[#7A7A7A] mb-2">Address: {list.address || "N/A"}</p>
+          <p className="text-[#7A7A7A] mb-2">House Type: {list.houseType || "N/A"}</p>
+          <p className="text-xl font-bold text-[#F47C48]">Price: ${list.price?.toLocaleString() || "N/A"}</p>
 
+          {/* Owner Details */}
+          {owner && (
+            <div className="flex items-center gap-4 mt-6 border-t pt-4">
+              <Image
+                src={owner.avatar || "/images/default-avatar.jpg"}
+                alt={owner.username || "Owner"}
+                width={50} height={50}
+                className="w-12 h-12 rounded-full border"
+              />
+              <div>
+                <p className="font-semibold text-[#1A3B5D]">{owner.username}</p>
+                <p className="text-[#7A7A7A]">{owner.email}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Booking Button */}
           <button
-            className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200"
+            className="mt-6 w-full bg-[#F47C48] text-white font-bold py-3 rounded-lg hover:bg-[#d86030] transition"
           >
-          <Link href={`/admin/listings`}>Back to Properties</Link>
+          <Link href="/agent/listings">Back</Link>
           </button>
         </div>
       </div>
