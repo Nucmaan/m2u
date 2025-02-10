@@ -4,16 +4,6 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState, useCallback } from "react";
 
-async function fetchListings() {
-  try {
-    const response = await axios.get("/api/listings");
-    return response.data.Listings;
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    return [];
-  }
-}
-
 const AgentDashboard = () => {
   const user = userAuth((state) => state.user);
   const [listings, setListings] = useState([]);
@@ -60,20 +50,38 @@ const AgentDashboard = () => {
     }
   }, [user?._id]);
 
-  useEffect(() => {
-    async function loadListings() {
-      const data = await fetchListings();
-      const filteredListings = data.filter((listing) => listing.owner?._id === user?._id);
-      setListings(filteredListings);
-    }
+  const getListings = useCallback(async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
+        );
+  
+        if (!response.data?.Listings) {
+          throw new Error("Invalid response from server");
+        }
+  
+        const validListings = response.data.Listings.filter(
+          (listing) => listing.owner !== null
+        );
+  
+        const filteredListings = validListings.filter(
+          (listing) => listing.owner?._id === user._id
+        );
+        setListings(filteredListings);
+      } catch (error) {
+        setListings([]);
+        console.error("Error fetching listings:", error);
+      }
+    }, [user?._id]);
 
-    loadListings();
 
+  useEffect(() => {    
     if (user?._id) {
       getOwnerContracts();
       fetchOwnerBookings();
+      getListings();
     }
-  }, [user?._id, getOwnerContracts, fetchOwnerBookings]);
+  }, [user?._id, getOwnerContracts, fetchOwnerBookings, getListings]);
 
   const availableProperties = listings.filter((listing) => listing.status === "Available");
 

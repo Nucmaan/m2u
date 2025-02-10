@@ -1,26 +1,33 @@
+"use client"
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { FaBed, FaBath, FaMapMarkerAlt, FaMoneyBillWave } from "react-icons/fa";
+import { useCallback, useEffect, useState } from "react";
 
-async function fetchListings() {
-  try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
-
-    if (!response.data || !response.data.Listings) {
-      throw new Error("Invalid response from server");
-    }
-
-    return response.data.Listings.filter((listing) => listing.owner !== null);
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    return [];
-  }
-}
-
-export default async function PropertyListing() {
-  const listings = await fetchListings();
+export default  function PropertyListing() {
+  const [listings, setListings] = useState([]);
   const topListings = listings.slice(0, 3);
+  
+  const getListings = useCallback(async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
+  
+        if (!response.data?.Listings) {
+          throw new Error("Invalid response from server");
+        }
+  
+        const validListings = response.data.Listings.filter((listing) => listing.owner !== null);
+        setListings(validListings);
+      } catch (error) {
+        setListings([]);
+        console.error("Error fetching listings:", error);
+      }
+    }, []);
+  
+    useEffect(() => {
+      getListings();
+    }, [getListings]);
 
   return (
     <div className="pt-10 pb-3 bg-[#F7F7F9]">

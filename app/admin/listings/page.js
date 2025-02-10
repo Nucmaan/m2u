@@ -4,39 +4,32 @@ import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-
-async function fetchListings() {
-  try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
-
-    // Validate the response
-    if (!response.data || !response.data.Listings) {
-      throw new Error("Invalid response from server");
-    }
-
-    // Filter out listings where owner is null
-    const validListings = response.data.Listings.filter(
-      (listing) => listing.owner !== null
-    ); 
-    return validListings;
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    return [];
-  }
-}
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
   const user = userAuth((state) => state.user);
 
-  useEffect(() => {
-    async function loadListings() {
-      const data = await fetchListings();
-      setListings(data);
-    }
-    loadListings();
-  }, [user._id]);
+  const getListings = useCallback(async () => {
+        try {
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
+    
+          if (!response.data?.Listings) {
+            throw new Error("Invalid response from server");
+          }
+    
+          const validListings = response.data.Listings.filter((listing) => listing.owner !== null);
+          setListings(validListings);
+        } catch (error) {
+          setListings([]);
+          console.error("Error fetching listings:", error);
+        }
+      }, []);
+    
+      useEffect(() => {
+        getListings();
+      }, [user._id, getListings]);
+
 
   const availableProperties = listings.filter(
     (listing) => listing.status === "Available"
