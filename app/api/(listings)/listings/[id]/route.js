@@ -89,11 +89,15 @@ export async function PUT(req, { params }) {
     const price = parseFloat(formData.get("price"));
     const bedrooms = parseInt(formData.get("bedrooms"));
     const bathrooms = parseInt(formData.get("bathrooms"));
-    const houseType = formData.get("houseType");
-    const status = formData.get("status");
+   
     const deposit = parseFloat(formData.get("deposit"));
     const description = formData.get("description");
+
+    const houseType = formData.get("houseType");
+    const status = formData.get("status");
+
     const images = formData.getAll("images");
+
 
     listing.title = title;
     listing.city = city;
@@ -121,7 +125,9 @@ export async function PUT(req, { params }) {
     return NextResponse.json({
       message: "Listing updated successfully",
       data: updatedListing,
-    });
+    },
+    { status: 200 }
+  );
   } catch (error) {
     console.error("Error updating listing:", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });

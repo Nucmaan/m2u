@@ -41,9 +41,9 @@ export default function BillPage() {
   }, [getOwnerContracts]);
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-[#F7F7F9] flex flex-col  py-10 px-4">
       {/* Heading */}
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8 text-center">
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">
         Manage Bills & Contracts
       </h1>
 
@@ -119,7 +119,7 @@ export default function BillPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center text-[#7A7A7A] font-medium">
+          <div className=" text-[#7A7A7A] font-medium">
             No active contracts available.
           </div>
         )}

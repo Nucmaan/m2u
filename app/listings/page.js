@@ -6,20 +6,23 @@ import { useState, useEffect, useCallback } from "react";
 
 export default function PropertyListing() {
   const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getListings = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
 
       if (!response.data?.Listings) {
         throw new Error("Invalid response from server");
       }
-
-      const validListings = response.data.Listings.filter((listing) => listing.owner !== null);
+      const validListings = response.data.Listings.filter((listing) => listing.owner !== null && listing.status === "Available");
       setListings(validListings);
     } catch (error) {
       setListings([]);
       console.error("Error fetching listings:", error);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -31,7 +34,9 @@ export default function PropertyListing() {
     <section className="min-h-screen bg-[#F7F7F9] px-6 py-8">
       <h1 className="text-3xl font-bold text-[#1A3B5D] text-center mb-8">Property Listings</h1>
 
-      {listings.length === 0 ? (
+      {loading ? (
+        <div className="text-center text-lg text-[#7A7A7A]">Loading properties...</div>
+      ) : listings.length === 0 ? (
         <div className="text-center text-lg text-[#7A7A7A]">
           No properties are available at the moment.
         </div>
@@ -72,6 +77,5 @@ export default function PropertyListing() {
         </div>
       )}
     </section>
-    
   );
 }

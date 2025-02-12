@@ -36,7 +36,7 @@ export default function BillPage() {
   }, [getOwnerContracts]);
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] flex flex-col items-center py-12 px-6">
+    <div className="min-h-screen bg-[#F7F7F9] flex flex-col  py-12 px-6">
       <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">Manage Your Bills</h1>
 
       {loading ? (
@@ -48,7 +48,7 @@ export default function BillPage() {
           <p className="text-[#E74C3C] text-lg">{error}</p>
         </div>
       ) : userBill.length === 0 ? (
-        <div className="text-center">
+        <div className="">
           <p className="text-[#7A7A7A] text-lg">No unpaid bills found.</p>
         </div>
       ) : (

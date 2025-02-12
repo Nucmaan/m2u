@@ -39,7 +39,7 @@ export default function BookingPage() {
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen">
       {/* Heading */}
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8 text-center">
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8 ">
         My Bookings
       </h1>
 

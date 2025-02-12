@@ -37,6 +37,7 @@ const listingsSchema = new mongoose.Schema(
         enum: ["Rent", "Buy"],
         default: "Rent",
       },
+      
       status: {
         type: String,
         enum: ["Available", "Sold", "Rented"],

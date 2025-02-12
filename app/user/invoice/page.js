@@ -58,7 +58,7 @@ const AllInvoicesPage = () => {
         ) : error ? (
           <p className="text-center text-red-500 text-lg">{error}</p>
         ) : ownerPayments.length === 0 ? (
-          <p className="text-center text-[#7A7A7A] text-lg font-semibold">
+          <p className=" text-[#7A7A7A] text-lg font-semibold">
             You &rsquo;re not have any invoices.
           </p>
         ) : (

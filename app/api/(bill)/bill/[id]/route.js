@@ -29,6 +29,7 @@ export async function GET(req, { params }) {
 }
 
 // PUT: Update a single bill by ID
+// PUT: Update a single bill by ID
 export async function PUT(req, { params }) {
   try {
     const { id } = await params;
@@ -42,35 +43,33 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ message: "Bill not found" }, { status: 404 });
     }
 
-
-    // Parse and validate dueDate
-if (dueDate !== undefined) {
-    const formattedDueDate = moment(dueDate, "YYYY-MM-DD", true);
-    if (formattedDueDate.isValid()) {
-      bill.dueDate = formattedDueDate.toDate();
-    } else {
-      return NextResponse.json(
-        { message: "Invalid due date format" },
-        { status: 400 }
-      );
+    // Update dueDate only if provided and not empty
+    if (dueDate && dueDate.trim() !== "") {
+      const formattedDueDate = moment(dueDate, "YYYY-MM-DD", true);
+      if (formattedDueDate.isValid()) {
+        bill.dueDate = formattedDueDate.toDate();
+      } else {
+        return NextResponse.json(
+          { message: "Invalid due date format" },
+          { status: 400 }
+        );
+      }
     }
-  }
-  
-  // Parse and validate paymentDate
-  if (paymentDate !== undefined) {
-    const formattedPaymentDate = moment(paymentDate, "YYYY-MM-DD", true);
-    if (formattedPaymentDate.isValid()) {
-      bill.paymentDate = formattedPaymentDate.toDate();
-    } else {
-      return NextResponse.json(
-        { message: "Invalid payment date format" },
-        { status: 400 }
-      );
-    }
-  }
-  
 
-    // Update the bill fields
+    // Update paymentDate only if provided
+    if (paymentDate && paymentDate.trim() !== "") {
+      const formattedPaymentDate = moment(paymentDate, "YYYY-MM-DD", true);
+      if (formattedPaymentDate.isValid()) {
+        bill.paymentDate = formattedPaymentDate.toDate();
+      } else {
+        return NextResponse.json(
+          { message: "Invalid payment date format" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Update other fields
     if (amount !== undefined) bill.amount = amount;
     if (status !== undefined) bill.status = status;
     if (comment !== undefined) bill.comment = comment;

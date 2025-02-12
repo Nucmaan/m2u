@@ -6,15 +6,18 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function Page() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [payment, setPayment] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [amount, setAmount] = useState("");
-  const [dueDate, setDueDate] = useState(null);
-  const [paymentDate, setPaymentDate] = useState("");
+  //const [dueDate, setDueDate] = useState(null);
+  //const [paymentDate, setPaymentDate] = useState("");
   const [status, setStatus] = useState("Pending");
   const [comment, setComment] = useState("");
+
+  const [dueDate, setDueDate] = useState("");
+  const [paymentDate, setPaymentDate] = useState("");
 
   const router = useRouter();
 
@@ -43,26 +46,28 @@ export default function Page() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const payload = {
+      amount,
+      status,
+      paymentDate,
+      comment,
+    };
+  
     try {
-      const response = await axios.put(`/api/bill/${id}`, {
-        amount,
-        dueDate,
-        status,
-        paymentDate,
-        comment,
-      });
-
-      if(response.status === 200) {
+      const response = await axios.put(`/api/bill/${id}`, payload);
+  
+      if (response.status === 200) {
         toast.success("Payment updated successfully.");
         router.push("/agent/payments");
       } else {
         toast.error(response.data.message);
       }
-
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
+  
 
   if (loading) {
     return <div>Loading payment details...</div>;
@@ -102,7 +107,7 @@ export default function Page() {
           <input
             type="date"
             id="dueDate"
-            value={dueDate.split("T")[0]}
+            value={dueDate ? dueDate.split("T")[0] : ""}
             onChange={(e) => setDueDate(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md"
           />
@@ -118,7 +123,7 @@ export default function Page() {
           <input
             type="date"
             id="paymentDate"
-            value={paymentDate.split("T")[0]}
+            value={paymentDate ? paymentDate.split("T")[0] : ""}
             onChange={(e) => setPaymentDate(e.target.value)}
             className="w-full px-4 py-2 border border-[#E0E0E0] rounded-md"
           />

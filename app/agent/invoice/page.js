@@ -34,7 +34,7 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F7F9] to-[#E8EBF3] p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-[#1A3B5D] mb-8 text-center">
+        <h1 className="text-4xl font-bold text-[#1A3B5D] mb-8 ">
           Agent Invoice
         </h1>
 
@@ -85,7 +85,7 @@ export default function Page() {
             ))}
           </div>
         ) : (
-          <div className="text-[#7A7A7A] text-center">
+          <div className="text-[#7A7A7A] ">
             No Bills found for this owner.
           </div>
         )}

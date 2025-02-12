@@ -78,7 +78,7 @@ export default function ContractListPage() {
             </div>
           ))
         ) : (
-          <p className="text-[#7A7A7A] text-lg text-center col-span-full">No contracts available.</p>
+          <p className="text-[#7A7A7A] text-lg  col-span-full">No contracts available.</p>
         )}
       </div>
     </div>

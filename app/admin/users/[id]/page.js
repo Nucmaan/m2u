@@ -1,35 +1,53 @@
 "use client";
+import axios from "axios";
+import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
-export default function EditUser({ userId = 1 }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "User", // Default role
-  });
+export default function EditUser() {
 
-  // Simulate fetching user data on component mount
+  const { id } = useParams();
+
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("User");
+  const [isVerified, setIsVerified] = useState(false);
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword ] = useState("");
+
+
   useEffect(() => {
-    // Simulate fetching user data from an API
-    const fetchedUser = {
-      id: userId,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      role: "Admin",
+    const getUserInformation = async () => {
+      try {
+        const response = await axios.get(`/api/user/${id}`);
+  
+        if (response.status === 201) {
+          const userData = response.data.user;
+          
+          setUserName(userData.username); 
+          setEmail(userData.email);
+          setRole(userData.role);
+          setIsVerified(userData.isVerified);
+          setMobile(userData.mobile);
+          setPassword(userData.password);
+        } else {
+          toast.error("Can't connect to server");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+        toast.error("Failed to fetch user data");
+      }
     };
-
-    setFormData(fetchedUser);
-  }, [userId]); // Only depend on userId
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  
+    if (id) {
+      getUserInformation();
+    }
+  }, [id]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Updated User Data:", formData);
-    // Add logic to send the updated formData to the backend here.
+    console.log("Updated User Data ");
   };
 
   return (
@@ -42,14 +60,14 @@ export default function EditUser({ userId = 1 }) {
         {/* Name Field */}
         <div className="mb-4">
           <label htmlFor="name" className="block text-sm font-medium text-[#7A7A7A]">
-            Name
+            userName
           </label>
           <input
             type="text"
             id="name"
             name="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
             placeholder="Enter full name"
             required
@@ -65,13 +83,46 @@ export default function EditUser({ userId = 1 }) {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
             placeholder="Enter email address"
             required
           />
         </div>
+
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium text-[#7A7A7A]">
+            Mobile
+          </label>
+          <input
+            type="text"
+            id="text"
+            name="mobile"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
+            placeholder="Enter mobile address"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+        <label htmlFor="password" className="block text-sm font-medium text-[#7A7A7A]">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
+          placeholder="Enter password"
+          required
+        />
+      </div>
+      
 
         {/* Role Dropdown */}
         <div className="mb-4">
@@ -81,14 +132,29 @@ export default function EditUser({ userId = 1 }) {
           <select
             id="role"
             name="role"
-            value={formData.role}
-            onChange={handleChange}
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
           >
             <option value="Admin">Admin</option>
             <option value="User">User</option>
             <option value="Agent">Agent</option>
           </select>
+        </div>
+
+        {/* Verification Checkbox */}
+        <div className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            id="isVerified"
+            name="isVerified"
+            checked={isVerified}
+            onChange={(e) => setIsVerified(e.target.checked)}
+            className="mr-2"
+          />
+          <label htmlFor="isVerified" className="text-sm font-medium text-[#7A7A7A]">
+            Verified
+          </label>
         </div>
 
         {/* Submit Button */}

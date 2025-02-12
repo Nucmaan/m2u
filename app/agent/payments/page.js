@@ -34,7 +34,7 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
       {/* Heading */}
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8 text-center">Agent Payments</h1>
+      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8 ">Agent Payments</h1>
 
       {/* Payment Cards */}
       {loading ? (
@@ -107,7 +107,7 @@ export default function Page() {
           ))}
         </div>
       ) : (
-        <div className="text-center text-[#7A7A7A] font-medium">
+        <div className=" text-[#7A7A7A] font-medium">
           No payments found for this owner.
         </div>
       )}
