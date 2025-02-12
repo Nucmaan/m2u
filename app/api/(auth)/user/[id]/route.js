@@ -1,6 +1,7 @@
 import ConnectDb from "@/Database/dbConfig";
 import User from "@/Models/authModel";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 
 export async function GET(req , { params }) {
@@ -29,42 +30,38 @@ export async function GET(req , { params }) {
 }
 
 
-export async function PUT(req) {
+export async function PUT(req, { params }) {
     try {
+
       await ConnectDb();
-  
-      const formData = await req.formData();
-      const id = formData.get("id");
-      const username = formData.get("username");
-      const password = formData.get("password");
-      const mobile = formData.get("mobile");
-      const avatarFile = formData.get("avatar"); 
-  
-      const defaultAvatar =
-        "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg";
+
+      const { id } = await params;
+
+      const body = await req.json();
+      const { userName, email, role, isVerified, mobile, password } = body;
+
   
       const existingUser = await User.findById(id);
       if (!existingUser) {
         return NextResponse.json({ message: "User not found" }, { status: 404 });
       }
-  
-  
-      if (username) {
-        existingUser.username = username;
+
+      if (userName) {
+        existingUser.username = userName;
       }
+      if (email) {
+        existingUser.email = email;
+      }
+      if (role) {
+        existingUser.role = role;
+      }
+
+      if (isVerified) {
+        existingUser.isVerified = isVerified;
+      }
+
       if (mobile) {
         existingUser.mobile = mobile;
-      }
-  
-      if (avatarFile && avatarFile.size > 0) {
-        
-        if (existingUser.avatar && existingUser.avatar !== defaultAvatar) {
-          await deleteImageFromS3(existingUser.avatar); 
-        }
-  
-        const buffer = Buffer.from(await avatarFile.arrayBuffer());
-        const fileUrl = await uploadImageToS3(buffer, avatarFile.name);
-        existingUser.avatar = fileUrl;
       }
   
       if (password) {
@@ -83,8 +80,7 @@ export async function PUT(req) {
         { status: 201 }
       );
     } catch (error) {
-      console.error(error);
-      return NextResponse.json({ error: error.message || ""
+      return NextResponse.json({ error: error.message || " Internal Server Error"
        }, { status: 500 });
     }
   }

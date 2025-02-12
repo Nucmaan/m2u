@@ -7,10 +7,11 @@ const userAuth = create(
       user: null,
       loginUser: (user) => set({ user }),
       logoutUser: () => set({ user: null }),
+      updateUser: (updatedUser) => set({ user: updatedUser }),
     }),
     { name: "m2u-storage",
-      getStorage: () => localStorage, // Use localStorage
-    } // Automatically uses localStorage with this key
+      getStorage: () => localStorage, 
+    } 
     
   )
 );

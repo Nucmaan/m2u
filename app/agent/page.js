@@ -1,6 +1,7 @@
 "use client";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState, useCallback } from "react";
 
@@ -38,7 +39,9 @@ const AgentDashboard = () => {
     try {
       if (!user?._id) return;
 
-      const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
+      const response = await axios.get(
+        `/api/contracts/ownercontract/${user._id}`
+      );
 
       if (response.status === 404) {
         setOwnerContracts([]);
@@ -51,31 +54,30 @@ const AgentDashboard = () => {
   }, [user?._id]);
 
   const getListings = useCallback(async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
-        );
-  
-        if (!response.data?.Listings) {
-          throw new Error("Invalid response from server");
-        }
-  
-        const validListings = response.data.Listings.filter(
-          (listing) => listing.owner !== null
-        );
-  
-        const filteredListings = validListings.filter(
-          (listing) => listing.owner?._id === user._id
-        );
-        setListings(filteredListings);
-      } catch (error) {
-        setListings([]);
-        console.error("Error fetching listings:", error);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
+      );
+
+      if (!response.data?.Listings) {
+        throw new Error("Invalid response from server");
       }
-    }, [user?._id]);
 
+      const validListings = response.data.Listings.filter(
+        (listing) => listing.owner !== null
+      );
 
-  useEffect(() => {    
+      const filteredListings = validListings.filter(
+        (listing) => listing.owner?._id === user._id
+      );
+      setListings(filteredListings);
+    } catch (error) {
+      setListings([]);
+      console.error("Error fetching listings:", error);
+    }
+  }, [user?._id]);
+
+  useEffect(() => {
     if (user?._id) {
       getOwnerContracts();
       fetchOwnerBookings();
@@ -83,49 +85,55 @@ const AgentDashboard = () => {
     }
   }, [user?._id, getOwnerContracts, fetchOwnerBookings, getListings]);
 
-  const availableProperties = listings.filter((listing) => listing.status === "Available");
+  const availableProperties = listings.filter(
+    (listing) => listing.status === "Available"
+  );
 
-  const pendingBooking = ownerBookings.filter((booking) => booking.status === "Pending");
+  const pendingBooking = ownerBookings.filter(
+    (booking) => booking.status === "pending" && booking.owner === user._id
+  );
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] p-6">
-      {/* Heading */}
-      <h1 className="text-3xl font-bold text-[#1A3B5D]">Agent Dashboard</h1>
-      <p className="text-[#7A7A7A] mt-2">Welcome back! Here’s an overview of your activities.</p>
+    <div className="flex min-h-screen bg-[#F7F7F9] p-3">
+      {/* Main Content */}
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {/* Active Properties Card */}
-        <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
-          <h2 className="text-lg font-bold text-[#1A3B5D]">Active Properties</h2>
-          <p className="text-2xl font-bold text-[#4C8492] mt-2">{availableProperties.length || 0}</p>
+      <main className="flex-1 px-6 pt-3  ">
+        <header className="flex justify-between items-center bg-white shadow-md p-4 rounded-lg">
+          <h2 className="text-xl font-semibold text-[#333333]">
+            {user.username}
+          </h2>
+          <div className="flex items-center gap-3">
+            <span className="text-[#7A7A7A]">{user.role}</span>
+            <div className="w-10 h-10 relative">
+              <Image
+                src={user.avatar || "/default-avatar.png"}
+                alt="User Avatar"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full"
+              />
+            </div>
+          </div>
+        </header>
+
+        {/* Dashboard Content */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 ">
+          <div className="p-6 rounded-lg shadow-md border border-[#E0E0E0] bg-[#4C8492] text-white">
+            <h3 className="text-lg">Active Listings</h3>
+            <p className="text-2xl font-bold">
+              {availableProperties.length || 0}
+            </p>
+          </div>
+          <div className="p-6 rounded-lg shadow-md border border-[#E0E0E0] bg-[#6E91A2] text-white">
+            <h3 className="text-lg">Pending Bookings</h3>
+            <p className="text-2xl font-bold">{pendingBooking.length || 0}</p>
+          </div>
+          <div className="p-6 rounded-lg shadow-md border border-[#E0E0E0] bg-[#85A8B3] text-white">
+            <h3 className="text-lg">Owner Contracts</h3>
+            <p className="text-2xl font-bold">{ownerContracts.length || 0}</p>
+          </div>
         </div>
-
-        {/* Pending Bookings Card */}
-        <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
-          <h2 className="text-lg font-bold text-[#1A3B5D]">Pending Bookings</h2>
-          <p className="text-2xl font-bold text-[#F47C48] mt-2">{pendingBooking.length || 0}</p>
-        </div>
-
-        {/* Contracts Card */}
-        <div className="bg-white shadow-lg rounded-lg p-6 border border-[#E0E0E0] hover:shadow-xl transition duration-300">
-          <h2 className="text-lg font-bold text-[#1A3B5D]">Contracts</h2>
-          <p className="text-2xl font-bold text-[#27AE60] mt-2">{ownerContracts.length || 0}</p>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="mt-8 flex flex-col sm:flex-row gap-4">
-        <button className="w-full sm:w-auto px-6 py-2 bg-[#1A3B5D] text-white font-bold rounded hover:bg-[#16324A] transition duration-300">
-          <Link href="/agent/listings/addproperty">Add New Property</Link>
-        </button>
-        <button className="w-full sm:w-auto px-6 py-2 bg-[#F47C48] text-white font-bold rounded hover:bg-[#e86d3f] transition duration-300">
-          <Link href="/agent/booking">View Bookings</Link>
-        </button>
-        <button className="w-full sm:w-auto px-6 py-2 bg-[#4C8492] text-white font-bold rounded hover:bg-[#3b6d78] transition duration-300">
-          <Link href="/agent/contract">Manage Contracts</Link>
-        </button>
-      </div>
+      </main>
     </div>
   );
 };

@@ -1,11 +1,10 @@
 "use client";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function EditUser() {
-
   const { id } = useParams();
 
   const [userName, setUserName] = useState("");
@@ -13,18 +12,19 @@ export default function EditUser() {
   const [role, setRole] = useState("User");
   const [isVerified, setIsVerified] = useState(false);
   const [mobile, setMobile] = useState("");
-  const [password, setPassword ] = useState("");
+  const [password, setPassword] = useState("");
 
+  const router = useRouter();
 
   useEffect(() => {
     const getUserInformation = async () => {
       try {
         const response = await axios.get(`/api/user/${id}`);
-  
+
         if (response.status === 201) {
           const userData = response.data.user;
-          
-          setUserName(userData.username); 
+
+          setUserName(userData.username);
           setEmail(userData.email);
           setRole(userData.role);
           setIsVerified(userData.isVerified);
@@ -38,16 +38,34 @@ export default function EditUser() {
         toast.error("Failed to fetch user data");
       }
     };
-  
+
     if (id) {
       getUserInformation();
     }
   }, [id]);
-  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated User Data ");
+    try {
+      const response = await axios.put(`/api/user/${id}`, {
+        userName,
+        email,
+        role,
+        isVerified,
+        mobile,
+        password,
+      });
+
+      if (response.status === 201) {
+        toast.success("User updated successfully.");
+        // Redirect to users list
+        router.push("/admin/users");
+      } else {
+        toast.error("Failed to update user. Please try again.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -59,7 +77,10 @@ export default function EditUser() {
       >
         {/* Name Field */}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-[#7A7A7A]">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-[#7A7A7A]"
+          >
             userName
           </label>
           <input
@@ -76,7 +97,10 @@ export default function EditUser() {
 
         {/* Email Field */}
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-[#7A7A7A]">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-[#7A7A7A]"
+          >
             Email
           </label>
           <input
@@ -92,7 +116,10 @@ export default function EditUser() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-[#7A7A7A]">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-[#7A7A7A]"
+          >
             Mobile
           </label>
           <input
@@ -108,25 +135,30 @@ export default function EditUser() {
         </div>
 
         <div className="mb-4">
-        <label htmlFor="password" className="block text-sm font-medium text-[#7A7A7A]">
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
-          placeholder="Enter password"
-          required
-        />
-      </div>
-      
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-[#7A7A7A]"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
+            placeholder="Enter password"
+            required
+          />
+        </div>
 
         {/* Role Dropdown */}
         <div className="mb-4">
-          <label htmlFor="role" className="block text-sm font-medium text-[#7A7A7A]">
+          <label
+            htmlFor="role"
+            className="block text-sm font-medium text-[#7A7A7A]"
+          >
             Role
           </label>
           <select
@@ -152,7 +184,10 @@ export default function EditUser() {
             onChange={(e) => setIsVerified(e.target.checked)}
             className="mr-2"
           />
-          <label htmlFor="isVerified" className="text-sm font-medium text-[#7A7A7A]">
+          <label
+            htmlFor="isVerified"
+            className="text-sm font-medium text-[#7A7A7A]"
+          >
             Verified
           </label>
         </div>

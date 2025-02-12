@@ -18,6 +18,9 @@ const UserSettings = () => {
   const [avatarPreview, setAvatarPreview] = useState(user1.avatar || "/profileImage.jpg");
   const [avatarFile, setAvatarFile] = useState(null);
 
+  const updateUser = userAuth((state) => state.updateUser);
+
+
   const id = user1._id;
 
   const router = useRouter();
@@ -62,6 +65,7 @@ const UserSettings = () => {
         },
       });
       if (response.status === 201) {
+        updateUser(response.data.userInfo);
         toast.success(response.data.message);
         router.replace("/admin/profile");
       } else {

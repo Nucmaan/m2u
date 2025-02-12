@@ -31,7 +31,7 @@ async function deleteImageFromS3(imageUrl) {
 
   const key = imageUrl.split(".amazonaws.com/")[1]; 
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
     Key: key,
   };
   const command = new DeleteObjectCommand(params);
@@ -89,6 +89,7 @@ export async function PUT(req) {
         userInfo: updatedUser,
         message: "User updated successfully",
       },
+
       { status: 201 }
     );
   } catch (error) {

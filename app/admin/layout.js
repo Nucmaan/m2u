@@ -32,8 +32,8 @@ function Layout({ children }) {
   }
 
   return (
-    <div className="flex">
-      <div>
+    <div className="flex ">
+      <div >
         <AdminSidebar />
       </div>
       <div className="flex-1">{children}</div>

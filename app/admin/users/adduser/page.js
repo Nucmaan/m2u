@@ -1,22 +1,47 @@
 "use client";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AddUser() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "User", // Default role
-  });
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("User Data:", formData);
-    // Add logic to send formData to the backend here.
+
+    if (!username || !email || !password) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    try {
+      const response = await axios.post("/api/user/addUser", {
+        username,
+        email,
+        password,
+      });
+
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        setUsername("");
+        setEmail("");
+        setPassword("");
+
+        router.replace("/admin/users");
+      }
+
+      if(response.status === 400){
+        toast.error(response.data.message);
+      }
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add user.");
+    }
   };
 
   return (
@@ -28,17 +53,17 @@ export default function AddUser() {
       >
         {/* Name Field */}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-[#7A7A7A]">
+          <label htmlFor="username" className="block text-sm font-medium text-[#7A7A7A]">
             Name
           </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
-            placeholder="Enter full name"
+            placeholder="Enter username"
             required
           />
         </div>
@@ -52,30 +77,29 @@ export default function AddUser() {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
             placeholder="Enter email address"
             required
           />
         </div>
 
-        {/* Role Dropdown */}
+        {/* Password Field */}
         <div className="mb-4">
-          <label htmlFor="role" className="block text-sm font-medium text-[#7A7A7A]">
-            Role
+          <label htmlFor="password" className="block text-sm font-medium text-[#7A7A7A]">
+            Password
           </label>
-          <select
-            id="role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-[#E0E0E0] rounded focus:outline-none focus:ring-[#4C8492] focus:border-[#4C8492]"
-          >
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-            <option value="Agent">Agent</option>
-          </select>
+            placeholder="Enter password"
+            required
+          />
         </div>
 
         {/* Submit Button */}
