@@ -1,4 +1,3 @@
-import BlogSection from "@/components/Blogs";
 import HeroSection from "@/components/Hero";
 import PropertyListing from "@/components/PropertyListing";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -9,7 +8,6 @@ export default function Page() {
       <HeroSection />
       <PropertyListing />
       <WhyChooseUs />
-      <BlogSection /> 
     </div>
   );
 }
