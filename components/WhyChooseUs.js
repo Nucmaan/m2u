@@ -7,6 +7,7 @@ export default function WhyChooseUs() {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Why Choose Us?
         </h2>
+        
         <div className="grid md:grid-cols-3 gap-8">
           {/* Speed */}
           <div className="flex flex-col items-center text-center bg-white shadow-lg p-6 rounded-lg">

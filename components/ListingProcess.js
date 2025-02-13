@@ -58,7 +58,7 @@ const HowItWorks = () => {
                 Finalize the Deal
               </h3>
               <p className="text-[#7A7A7A] text-sm">
-                Complete the payment process and move into your new home. It&apos;s that easy!
+                Complete the payment process and move into your new home. It&rsquo;s that easy!
               </p>
             </div>
           </div>
