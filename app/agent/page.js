@@ -96,7 +96,6 @@ const AgentDashboard = () => {
   return (
     <div className="flex min-h-screen bg-[#F7F7F9] p-3">
       {/* Main Content */}
-
       <main className="flex-1 px-6 pt-3  ">
         <header className="flex justify-between items-center bg-white shadow-md p-4 rounded-lg">
           <h2 className="text-xl font-semibold text-[#333333]">
