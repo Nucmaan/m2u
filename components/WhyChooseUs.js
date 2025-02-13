@@ -2,7 +2,7 @@ import { FaBolt, FaEye, FaShieldAlt } from "react-icons/fa";
 
 export default function WhyChooseUs() {
   return (
-    <div className="pt-12 pb-8 bg-gray-100">
+    <div className="pt-5 pb-8 bg-[#F7F7F9]">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Why Choose Us?
