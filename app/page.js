@@ -1,3 +1,4 @@
+import DownloadApp from "@/components/DownloadOurApp";
 import HeroSection from "@/components/Hero";
 import HowItWorks from "@/components/ListingProcess";
 import PropertyListing from "@/components/PropertyListing";
@@ -10,6 +11,7 @@ export default function Page() {
       <PropertyListing />
       <HowItWorks />
       <WhyChooseUs />
+      <DownloadApp />
     </div>
   );
 }
