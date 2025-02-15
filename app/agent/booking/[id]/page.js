@@ -56,7 +56,7 @@ export default function EditBookingPage() {
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
               <option value="cancelled">Cancelled</option>
-              <option value="completed">Completed</option>
+              <option value="completed">Confirmed</option>
             </select>
           </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
@@ -54,7 +55,7 @@ const AllInvoicesPage = () => {
 
       <div className="space-y-6">
         {loading ? (
-          <p className="text-center text-[#7A7A7A] text-lg">Fetching invoices...</p>
+          <RaadiLoading />
         ) : error ? (
           <p className="text-center text-red-500 text-lg">{error}</p>
         ) : ownerPayments.length === 0 ? (

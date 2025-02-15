@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import RaadiLoading from "@/components/RaadiLoading";
 
 export default function EditListingPage() {
   const { id } = useParams();
@@ -27,9 +28,10 @@ export default function EditListingPage() {
 
   const fetchListing = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`/api/listings/${id}`);
       const data = response.data.data;
-      console.log("Fetched data:", data);
+      //console.log("Fetched data:", data);
 
       // Set the state with fetched data
       setTitle(data.title || "");
@@ -46,6 +48,8 @@ export default function EditListingPage() {
     } catch (error) {
       console.error("Error fetching listing:", error);
       toast.error("Failed to fetch listing details.");
+    } finally {
+      setLoading(false);
     }
   }, [id]);
 
@@ -118,6 +122,10 @@ export default function EditListingPage() {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  if(loading){
+    return <RaadiLoading/>;
   }
 
 

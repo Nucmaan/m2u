@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 export default  function PropertyListing() {
   const [listings, setListings] = useState([]);
   const topListings = listings.slice(0, 3);
+  const [error, setError] = useState("");
   
   const getListings = useCallback(async () => {
       try {
@@ -20,8 +21,9 @@ export default  function PropertyListing() {
         const validListings = response.data.Listings.filter((listing) => listing.owner !== null);
         setListings(validListings);
       } catch (error) {
+        setError(error?.message);
         setListings([]);
-        console.error("Error fetching listings:", error);
+       /// console.error("Error fetching listings:", error);
       }
     }, []);
   

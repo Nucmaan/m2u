@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
@@ -31,7 +32,8 @@ function ContractPage() {
       <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">Your Contracts</h1>
 
       {loading ? (
-        <p className="text-lg text-[#7A7A7A]">Loading...</p>
+        <RaadiLoading />
+
       ) : userContracts.length === 0 ? (
         <p className="text-lg text-[#7A7A7A]">You don&apos;t have any contracts.</p>
       ) : (

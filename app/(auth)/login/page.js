@@ -2,7 +2,7 @@ import Head from "next/head";
 import Login from "@/components/Login";
 
 export default function Page() {
-  const domain = process.env.DOMAIN || "http://localhost:3000";
+  const domain = process.env.NEXT_PUBLIC_DOMAIN|| "http://localhost:3000";
 
   return (
     <>

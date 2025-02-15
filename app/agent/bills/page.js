@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
@@ -50,9 +51,8 @@ export default function BillPage() {
       {/* Contract Cards */}
       <div className="w-full max-w-6xl">
         {loading ? (
-          <div className="text-center text-[#7A7A7A] font-medium">
-            Loading active contracts...
-          </div>
+          <RaadiLoading />
+
         ) : ownerContracts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {ownerContracts.map((contract) => (

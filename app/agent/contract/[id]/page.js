@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState, useCallback } from "react";
@@ -14,8 +15,11 @@ export default function EditContractPage() {
   const { id } = useParams();
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const fetchContract = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`/api/contracts/${id}`);
       const contract = response.data.existingContract;
       setStartDate(contract.startDate.split("T")[0]);
@@ -26,6 +30,8 @@ export default function EditContractPage() {
     } catch (error) {
       console.error("Error fetching contract:", error);
       toast.error("Failed to fetch contract details. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }, [id]);
 
@@ -50,6 +56,10 @@ export default function EditContractPage() {
       toast.error(error.response?.data?.message || "Failed to update contract. Please try again.");
     }
   };
+
+  if (loading) {
+    return <RaadiLoading />;
+  }
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">

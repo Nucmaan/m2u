@@ -12,7 +12,7 @@ const CreateNewPassword = () => {
       return;
     }
     // Add logic to handle password update
-    console.log('Password successfully updated!');
+    //console.log('Password successfully updated!');
   };
 
   return (

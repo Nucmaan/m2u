@@ -3,6 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
+import RaadiLoading from "@/components/RaadiLoading";
 
 export default function PropertyListing() {
   const [listings, setListings] = useState([]);
@@ -35,7 +36,7 @@ export default function PropertyListing() {
       <h1 className="text-3xl font-bold text-[#1A3B5D] text-center mb-8">Property Listings</h1>
 
       {loading ? (
-        <div className="text-center text-lg text-[#7A7A7A]">Loading properties...</div>
+        <RaadiLoading />
       ) : listings.length === 0 ? (
         <div className="text-center text-lg text-[#7A7A7A]">
           No properties are available at the moment.

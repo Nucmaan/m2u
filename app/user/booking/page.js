@@ -4,6 +4,7 @@ import userAuth from "@/myStore/UserAuth";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import RaadiLoading from "@/components/RaadiLoading";
 
 function UserBookingPage() {
   const [userBookings, setUserBookings] = useState([]);
@@ -43,7 +44,7 @@ function UserBookingPage() {
       <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">My Bookings</h1>
 
       {loading ? (
-        <p className="text-center text-lg text-gray-600">Loading...</p>
+        <RaadiLoading />
       ) : userBookings.length === 0 ? (
         <p className="text-center text-lg text-gray-600">
           You don&apos;t have any bookings.

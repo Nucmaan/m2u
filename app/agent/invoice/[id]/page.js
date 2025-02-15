@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
+import RaadiLoading from "@/components/RaadiLoading";
 
 export default function Page() {
   const { id } = useParams();
@@ -39,7 +40,7 @@ export default function Page() {
   };
 
   if (loading) {
-    return <div className="text-center text-lg text-gray-600">Loading Invoice details...</div>;
+    return <RaadiLoading />;
   }
 
   const {

@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
@@ -39,7 +40,7 @@ export default function Page() {
         </h1>
 
         {loading ? (
-          <div className="text-[#7A7A7A] text-center">Loading Invoices...</div>
+          <RaadiLoading />
         ) : ownerPayments.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {ownerPayments.map((payment) => (

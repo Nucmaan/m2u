@@ -19,18 +19,16 @@ const Register = () => {
         password,
       });
 
-      console.log(response.data);
+      //console.log(response.data);
       toast.success(response.data.message);
-      setUserName("");
-      setEmail("");
-      setPassword("");
+     
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
         toast.error("Something went wrong. Please try again.");
       }
-      console.error(error);
+      //console.error(error);
     } finally {
       setLoading(false); // End loading
     }

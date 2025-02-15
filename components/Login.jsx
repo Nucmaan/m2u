@@ -46,13 +46,11 @@ const Login = () => {
 
       toast.success(response.data.message);
 
-      setUserName("");
-      setPassword("");
     } catch (error) {
       const message =
         error.response?.data?.message || "An unexpected error occurred.";
       toast.error(message);
-      console.error("Login Error:", error);
+      //console.error("Login Error:", error);
     } finally {
       setLoading(false);
     }

@@ -12,7 +12,6 @@ export default async function VerifyPage({ params }) {
         <p className="text-[#7A7A7A] mb-6">
           Click the button below to complete your account verification process.
         </p>
-        
         <VerifyButton token={token} />
       </div>
     </div>

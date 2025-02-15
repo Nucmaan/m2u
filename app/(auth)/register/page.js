@@ -2,7 +2,7 @@ import Register from "@/components/Register";
 import Head from "next/head";
 
 export default function Page() {
-  const domain = process.env.DOMAIN || "http://localhost:3000"; // Fallback for development
+  const domain = process.NEXT_PUBLIC_DOMAIN || "http://localhost:3000"; // Fallback for development
 
   return (
     <>

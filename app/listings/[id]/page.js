@@ -5,6 +5,7 @@ import axios from "axios";
 import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import RaadiLoading from "@/components/RaadiLoading";
 
 const ViewProperty = () => {
   const { id } = useParams();
@@ -116,11 +117,7 @@ const ViewProperty = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl font-semibold text-gray-600">Loading...</p>
-      </div>
-    );
+    return <RaadiLoading />;
   }
 
   return (

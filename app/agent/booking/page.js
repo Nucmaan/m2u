@@ -1,4 +1,5 @@
 "use client";
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
@@ -43,9 +44,8 @@ export default function BookingPage() {
         My Bookings
       </h1>
 
-      {/* Loading State */}
       {loading ? (
-        <p className="text-center text-lg text-[#7A7A7A]">Loading bookings...</p>
+        <RaadiLoading />
       ) : error ? (
         <p className="text-center text-lg text-red-500">{error}</p>
       ) : ownerBookings.length > 0 ? (

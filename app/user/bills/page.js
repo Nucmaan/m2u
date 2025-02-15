@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Link from "next/link";
@@ -40,9 +41,7 @@ export default function BillPage() {
       <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">Manage Your Bills</h1>
 
       {loading ? (
-        <div className="text-center">
-          <p className="text-[#7A7A7A] text-lg">Loading your bills...</p>
-        </div>
+       <RaadiLoading />
       ) : error ? (
         <div className="text-center">
           <p className="text-[#E74C3C] text-lg">{error}</p>

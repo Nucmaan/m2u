@@ -6,6 +6,7 @@ import userAuth from "@/myStore/UserAuth";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
+import RaadiLoading from "@/components/RaadiLoading";
 
 const ViewProperty = () => {
   const { id } = useParams();
@@ -48,7 +49,7 @@ const ViewProperty = () => {
   };
 
   if (loading) {
-    return <div className="text-center text-lg text-[#7A7A7A] py-10">Loading property details...</div>;
+    return <RaadiLoading />;
   }
 
   return (

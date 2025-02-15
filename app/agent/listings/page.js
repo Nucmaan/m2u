@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import Image from "next/image";
@@ -11,7 +12,11 @@ export default function PropertyList() {
   const [listings, setListings] = useState([]);
   const user = userAuth((state) => state.user);
 
+    const [loading, setLoading] = useState(true); // Added loading state
+  
+
   const getListings = useCallback(async () => {
+    setLoading(true); // Start loading when fetching listings
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
@@ -32,6 +37,8 @@ export default function PropertyList() {
     } catch (error) {
       setListings([]);
       console.error("Error fetching listings:", error);
+    }finally {
+      setLoading(false); // Set loading to false after fetching
     }
   }, [user._id]);
 
@@ -46,6 +53,9 @@ export default function PropertyList() {
   const rentedOrSoldProperties = listings.filter(
     (listing) => listing.status !== "Available"
   );
+
+  if (loading) return <RaadiLoading />; // Show loading animation while fetching
+
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">

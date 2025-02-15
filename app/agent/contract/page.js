@@ -1,5 +1,6 @@
 "use client";
 
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
 import moment from "moment";
@@ -11,9 +12,12 @@ export default function ContractListPage() {
   const user = userAuth((state) => state.user);
   const [ownerContracts, setOwnerContracts] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true); // Added loading state
+
 
   const getOwnerContracts = useCallback(async () => {
     if (!user || !user._id) return;
+    setLoading(true); // Set loading to true before fetching data
     try {
       const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
       if (response.status === 404) {
@@ -23,6 +27,8 @@ export default function ContractListPage() {
       }
     } catch (error) {
       setError(error.response?.data?.message || "Failed to fetch contracts.");
+    } finally {
+      setLoading(false); // Set loading to false after fetching
     }
   }, [user]);
 
@@ -43,6 +49,8 @@ export default function ContractListPage() {
   useEffect(() => {
     getOwnerContracts();
   }, [getOwnerContracts]);
+
+  if (loading) return <RaadiLoading />; // Show loading animation while fetching
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen">
