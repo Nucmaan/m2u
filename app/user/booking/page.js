@@ -46,7 +46,7 @@ function UserBookingPage() {
       {loading ? (
         <RaadiLoading />
       ) : userBookings.length === 0 ? (
-        <p className="text-center text-lg text-gray-600">
+        <p className="text-lg text-gray-600">
           You don&apos;t have any bookings.
         </p>
       ) : (

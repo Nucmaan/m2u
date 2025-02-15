@@ -60,7 +60,7 @@ const AllInvoicesPage = () => {
           <p className="text-center text-red-500 text-lg">{error}</p>
         ) : ownerPayments.length === 0 ? (
           <p className=" text-[#7A7A7A] text-lg font-semibold">
-            You &rsquo;re not have any invoices.
+            You do not have any invoices.
           </p>
         ) : (
           ownerPayments.map((invoice) => (
