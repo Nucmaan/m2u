@@ -19,11 +19,16 @@ export default function BillPage() {
       setLoading(true);
       const response = await axios.get(`/api/bill`);
 
-      const unpaidBill = response.data.data.filter(
-        (bill) => bill.status !== "Paid" && bill.user && bill.user._id === user._id
-      );
+const unpaidBill = response.data.data.filter(
+  (bill) => 
+    bill.status !== "Paid" && 
+    bill.user && 
+    bill.user._id === user._id // Ensure bill.user exists before accessing _id
+);
 
-      setUserBill(unpaidBill);
+setUserBill(unpaidBill);
+
+
     } catch (error) {
       console.error("Error fetching bills:", error.response ? error.response.data : error.message);
       setError("Failed to fetch bills. Please try again.");

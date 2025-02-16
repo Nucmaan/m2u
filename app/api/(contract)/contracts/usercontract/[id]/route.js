@@ -13,9 +13,9 @@ export async function GET(req, { params }) {
     await ConnectDb();
 
     const contracts = await Contract.find({ user: id })
-      .populate("property", "title address city price")
-      .populate("user", "username email avatar")
-      .populate("owner", "username email avatar")
+      .populate("property", "title address city price houseType status")
+      .populate("user", "username email avatar mobile")
+      .populate("owner", "username email avatar mobile")
       .sort({ createdAt: -1 });
 
     if (!contracts || contracts.length === 0) {

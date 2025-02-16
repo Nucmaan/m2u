@@ -162,6 +162,8 @@ export default function EditContractPage() {
             <option value="Active">Active</option>
             <option value="Expired">Expired</option>
             <option value="Terminated">Terminated</option>
+            <option value="Completed">Completed</option>
+
           </select>
         </div>
 
