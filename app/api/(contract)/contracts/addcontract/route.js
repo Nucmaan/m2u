@@ -19,7 +19,7 @@ export async function POST(req) {
       termsAndConditions,
     } = await req.json();
 
-    if (!(bookingId && propertyId && userId && ownerId && startDate && endDate && monthlyRent && deposit)) {
+    if (!(bookingId && propertyId && userId && ownerId && startDate  && monthlyRent )) {
       return NextResponse.json(
         { message: "All required fields must be provided" },
         { status: 400 }
