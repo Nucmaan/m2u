@@ -12,12 +12,19 @@ export default function PropertyListing() {
   const getListings = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
+      );
 
       if (!response.data?.Listings) {
         throw new Error("Invalid response from server");
       }
-      const validListings = response.data.Listings.filter((listing) => listing.owner !== null && listing.status === "Available");
+      const validListings = response.data.Listings.filter(
+        (listing) =>
+          listing.owner !== null &&
+          listing.owner.isVerified === true &&
+          listing.status === "Available"
+      );
       setListings(validListings);
     } catch (error) {
       setListings([]);
@@ -33,7 +40,9 @@ export default function PropertyListing() {
 
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-6 py-8">
-      <h1 className="text-3xl font-bold text-[#1A3B5D] text-center mb-8">Property Listings</h1>
+      <h1 className="text-3xl font-bold text-[#1A3B5D] text-center mb-8">
+        Property Listings
+      </h1>
 
       {loading ? (
         <RaadiLoading />
@@ -49,23 +58,38 @@ export default function PropertyListing() {
               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-200 border border-[#E0E0E0]"
             >
               <div className="relative w-full h-48">
-                <Image src={listing.images[0] || "/images/nasri.jpg"} alt={listing.title} fill style={{ objectFit: "cover" }} />
+                <Image
+                  src={listing.images[0] || "/images/nasri.jpg"}
+                  alt={listing.title}
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
               </div>
 
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-[#1A3B5D] mb-2">{listing.title}</h2>
+                <h2 className="text-xl font-semibold text-[#1A3B5D] mb-2">
+                  {listing.title}
+                </h2>
                 <p className="text-sm text-[#7A7A7A] mb-2">{listing.address}</p>
-                <p className="text-lg font-bold text-[#F47C48]">${listing.price}</p>
-                <p className="text-sm text-[#7A7A7A] mb-2">City: {listing.city || "N/A"}</p>
+                <p className="text-lg font-bold text-[#F47C48]">
+                  ${listing.price}
+                </p>
+                <p className="text-sm text-[#7A7A7A] mb-2">
+                  City: {listing.city || "N/A"}
+                </p>
 
                 <div className="mt-2 flex justify-between items-center text-sm text-[#7A7A7A]">
                   <span>{listing.bedrooms} Beds</span>
                   <span>{listing.bathrooms} Baths</span>
                 </div>
 
-                <div className={`mt-2 inline-block px-3 py-1 text-xs font-semibold rounded-full ${
-                  listing.houseType === "Rent" ? "bg-[#4C8492] text-white" : "bg-[#27AE60] text-white"
-                }`}>
+                <div
+                  className={`mt-2 inline-block px-3 py-1 text-xs font-semibold rounded-full ${
+                    listing.houseType === "Rent"
+                      ? "bg-[#4C8492] text-white"
+                      : "bg-[#27AE60] text-white"
+                  }`}
+                >
                   {listing.houseType}
                 </div>
 

@@ -18,8 +18,9 @@ export default  function PropertyListing() {
           throw new Error("Invalid response from server");
         }
   
-        const validListings = response.data.Listings.filter((listing) => listing.owner !== null);
+        const validListings = response.data.Listings.filter((listing) => listing.owner !== null && listing.owner.isVerified === true && listing.status === "Available");
         setListings(validListings);
+
       } catch (error) {
         setError(error?.message);
         setListings([]);
