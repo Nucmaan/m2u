@@ -19,7 +19,7 @@ export async function GET(req, { params }) {
 
 
     const contracts = await Contract.find({ owner: id })
-      .populate("property", "title address city price")
+      .populate("property", "title address city price houseType status")
       .populate("user", "username email mobile") 
       .populate("owner", "username email mobile") 
       .sort({ createdAt: -1 }); // Sort by latest contracts

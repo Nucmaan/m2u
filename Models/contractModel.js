@@ -24,11 +24,10 @@ const contractSchema = new mongoose.Schema(
     },
     startDate: {
       type: Date,
-      required: true,
     },
     endDate: {
       type: Date,
-      required: true,
+      default: null
     },
     monthlyRent: {
       type: Number,
@@ -36,7 +35,7 @@ const contractSchema = new mongoose.Schema(
     },
     deposit: {
       type: Number,
-      required: true,
+      default: 0,  
     },
     status: {
       type: String,
