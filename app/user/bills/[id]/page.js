@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { FaSpinner } from "react-icons/fa";
 import userAuth from "@/myStore/UserAuth";
+import RaadiLoading from "@/components/RaadiLoading";
 
 function BillPaymentPage() {
   const { id } = useParams();
@@ -14,17 +15,21 @@ function BillPaymentPage() {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
   const user = userAuth((state) => state.user);
+
+  const [hello, setHello] = useState(false);
 
   // Fetch bill information
   const fetchBillInfo = useCallback(async () => {
+    setHello(true);
     try {
       const { data } = await axios.get(`/api/bill/${id}`);
       setBillInfo(data.data);
     } catch (error) {
       //console.error("Error fetching bill info:", error);
       toast.error("Failed to fetch bill details.", error);
+    } finally {
+      setHello(false);
     }
   }, [id]);
 
@@ -56,6 +61,10 @@ function BillPaymentPage() {
       setLoading(false);
     }
   };
+
+  if(hello){
+    return <RaadiLoading />
+  }
 
   return (
     <div className="min-h-screen mt-4 bg-gray-100 px-4 ">

@@ -102,7 +102,7 @@ function ContractPage() {
                       <p className="text-sm text-[#7A7A7A]">
                         Monthly Rent:{" "}
                         <span className="font-medium text-[#1A3B5D]">
-                          ${monthlyRent}
+                          ${property.price}
                         </span>
                       </p>
                       <p className="text-sm text-[#7A7A7A]">

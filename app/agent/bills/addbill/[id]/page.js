@@ -12,6 +12,7 @@ export default function AddBillPage() {
   const [user, setUser] = useState("");
   const [comment, setComment] = useState("");
   const [property, setProperty] = useState("");
+  const [housePrice, setHousePrice] = useState("");
 
   const owner = userAuth((state) => state.user);
   const { id } = useParams();
@@ -22,9 +23,10 @@ export default function AddBillPage() {
       const response = await axios.get(`/api/contracts/${id}`);
       setUser(response.data.existingContract.user);
       setProperty(response.data.existingContract.property);
+      setHousePrice(response.data.existingContract.property.price);
     } catch (error) {
       console.error("Error fetching contract:", error);
-      toast.error("Failed to fetch contract details. Please try again.");
+      toast.error("Failed to fetch contract details. Please try again." );
     }
   }, [id]);
 
@@ -35,8 +37,23 @@ export default function AddBillPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!amount || !dueDate || !user || !comment) {
-      toast.error("All fields are required.");
+    if (!dueDate) {
+      toast.error("due date is missing");
+      return;
+    }
+
+    if (!user) {
+      toast.error("user is missing");
+      return;
+    }
+
+    if (!comment) {
+      toast.error("comment is missing.");
+      return;
+    }
+
+    if (!amount ) {
+      toast.error("Amount is missing.");
       return;
     }
 
@@ -69,12 +86,31 @@ export default function AddBillPage() {
     <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">
       <div className="bg-white w-full  p-8 rounded-lg shadow-lg border border-[#E0E0E0]">
         <form onSubmit={handleSubmit} className="space-y-6">
+          
+        {property && property.status === "Sold" ? (
           <div>
             <label
               htmlFor="amount"
               className="block text-sm font-semibold text-[#1A3B5D] mb-2"
             >
-              Amount ($)
+              House Price ($)
+            </label>
+            <input
+              id="amount"
+              type="number"
+              value={housePrice}
+              className="w-full px-4 py-2 border border-[#E0E0E0] rounded-lg text-[#333333] bg-gray-200 cursor-not-allowed"
+              placeholder="Sold"
+              disabled
+            />
+          </div>
+        ) : (
+          <div>
+            <label
+              htmlFor="amount"
+              className="block text-sm font-semibold text-[#1A3B5D] mb-2"
+            >
+              amount ($)
             </label>
             <input
               id="amount"
@@ -86,6 +122,8 @@ export default function AddBillPage() {
               required
             />
           </div>
+        )}
+        
 
           <div>
             <label
@@ -125,7 +163,7 @@ export default function AddBillPage() {
             type="submit"
             className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-lg hover:bg-[#16324A] transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#F47C48]"
           >
-            Add Bill
+            Add Money
           </button>
         </form>
       </div>

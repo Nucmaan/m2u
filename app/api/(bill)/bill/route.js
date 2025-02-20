@@ -12,7 +12,7 @@ export async function GET(req) {
         const bills = await Bill.find({})
             .populate("user", "username email mobile") 
             .populate("owner", "username email mobile") 
-            .populate("property", "title address"); 
+            .populate("property", "title address price"); 
 
         return NextResponse.json(
             { message: bills.length > 0 ? "Bills fetched successfully" : "No bills found", data: bills }, 

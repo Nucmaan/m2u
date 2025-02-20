@@ -17,7 +17,7 @@ export async function GET(req, { params }) {
         await ConnectDb();
 
         const existingContract = await Contract.findById(id)
-        .populate("property", "status")
+        .populate("property", "status price")
 
         if (!existingContract) {
           return NextResponse.json(

@@ -27,6 +27,7 @@ export default function BillPage() {
           mobile: contract.user.mobile,
           property: contract.property.title,
           propertyStatus: contract.property.status, // Ensure status is included
+          price : contract.property.price,
           startDate: new Date(contract.startDate).toLocaleDateString(),
           endDate: new Date(contract.endDate).toLocaleDateString(),
           monthlyRent: contract.monthlyRent,
@@ -85,7 +86,7 @@ export default function BillPage() {
                   <FiDollarSign className="mr-2 text-[#4C8492]" />
                   Price:{" "}
                   <span className="ml-1 text-[#333333] font-semibold">
-                    ${contract.monthlyRent}
+                    ${contract.price}
                   </span>
                 </p>
 

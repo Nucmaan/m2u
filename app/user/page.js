@@ -6,10 +6,11 @@ import Image from "next/image";
 import React, { useEffect, useState, useCallback } from "react";
 
 const UserDashboard = () => {
-  const userName = userAuth((state) => state.user);
   const [userContracts, setUserContracts] = useState([]);
   const [userBookings, setUserBookings] = useState([]);
+
   const [totalUnpaidAmount, setTotalUnpaidAmount] = useState(0);
+  const userName = userAuth((state) => state.user);
 
   const getOwnerBills = useCallback(async () => {
     try {
@@ -21,7 +22,7 @@ const UserDashboard = () => {
       }
 
       const unpaidBill = response.data.data.filter(
-        (bill) => bill?.status !== "Paid" && bill?.user?._id === userName?._id
+        (bill) => bill?.status !== "Paid" && bill?.user?._id === userName._id
       );
 
       const totalAmount = unpaidBill.reduce(
@@ -115,7 +116,7 @@ const UserDashboard = () => {
           <div className="p-6 rounded-lg shadow-md border border-[#E0E0E0] bg-[#85A8B3] text-white">
             <h3 className="text-lg">Outstanding Bills</h3>
             <p className="text-2xl font-bold">
-              ${totalUnpaidAmount.length || 0}
+              ${totalUnpaidAmount || 0}
             </p>
           </div>
         </div>
