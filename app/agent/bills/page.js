@@ -23,6 +23,8 @@ export default function BillPage() {
         .map((contract) => ({
           _id: contract._id,
           user: contract.user.username,
+          email : contract.user.email,
+          Mobile : contract.user.mobile,
           property: contract.property.title,
           startDate: new Date(contract.startDate).toLocaleDateString(),
           endDate: new Date(contract.endDate).toLocaleDateString(),
@@ -69,13 +71,24 @@ export default function BillPage() {
                 {/* User Details */}
                 <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
                   <FiUser className="mr-2 text-[#4C8492]" />
-                  User: <span className="ml-1 text-[#333333]">{contract.user}</span>
+                  User Name : <span className="ml-1 text-[#333333]">{contract.user}</span>
                 </p>
+
+                <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
+                  <FiUser className="mr-2 text-[#4C8492]" />
+                  User Email : <span className="ml-1 text-[#333333]">{contract.email}</span>
+                </p>
+
+                <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
+                <FiUser className="mr-2 text-[#4C8492]" />
+                User Mobile : <span className="ml-1 text-[#333333]">{contract.Mobile}</span>
+              </p>
+
 
                 {/* Monthly Rent */}
                 <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
                   <FiDollarSign className="mr-2 text-[#4C8492]" />
-                  Monthly Rent:{" "}
+                  price :{" "}
                   <span className="ml-1 text-[#333333] font-semibold">
                     ${contract.monthlyRent}
                   </span>
@@ -84,14 +97,17 @@ export default function BillPage() {
                 {/* Start Date */}
                 <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
                   <FiCalendar className="mr-2 text-[#4C8492]" />
-                  Start: <span className="ml-1">{contract.startDate}</span>
+                  Contract Date : <span className="ml-1">{contract.startDate}</span>
                 </p>
 
                 {/* End Date */}
-                <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
-                  <FiCalendar className="mr-2 text-[#4C8492]" />
-                  End: <span className="ml-1">{contract.endDate}</span>
-                </p>
+                
+                {contract.property.status === "Rented" && contract.endDate && (
+                  <p className="text-sm text-[#7A7A7A] flex items-center mb-2">
+                    <FiCalendar className="mr-2 text-[#4C8492]" />
+                    contract End Date : <span className="ml-1">{contract.endDate}</span>
+                  </p>
+                )}
 
                 {/* Status Badge */}
                 <p className="mt-2">

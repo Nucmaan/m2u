@@ -9,15 +9,10 @@ const Footer = () => {
     >
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
       
-        <div className="flex items-center space-x-3">
-          <Image
-            src="/logo.png"
-            alt="MyHome2U Logo"
-            width={80} // Adjust width
-            height={40} // Adjust height
-            className="h-10 w-20"
-          />
-          <span className="text-2xl font-semibold">MyHome2U</span>
+        <div className="flex items-center">
+        <Link href="/" className="text-white hover:text-[#F47C48]">
+        <Image src="/logo.png" alt="MyHome2U Logo" width={80} height={40} priority />
+      </Link>          <span className="text-2xl font-semibold">MyHome2U</span>
         </div>
 
         <div className="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">

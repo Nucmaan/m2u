@@ -12,23 +12,18 @@ export default function ContractListPage() {
   const user = userAuth((state) => state.user);
   const [ownerContracts, setOwnerContracts] = useState([]);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true); // Added loading state
-
+  const [loading, setLoading] = useState(true);
 
   const getOwnerContracts = useCallback(async () => {
     if (!user || !user._id) return;
-    setLoading(true); // Set loading to true before fetching data
+    setLoading(true);
     try {
       const response = await axios.get(`/api/contracts/ownercontract/${user._id}`);
-      if (response.status === 404) {
-        setOwnerContracts([]);
-      } else {
-        setOwnerContracts(response.data.contracts);
-      }
+      setOwnerContracts(response.status === 404 ? [] : response.data.contracts);
     } catch (error) {
       setError(error.response?.data?.message || "Failed to fetch contracts.");
     } finally {
-      setLoading(false); // Set loading to false after fetching
+      setLoading(false);
     }
   }, [user]);
 
@@ -50,43 +45,85 @@ export default function ContractListPage() {
     getOwnerContracts();
   }, [getOwnerContracts]);
 
-  if (loading) return <RaadiLoading />; // Show loading animation while fetching
+  if (loading) return <RaadiLoading />;
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen">
+      {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-[#1A3B5D] ">All Contracts</h1>
-        <button className="px-6 py-2 bg-[#F47C48] text-white font-semibold rounded-lg hover:bg-[#e86d3f] transition duration-200">
-          <Link href="/agent/contract/addcontract">Add Contract</Link>
-        </button>
+        <h1 className="text-3xl font-bold text-[#1A3B5D]">All Contracts</h1>
+        <Link href="/agent/contract/addcontract">
+          <button className="px-6 py-2 bg-[#F47C48] text-white font-semibold rounded-lg hover:bg-[#e86d3f] transition duration-200">
+            Add Contract
+          </button>
+        </Link>
       </div>
+
+      {/* Contract Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {ownerContracts.length > 0 ? (
           ownerContracts.map((contract) => (
-            <div key={contract._id} className="bg-white rounded-lg shadow-lg border border-[#E0E0E0] p-6 hover:shadow-xl transition duration-300 relative">
+            <div
+              key={contract._id}
+              className="relative bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition duration-300"
+            >
+              {/* Delete Button */}
               <button
                 onClick={() => deleteContract(contract._id)}
-                className="absolute top-4 right-4 bg-[#E74C3C] text-white text-sm px-2 py-1 rounded-full hover:bg-[#C0392B] transition duration-200"
+                className="absolute top-4 right-4 bg-[#E74C3C] text-white text-sm px-3 py-1 rounded-full hover:bg-[#C0392B] transition duration-200"
                 title="Delete Contract"
               >
-                &times;
+                ✖
               </button>
-              <h2 className="text-xl font-bold text-[#1A3B5D] mb-4">{contract.property.title}</h2>
-              <p className="text-sm text-[#7A7A7A] mb-2"><span className="font-medium">User:</span> {contract.user.username}</p>
-              <p className="text-sm text-[#7A7A7A] mb-2"><span className="font-medium">Email:</span> {contract.user.email}</p>
-              <p className="text-sm text-[#7A7A7A] mb-2"><span className="font-medium">Start Date:</span> {moment(contract.startDate).format("D MMMM, YYYY")}</p>
-              <p className="text-sm text-[#7A7A7A] mb-4"><span className="font-medium">End Date:</span> {moment(contract.endDate).format("D MMMM, YYYY")}</p>
-              <p className="mt-2">
-                <span className={`inline-block px-4 py-1 text-sm font-medium rounded-full text-white ${
-                  contract.status === "Active" ? "bg-[#27AE60]" : contract.status === "Pending" ? "bg-[#F47C48]" : "bg-[#E74C3C]"}`}>{contract.status}</span>
+
+              {/* Property Title */}
+              <h2 className="text-xl font-semibold text-[#1A3B5D] mb-3">{contract.property.title}</h2>
+
+              {/* Contract Details */}
+              <div className="text-gray-700 text-sm space-y-2">
+                <p><span className="font-medium">User:</span> {contract.user.username}</p>
+                <p><span className="font-medium">Email:</span> {contract.user.email}</p>
+                <p>
+                  <span className="font-medium">Contract Date:</span> {moment(contract.startDate).format("D MMM, YYYY")}
+                </p>
+                {contract.property.status === "Rented" && contract.endDate && (
+                  <p>
+                    <span className="font-medium">End Date:</span> {moment(contract.endDate).format("D MMM, YYYY")}
+                  </p>
+                )}
+              </div>
+
+              {/* Status Badge */}
+              <p className="mt-4">
+                <span
+                  className={`inline-block px-4 py-1 text-sm font-medium rounded-full text-white ${
+                    contract.status === "Active"
+                      ? "bg-[#27AE60]"
+                      : contract.status === "Pending"
+                      ? "bg-[#F47C48]"
+                      : contract.status === "Expired"
+                      ? "bg-[#E67E22]"
+                      : contract.status === "Terminated"
+                      ? "bg-[#8E44AD]"
+                      : contract.status === "Completed"
+                      ? "bg-[#2C3E50]"
+                      : "bg-[#E74C3C]"
+                  }`}
+                >
+                  {contract.status}
+                </span>
               </p>
-              <button className="mt-6 w-full py-2 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200">
-                <Link href={`/agent/contract/${contract._id}`}>Edit Contract</Link>
-              </button>
+
+              {/* Edit Button */}
+              <Link href={`/agent/contract/${contract._id}`}>
+                <button className="mt-6 w-full py-2 bg-[#4C8492] text-white font-semibold rounded-lg hover:bg-[#3b6d78] transition duration-200">
+                  Edit Contract
+                </button>
+              </Link>
             </div>
           ))
         ) : (
-          <p className="text-[#7A7A7A] text-lg  col-span-full">No contracts available.</p>
+          <p className="text-gray-600 text-lg col-span-full text-center">No contracts available.</p>
         )}
       </div>
     </div>

@@ -30,7 +30,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ backgroundColor: "#1A3B5D" }} className="text-white p-4 shadow-md z-50 sticky top-0">
+    <nav style={{ backgroundColor: "#1A3B5D" }} className="text-white px-4 pt-4 pb-2 shadow-md z-50 sticky top-0">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Link href="/" className="text-white hover:text-[#F47C48]">
