@@ -28,7 +28,7 @@ export default function PropertyListing() {
       setListings(validListings);
     } catch (error) {
       setListings([]);
-      console.error("Error fetching listings:", error);
+      //console.error("Error fetching listings:", error);
     } finally {
       setLoading(false);
     }

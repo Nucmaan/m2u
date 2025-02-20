@@ -30,7 +30,7 @@ setUserBill(unpaidBill);
 
 
     } catch (error) {
-      console.error("Error fetching bills:", error.response ? error.response.data : error.message);
+      //console.error("Error fetching bills:", error.response ? error.response.data : error.message);
       setError("Failed to fetch bills. Please try again.");
     } finally {
       setLoading(false);

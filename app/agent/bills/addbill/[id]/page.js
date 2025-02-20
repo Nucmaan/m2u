@@ -67,9 +67,7 @@ export default function AddBillPage() {
 
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Add Bill</h1>
-
-      <div className="bg-white w-full max-w-md p-8 rounded-lg shadow-lg border border-[#E0E0E0]">
+      <div className="bg-white w-full  p-8 rounded-lg shadow-lg border border-[#E0E0E0]">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label

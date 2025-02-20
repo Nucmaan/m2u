@@ -1,4 +1,5 @@
 "use client";
+import RaadiLoading from "@/components/RaadiLoading";
 import Sidebar from "@/components/Sidebar";
 import userAuth from "@/myStore/UserAuth";
 import { useRouter } from "next/navigation";
@@ -23,7 +24,7 @@ function Layout({ children }) {
 
   // Show a loading placeholder while hydration is in progress
   if (!isHydrated) {
-    return <div>Loading...</div>;
+    return <RaadiLoading />;
   }
 
   // Prevent rendering for non-user roles
@@ -33,12 +34,13 @@ function Layout({ children }) {
 
   return (
     <div className="flex">
-      <div className="w-1/5">
+      <div className="w-1/7">
         <Sidebar />
       </div>
       <div className="flex-1 bg-gray-100">{children}</div>
     </div>
   );
 }
+
 
 export default Layout;

@@ -16,10 +16,10 @@ function ContractPage() {
       const response = await axios.get(
         `/api/contracts/usercontract/${user._id}`
       );
-      console.log("API Response:", response.data); // Debugging
+     // console.log("API Response:", response.data); // Debugging
       setUserContracts(response.data.contracts);
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       setUserContracts([]); // Handle errors
     } finally {
       setLoading(false);

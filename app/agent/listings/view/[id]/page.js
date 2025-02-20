@@ -54,7 +54,7 @@ const ViewProperty = () => {
 
   return (
     <section className="min-h-screen bg-[#F7F7F9] px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-[#E0E0E0]">
+      <div className="w-full mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-[#E0E0E0]">
         <div className="relative">
           <Image
             src={list?.images?.[currentImageIndex] || "https://via.placeholder.com/500"}

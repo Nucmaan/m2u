@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import RaadiLoading from "@/components/RaadiLoading";
 
 export default function Page() {
   const { id } = useParams();
@@ -70,12 +71,11 @@ export default function Page() {
   
 
   if (loading) {
-    return <div>Loading payment details...</div>;
+    return <RaadiLoading />;
   }
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-6">Edit Payment</h1>
 
       <form
         onSubmit={handleSubmit}

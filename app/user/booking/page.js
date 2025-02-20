@@ -10,6 +10,7 @@ function UserBookingPage() {
   const [userBookings, setUserBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = userAuth((state) => state.user);
+  const [errormessage, setErrorMessage] = useState("");
 
   const fetchUserBookings = useCallback(async () => {
     if (!user?._id) return;
@@ -17,7 +18,8 @@ function UserBookingPage() {
       const response = await axios.get(`/api/booking/userBooking/${user._id}`);
       setUserBookings(response.data.bookings);
     } catch (error) {
-      console.error("Error fetching user bookings:", error);
+     // console.error("Error fetching user bookings:", error);
+      setErrorMessage("Failed to fetch user bookings");
     } finally {
       setLoading(false);
     }

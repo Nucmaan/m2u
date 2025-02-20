@@ -33,16 +33,17 @@ export default function Page() {
   }, [owner]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F7F9] to-[#E8EBF3] p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="p-6 bg-[#F7F7F9] min-h-screen">
+      <div className="mx-auto">
         <h1 className="text-4xl font-bold text-[#1A3B5D] mb-8 ">
           Agent Invoice
         </h1>
 
+
         {loading ? (
           <RaadiLoading />
         ) : ownerPayments.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {ownerPayments.map((payment) => (
               <div
                 key={payment._id}
@@ -51,7 +52,11 @@ export default function Page() {
                 <h2 className="text-2xl font-semibold text-[#1A3B5D] mb-2">
                   {payment.user.username}
                 </h2>
-                <p className="text-[#7A7A7A] mb-4">{payment.user.email}</p>
+                <p className="text-[#7A7A7A] mb-4">User Name : {payment.user.username}</p>
+
+                <p className="text-[#7A7A7A] mb-4">User Email : {payment.user.email}</p>
+                <p className="text-[#7A7A7A] mb-4">User Mobile : {payment.user.mobile}</p>
+
                 <p className="text-[#333333] font-medium mb-2">
                   Amount:{" "}
                   <span className="font-bold text-[#F47C48]">

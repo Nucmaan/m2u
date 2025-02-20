@@ -18,6 +18,8 @@ const UserSettings = () => {
   const [avatarPreview, setAvatarPreview] = useState(user1.avatar || "/profileImage.jpg");
   const [avatarFile, setAvatarFile] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const updateUser = userAuth((state) => state.updateUser);
 
 
@@ -41,6 +43,7 @@ const UserSettings = () => {
   };
 
   const handleSaveChanges = async () => {
+    setLoading(true);
     const formData = new FormData();
 
     formData.append("id", id); 
@@ -73,12 +76,14 @@ const UserSettings = () => {
       }
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-[#F7F7F9] min-h-screen p-6 md:p-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="bg-[#F7F7F9] min-h-screen p-6 ">
+      <div className="w-full mx-auto">
         <h1 className="text-3xl font-extrabold text-[#1A3B5D] mb-8">User Settings</h1>
 
         <div className="bg-white rounded-lg shadow-md border border-[#E0E0E0] p-6 mb-8">
@@ -148,7 +153,7 @@ const UserSettings = () => {
             className="px-6 py-3 bg-[#1A3B5D] text-white rounded-lg hover:bg-[#16324A] focus:outline-none focus:ring-2 focus:ring-[#1A3B5D] transition duration-200"
             onClick={handleSaveChanges}
           >
-            Save Changes
+            {loading ? "saving..." : "Save Changes"}
           </button>
           <Link
             href="/agent/profile"

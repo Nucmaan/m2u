@@ -35,7 +35,7 @@ const AllInvoicesPage = () => {
 
         setOwnerPayments(filteredPayments);
       } catch (error) {
-        console.error("Error fetching user payments:", error);
+        //console.error("Error fetching user payments:", error);
         setError("Failed to fetch invoices. Please try again.");
       } finally {
         setLoading(false);

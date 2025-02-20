@@ -14,7 +14,7 @@ export default function BookingPage() {
   const fetchOwnerBookings = useCallback(async () => {
     try {
       if (!user?._id) {
-        console.log("User ID missing!");
+        //console.log("User ID missing!");
         return;
       }
 
@@ -47,7 +47,7 @@ export default function BookingPage() {
       {loading ? (
         <RaadiLoading />
       ) : error ? (
-        <p className="text-center text-lg text-red-500">{error}</p>
+        <p className="text-gray-600 text-lg col-span-full">{error}</p>
       ) : ownerBookings.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {ownerBookings.map((booking) => (
@@ -117,7 +117,7 @@ export default function BookingPage() {
           ))}
         </div>
       ) : (
-        <p className="text-center text-lg text-[#7A7A7A]">
+        <p className="text-gray-600 text-lg col-span-full">
           You don’t have any bookings at the moment.
         </p>
       )}

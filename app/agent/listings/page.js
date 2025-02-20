@@ -7,13 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 
-
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
   const user = userAuth((state) => state.user);
 
-    const [loading, setLoading] = useState(true); // Added loading state
-  
+  const [loading, setLoading] = useState(true); // Added loading state
 
   const getListings = useCallback(async () => {
     setLoading(true); // Start loading when fetching listings
@@ -36,8 +34,8 @@ export default function PropertyList() {
       setListings(filteredListings);
     } catch (error) {
       setListings([]);
-      console.error("Error fetching listings:", error);
-    }finally {
+      //console.error("Error fetching listings:", error);
+    } finally {
       setLoading(false); // Set loading to false after fetching
     }
   }, [user._id]);
@@ -55,7 +53,6 @@ export default function PropertyList() {
   );
 
   if (loading) return <RaadiLoading />; // Show loading animation while fetching
-
 
   return (
     <div className="min-h-screen bg-[#F7F7F9] p-6">

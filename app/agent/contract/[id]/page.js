@@ -69,12 +69,11 @@ export default function EditContractPage() {
   return (
     <div className="p-6 bg-[#F7F7F9] min-h-screen flex flex-col items-center">
       {/* Heading */}
-      <h1 className="text-3xl font-bold text-[#1A3B5D] mb-8">Edit Contract</h1>
 
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white w-full max-w-lg p-8 rounded-lg shadow-lg border border-[#E0E0E0] space-y-6"
+        className="bg-white w-full  p-8 rounded-lg shadow-lg border border-[#E0E0E0] space-y-4"
       >
         {houseStatus === "Sold" ? (
           <>

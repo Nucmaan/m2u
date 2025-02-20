@@ -15,8 +15,8 @@ const ProfilePage = () => {
   //const avatarSrc = user1.avatar ? user1.avatar : "/profileImage.jpg";
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] py-3  flex justify-center">
-      <div className="w-full max-w-5xl bg-white rounded-lg shadow-lg border border-[#E0E0E0]">
+    <div className="min-h-screen bg-[#F7F7F9] p-6  flex justify-center">
+      <div className="w-full  bg-white  border border-[#E0E0E0]">
         {/* Header */}
         <div className="relative bg-[#1A3B5D] h-40 rounded-t-lg">
           <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">

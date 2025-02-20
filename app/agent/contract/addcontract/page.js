@@ -97,7 +97,7 @@ export default function AddContractPage() {
       <h1 className="text-3xl font-bold text-[#1A3B5D] mb-6">Add Contract</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white w-full max-w-2xl p-8 rounded-2xl shadow-lg space-y-6 border border-[#E0E0E0]"
+        className="bg-white w-full  p-8 rounded-2xl shadow-lg space-y-6 border border-[#E0E0E0]"
       >
         {/* Select Booking */}
         <div>

@@ -17,7 +17,7 @@ const AdminDashboard = () => {
         setUserList(response.data.users);
       } catch (error) {
         setUserList([]);
-        console.error(error);
+        //console.error(error);
       }
     };
 
@@ -27,7 +27,7 @@ const AdminDashboard = () => {
         setListings(response.data.Listings);
       } catch (error) {
         setListings([]);
-        console.error(error);
+        //console.error(error);
       }
     };
     getListingList();

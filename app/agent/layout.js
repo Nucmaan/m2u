@@ -1,5 +1,6 @@
 "use client";
 import AgentSidebar from "@/components/AgentSidebar";
+import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,7 +24,7 @@ function Layout({ children }) {
 
   // Show a loading placeholder while hydration is in progress
   if (!isHydrated) {
-    return <div>Loading...</div>;
+    return <RaadiLoading />;
   }
 
   // Prevent rendering for non-agent users
@@ -33,7 +34,7 @@ function Layout({ children }) {
 
   return (
     <div className="flex">
-      <div className="w-1/5">
+      <div className="w-1/7">
         <AgentSidebar />
       </div>
       <div className="flex-1 bg-gray-100">{children}</div>

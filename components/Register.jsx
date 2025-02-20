@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -8,6 +9,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -18,9 +20,15 @@ const Register = () => {
         email,
         password,
       });
-
-      //console.log(response.data);
-      toast.success(response.data.message);
+        if (response.status === 201) {
+        toast.success(response.data.message);
+        router.push("/login"); // Redirect to login page after registration
+        setUserName("");
+        setEmail("");
+        setPassword("");
+      }else {
+        toast.error(response.data.message);
+      }
      
     } catch (error) {
       if (error.response?.data?.message) {

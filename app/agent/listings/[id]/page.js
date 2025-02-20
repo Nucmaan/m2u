@@ -24,6 +24,10 @@ export default function EditListingPage() {
   const [imagePreviews, setImagePreviews] = useState([]); // Image previews for new images
   const [currentImages, setCurrentImages] = useState([]); // Current images from the API
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+
+  const [updating, setUpdating] = useState(false);
 
 
   const fetchListing = useCallback(async () => {
@@ -46,7 +50,8 @@ export default function EditListingPage() {
       setDescription(data.description || "");
       setCurrentImages(data.images || []);
     } catch (error) {
-      console.error("Error fetching listing:", error);
+      setErrorMessage(error.response?.data?.message || "");
+     // console.error("Error fetching listing:", error);
       toast.error("Failed to fetch listing details.");
     } finally {
       setLoading(false);
@@ -66,6 +71,8 @@ export default function EditListingPage() {
 
   const updateListingInfo = async (e) => {
     e.preventDefault();
+
+    setUpdating(true);
 
     const formData = new FormData();
     if(title) {
@@ -105,7 +112,7 @@ export default function EditListingPage() {
 
 
     try {
-
+      
       const response = await axios.put(`/api/listings/${id}`, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
@@ -120,7 +127,10 @@ export default function EditListingPage() {
       }
 
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.response?.data?.message || "");
+      //console.log(error);
+    } finally {
+      setUpdating(false);
     }
   }
 
@@ -130,7 +140,7 @@ export default function EditListingPage() {
 
 
   return (
-    <form className="max-w-4xl mx-auto my-5 bg-white p-8 rounded-lg shadow-lg space-y-6">
+    <form className="max-w-8xl m-6   bg-white px-8 pt-6 pb-8 rounded-lg ">
       <div>
         <label className="block text-gray-600 font-semibold">Title</label>
         <input
@@ -273,7 +283,7 @@ export default function EditListingPage() {
         onClick={updateListingInfo}
         className="bg-[#1A3B5D] text-white py-2 px-4 rounded-md hover:bg-[#1A3B5D] focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        Update Listing
+        {updating ? "Saving..." : "Save Changes"}
       </button>
 
     </form>

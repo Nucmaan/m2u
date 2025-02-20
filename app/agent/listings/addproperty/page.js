@@ -94,7 +94,7 @@ const AddListing = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-4xl mx-auto bg-white p-8 mt-3 rounded-lg shadow-lg border border-[#E0E0E0] space-y-6"
+      className="w-full bg-white p-8 m-3"
     >
       <h2 className="text-2xl font-bold text-center text-[#1A3B5D]">
         Add New Property Listing
@@ -298,7 +298,7 @@ const AddListing = () => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full py-3 bg-[#1A3B5D] text-white font-semibold rounded-md hover:bg-[#16324A] transition duration-200"
+        className="w-full py-3 mt-4 bg-[#1A3B5D] text-white font-semibold rounded-md hover:bg-[#16324A] transition duration-200"
         disabled={loading}
       >
         {loading ? "Loading..." : "Add Property"}

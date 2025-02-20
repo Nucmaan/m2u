@@ -81,8 +81,10 @@ export default function ContractListPage() {
 
               {/* Contract Details */}
               <div className="text-gray-700 text-sm space-y-2">
-                <p><span className="font-medium">User:</span> {contract.user.username}</p>
+                <p><span className="font-medium">User Name :</span> {contract.user.username}</p>
                 <p><span className="font-medium">Email:</span> {contract.user.email}</p>
+                <p><span className="font-medium">Moile:</span> {contract.user.mobile}</p>
+
                 <p>
                   <span className="font-medium">Contract Date:</span> {moment(contract.startDate).format("D MMM, YYYY")}
                 </p>
@@ -123,7 +125,7 @@ export default function ContractListPage() {
             </div>
           ))
         ) : (
-          <p className="text-gray-600 text-lg col-span-full text-center">No contracts available.</p>
+          <p className="text-gray-600 text-lg col-span-full ">No contracts available.</p>
         )}
       </div>
     </div>

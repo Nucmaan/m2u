@@ -12,11 +12,12 @@ const AgentDashboard = () => {
   const [ownerBookings, setOwnerBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchOwnerBookings = useCallback(async () => {
     try {
       if (!user?._id) {
-        console.log("User ID missing!");
+        //console.log("User ID missing!");
         return;
       }
 
@@ -73,7 +74,8 @@ const AgentDashboard = () => {
       setListings(filteredListings);
     } catch (error) {
       setListings([]);
-      console.error("Error fetching listings:", error);
+      //console.error("Error fetching listings:", error);
+      setErrorMessage(error.message);
     }
   }, [user?._id]);
 

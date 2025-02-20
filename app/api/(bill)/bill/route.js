@@ -10,8 +10,8 @@ export async function GET(req) {
 
         // Fetch bills and populate user, owner, and property fields
         const bills = await Bill.find({})
-            .populate("user", "username email") 
-            .populate("owner", "username email") 
+            .populate("user", "username email mobile") 
+            .populate("owner", "username email mobile") 
             .populate("property", "title address"); 
 
         return NextResponse.json(
