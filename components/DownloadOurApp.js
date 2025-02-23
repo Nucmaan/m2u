@@ -41,7 +41,7 @@ const DownloadApp = () => {
             Get it on Google Play
           </button>
           
-          <button className="bg-[#1A3B5D] text-white px-6 py-3 rounded-lg text-lg font-medium shadow-md hover:opacity-80 transition duration-300">
+          <button className="bg-[#F47C48] text-white px-6 py-3 rounded-lg text-lg font-medium shadow-md hover:opacity-80 transition duration-300">
             Download on the App Store
           </button>
         </div>
