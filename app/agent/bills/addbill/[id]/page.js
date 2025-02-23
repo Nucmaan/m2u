@@ -52,17 +52,19 @@ export default function AddBillPage() {
       return;
     }
 
-    if (!amount ) {
-      toast.error("Amount is missing.");
-      return;
-    }
+  const finalAmount = property?.status === "Sold" ? housePrice : amount;
+
+  if (!finalAmount) {
+    toast.error("Amount is missing.");
+    return;
+  }
 
     try {
       const response = await axios.post(`/api/bill/addbill`, {
         user,
         owner: owner._id,
         property,
-        amount,
+        amount : finalAmount,
         dueDate,
         comment,
       });
@@ -123,7 +125,6 @@ export default function AddBillPage() {
             />
           </div>
         )}
-        
 
           <div>
             <label
