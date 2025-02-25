@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 function Layout({ children }) {
-  const user = userAuth((state) => state.user);
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
+  const user = userAuth((state) => state.user);
+
 
   useEffect(() => {
     // Wait for Zustand to hydrate
