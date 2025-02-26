@@ -40,6 +40,7 @@ async function deleteImageFromS3(imageUrl) {
 
 export async function PUT(req) {
   try {
+    
     await ConnectDb();
 
     const formData = await req.formData();
@@ -48,6 +49,10 @@ export async function PUT(req) {
     const password = formData.get("password");
     const mobile = formData.get("mobile");
     const avatarFile = formData.get("avatar"); 
+
+    console.log(id);
+    console.log(avatarFile);
+
 
     const defaultAvatar =
       "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg";
