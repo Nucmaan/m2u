@@ -10,25 +10,21 @@ function Layout({ children }) {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Wait for Zustand to hydrate
-    if (user) {
+     if (user) {
       setIsHydrated(true);
 
-      // Redirect if user is not an admin
-      if (user?.role !== "Admin") {
+       if (user?.role !== "Admin") {
         router.push("/login");
       }
     }
   }, [user, router]);
 
-  // Show a loading placeholder while hydration is in progress
-  if (!isHydrated) {
+   if (!isHydrated) {
     return <div>Loading...</div>;
   }
 
-  // Prevent rendering for non-admin users
-  if (user?.role !== "Admin") {
-    return null; // Or show a "Permission Denied" page/message
+   if (user?.role !== "Admin") {
+    return null; 
   }
 
   return (

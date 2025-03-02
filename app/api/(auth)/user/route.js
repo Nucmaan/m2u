@@ -62,7 +62,6 @@ export async function PUT(req) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-
     if (username) {
       existingUser.username = username;
     }
@@ -99,6 +98,6 @@ export async function PUT(req) {
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
 }

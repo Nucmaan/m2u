@@ -16,7 +16,6 @@ async function uploadImageToS3(file, fileName) {
   const fileBuffer = file;
   console.log("File name:", fileName);
 
-  // Create a unique file name with timestamp
   const uniqueFileName = `myhome2uFolder/${fileName}-${Date.now()}`;
 
   const params = {
