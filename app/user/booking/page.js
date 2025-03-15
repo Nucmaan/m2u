@@ -98,8 +98,7 @@ function UserBookingPage() {
   return (
     <div className="min-h-screen bg-[#F7F7F9] pt-28 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Page Header */}
-        <div className="bg-gradient-to-r from-[#4C8492] to-[#1A3B5D] rounded-xl p-6 mb-6 text-white shadow-md">
+         <div className="bg-gradient-to-r from-[#4C8492] to-[#1A3B5D] rounded-xl p-6 mb-6 text-white shadow-md">
           <h1 className="text-2xl font-bold">My Bookings</h1>
           <p className="mt-1 text-gray-100">Manage and track your property visits</p>
         </div>
@@ -124,14 +123,13 @@ function UserBookingPage() {
               </div>
               <h2 className="text-xl font-semibold text-gray-700">No Bookings Found</h2>
               <p className="text-gray-500 mt-2 max-w-md">
-                You don't have any property bookings at the moment.
+                You don not have any property bookings at the moment.
               </p>
             </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            {/* Booking Statistics */}
-            <div className="grid grid-cols-2 md:grid-cols-5 border-b divide-x">
+             <div className="grid grid-cols-2 md:grid-cols-5 border-b divide-x">
               {filterTabs.map((tab) => (
                 <button
                   key={tab.value}
@@ -165,8 +163,7 @@ function UserBookingPage() {
               ))}
             </div>
 
-            {/* Bookings List */}
-            <div className="p-6">
+             <div className="p-6">
               {filteredBookings.length === 0 ? (
                 <div className="text-center py-8">
                   <p className="text-gray-500">No {activeTab === 'all' ? '' : activeTab} bookings found.</p>
@@ -179,16 +176,17 @@ function UserBookingPage() {
                       className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300"
                     >
                       <div className="md:flex">
-                        {/* Property Image */}
-                        <div className="md:w-1/4 bg-gray-100 flex items-center justify-center h-48 md:h-auto">
+                         <div className="md:w-1/4 bg-gray-100 flex items-center justify-center h-48 md:h-auto">
                           {booking.listing?.images && booking.listing.images.length > 0 && !imageErrors[booking._id] ? (
                             <div className="relative w-full h-full">
-                              <img
-                                src={booking.listing.images[0]}
-                                alt={booking.listing?.title || "Property"}
-                                className="w-full h-full object-cover"
-                                onError={() => handleImageError(booking._id)}
-                              />
+                            <Image
+                            src={booking.listing.images[0]}
+                            alt={booking.listing?.title || "Property"}
+                            layout="fill"
+                            objectFit="cover"
+                            onError={() => handleImageError(booking._id)}
+                          />
+                          
                             </div>
                           ) : (
                             <div className="flex flex-col items-center justify-center p-4 h-full">
@@ -198,8 +196,7 @@ function UserBookingPage() {
                           )}
                         </div>
 
-                        {/* Booking Details */}
-                        <div className="md:w-3/4 p-6">
+                         <div className="md:w-3/4 p-6">
                           <div className="flex justify-between items-start mb-4">
                             <div>
                               <h3 className="text-xl font-semibold text-gray-800">

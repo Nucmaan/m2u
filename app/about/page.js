@@ -99,7 +99,7 @@ const AboutUs = () => {
               About <span className="text-[#F47C48]">MyHome2U</span>
             </h1>
             <p className="text-xl max-w-3xl mx-auto text-gray-200 leading-relaxed">
-              We're not just finding properties, we're helping people discover homes where memories are made.
+              We are not just finding properties, we are helping people discover homes where memories are made.
             </p>
           </motion.div>
         </div>
@@ -139,10 +139,10 @@ const AboutUs = () => {
                   Founded in 2013, MyHome2U was born from a simple idea: property hunting should be simple, transparent, and enjoyable. We saw a market filled with complexity and stress, and we decided to change that.
                 </p>
                 <p>
-                  Starting with just a handful of listings in Mogadishu, we've grown to become one of Somalia's most trusted property platforms, connecting thousands of people with their perfect homes.
+                  Starting with just a handful of listings in Mogadishu, we have grown to become one of Somalia s most trusted property platforms, connecting thousands of people with their perfect homes.
                 </p>
                 <p>
-                  Our journey hasn't always been easy, but our commitment to our clients has never wavered. Today, we're proud to offer a service that truly puts people first.
+                  Our journey has not always been easy but our commitment to our clients has never wavered. Today, we are proud to offer a service that truly puts people first.
                 </p>
               </div>
 
@@ -244,9 +244,9 @@ const AboutUs = () => {
                     Our Vision
                   </h3>
                   <p className="text-[#7A7A7A]">
-                    To become Somalia's most trusted property platform, revolutionizing how people discover, 
-                    purchase, and sell properties. We envision a market where every transaction is built on 
-                    trust, and every client feels supported throughout their journey.
+                    To become Somalia s most trusted property platform, revolutionizing how people discover 
+                    purchase and sell properties. We envision a market where every transaction is built on 
+                    trust and every client feels supported throughout their journey.
                   </p>
                 </motion.div>
               </div>
@@ -403,9 +403,9 @@ const AboutUs = () => {
             
             <div className="max-w-3xl mx-auto relative z-10">
               <p className="text-xl italic text-[#7A7A7A] mb-6">
-                "MyHome2U transformed our property search from a stressful chore into an exciting journey. 
-                Their team went above and beyond, understanding exactly what we needed and finding us the perfect home. 
-                I couldn't recommend them more highly!"
+                MyHome2U transformed our property search from a stressful chore into an exciting journey. 
+                Their team went above and beyond understanding exactly what we needed and finding us the perfect home. 
+                I could not recommend them more highly!
               </p>
               <div className="flex items-center justify-center">
                 <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
@@ -419,7 +419,7 @@ const AboutUs = () => {
                 </div>
                 <div className="text-left">
                   <h4 className="font-semibold text-[#1A3B5D]">Ahmed Mohamed</h4>
-                  <p className="text-[#F47C48]">Homeowner, Mogadishu</p>
+                  <p className="text-[#F47C48]">Homeowner Mogadishu</p>
                 </div>
               </div>
             </div>

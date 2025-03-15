@@ -137,49 +137,9 @@ export default function PropertyListing() {
   const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(false);
 
-  const getListings = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
-      );
-
-      if (!response.data?.Listings) {
-        throw new Error("Invalid response from server");
-      }
-      
-      const validListings = response.data.Listings.filter(
-        (listing) =>
-          listing.owner !== null &&
-          listing.owner.isVerified === true &&
-          listing.status === "Available"
-      );
-      
-      setListings(validListings);
-      setFilteredListings(validListings);
-    } catch (error) {
-      setError("Failed to load listings. Please try again later.");
-      setListings([]);
-      setFilteredListings([]);
-      console.error("Error fetching listings:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    getListings();
-  }, [getListings]);
-
-  useEffect(() => {
-    applyFilters();
-  }, [searchTerm, filters, sortBy, listings]);
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let result = [...listings];
-
-    // Search
+  
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       result = result.filter(
@@ -190,36 +150,26 @@ export default function PropertyListing() {
           listing.address?.toLowerCase().includes(search)
       );
     }
-
-    // Price filters
+  
     if (filters.priceMin) {
       result = result.filter((listing) => listing.price >= parseInt(filters.priceMin));
     }
     if (filters.priceMax) {
       result = result.filter((listing) => listing.price <= parseInt(filters.priceMax));
     }
-
-    // Bedrooms
     if (filters.bedrooms) {
       result = result.filter((listing) => listing.bedrooms >= parseInt(filters.bedrooms));
     }
-
-    // Bathrooms
     if (filters.bathrooms) {
       result = result.filter((listing) => listing.bathrooms >= parseInt(filters.bathrooms));
     }
-
-    // Property Type
     if (filters.propertyType) {
       result = result.filter((listing) => listing.propertyType === filters.propertyType);
     }
-
-    // House Type (Sale/Rent)
     if (filters.houseType) {
       result = result.filter((listing) => listing.houseType === filters.houseType);
     }
-
-    // Sort
+  
     switch (sortBy) {
       case "priceAsc":
         result.sort((a, b) => a.price - b.price);
@@ -233,9 +183,15 @@ export default function PropertyListing() {
       default:
         break;
     }
-
+  
     setFilteredListings(result);
-  };
+  }, [listings, searchTerm, filters, sortBy]); // Add dependencies
+  
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]); // Add applyFilters as a dependency
+  
+  
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -288,8 +244,7 @@ export default function PropertyListing() {
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        {/* Header */}
-        <div className="text-center mb-12">
+         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-[#1A3B5D] mb-4">
             Discover Your Perfect Property
           </h1>
@@ -298,11 +253,9 @@ export default function PropertyListing() {
           </p>
         </div>
 
-        {/* Search & Filter Bar */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+         <div className="bg-white rounded-lg shadow-md p-4 mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
-            {/* Search */}
-            <div className="flex-grow relative">
+             <div className="flex-grow relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FaSearch className="text-gray-400" />
               </div>
@@ -315,8 +268,7 @@ export default function PropertyListing() {
               />
             </div>
 
-            {/* Filter Toggle */}
-            <button
+             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center justify-center gap-2 px-4 py-2 bg-[#F47C48]/10 text-[#F47C48] font-medium rounded-md hover:bg-[#F47C48]/20 transition-colors duration-300"
             >
@@ -329,8 +281,7 @@ export default function PropertyListing() {
               )}
             </button>
 
-            {/* Sort */}
-            <div className="relative">
+             <div className="relative">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -352,8 +303,7 @@ export default function PropertyListing() {
             </div>
           </div>
 
-          {/* Expanded Filters */}
-          {showFilters && (
+           {showFilters && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -362,8 +312,7 @@ export default function PropertyListing() {
               className="border-t border-gray-200 pt-4 mt-2"
             >
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {/* Price Range */}
-                <div>
+                 <div>
                   <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                     Min Price
                   </label>
@@ -390,8 +339,7 @@ export default function PropertyListing() {
                   />
                 </div>
 
-                {/* Bedrooms */}
-                <div>
+                 <div>
                   <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                     Bedrooms
                   </label>
@@ -410,8 +358,7 @@ export default function PropertyListing() {
                   </select>
                 </div>
 
-                {/* Bathrooms */}
-                <div>
+                 <div>
                   <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                     Bathrooms
                   </label>
@@ -429,8 +376,7 @@ export default function PropertyListing() {
                   </select>
                 </div>
 
-                {/* Property Type */}
-                <div>
+                 <div>
                   <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                     Property Type
                   </label>
@@ -448,8 +394,7 @@ export default function PropertyListing() {
                   </select>
                 </div>
 
-                {/* House Type */}
-                <div>
+                 <div>
                   <label className="block text-sm font-medium text-[#7A7A7A] mb-1">
                     Sale/Rent
                   </label>
@@ -466,8 +411,7 @@ export default function PropertyListing() {
                 </div>
               </div>
 
-              {/* Reset Filters */}
-              {hasActiveFilters() && (
+               {hasActiveFilters() && (
                 <div className="mt-4 flex justify-end">
                   <button
                     onClick={resetFilters}
@@ -481,8 +425,7 @@ export default function PropertyListing() {
           )}
         </div>
 
-        {/* Results Info */}
-        <div className="flex justify-between items-center mb-6">
+         <div className="flex justify-between items-center mb-6">
           <p className="text-[#7A7A7A]">
             {filteredListings.length} {filteredListings.length === 1 ? "property" : "properties"} found
           </p>
@@ -496,8 +439,7 @@ export default function PropertyListing() {
           )}
         </div>
 
-        {/* Main Content */}
-        {loading ? (
+         {loading ? (
           <>
             <div className="mb-8 flex justify-center">
               <FaSpinner className="animate-spin text-[#F47C48] text-3xl" />
@@ -527,7 +469,7 @@ export default function PropertyListing() {
               No properties found
             </h3>
             <p className="text-[#7A7A7A] mb-6 max-w-lg mx-auto">
-              We couldn't find any properties matching your criteria. Try adjusting your filters or broadening your search.
+              We could not find any properties matching your criteria. Try adjusting your filters or broadening your search.
             </p>
             <button
               onClick={resetFilters}

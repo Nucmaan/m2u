@@ -59,8 +59,7 @@ const ContactUs = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
-    // Clear errors when typing
-    if (errors[name]) {
+     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: null,
@@ -130,8 +129,7 @@ const ContactUs = () => {
 
   return (
     <section className="bg-gradient-to-b from-white  to-[#F7F7F9] py-28 px-6 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
           backgroundImage: "radial-gradient(#1A3B5D 1px, transparent 1px)",
           backgroundSize: "20px 20px",
@@ -144,8 +142,7 @@ const ContactUs = () => {
         transition={{ duration: 0.5 }}
         className="max-w-6xl mx-auto relative z-10"
       >
-        {/* Header */}
-        <motion.div
+         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -155,7 +152,7 @@ const ContactUs = () => {
             Get in <span className="text-[#F47C48]">Touch</span>
           </h1>
           <p className="text-lg text-[#7A7A7A] max-w-2xl mx-auto">
-            Have questions about finding your perfect home? We're here to help you every step of the way.
+            Have questions about finding your perfect home? We are here to help you every step of the way.
           </p>
         </motion.div>
 
@@ -184,8 +181,7 @@ const ContactUs = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-start">
-          {/* Form */}
-          <motion.div
+           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -201,7 +197,7 @@ const ContactUs = () => {
                   <FiCheckCircle className="text-[#27AE60] text-4xl" />
                 </div>
                 <h3 className="text-2xl font-bold text-[#1A3B5D] mb-4">Message Sent!</h3>
-                <p className="text-[#7A7A7A] mb-8">Thank you for reaching out. We'll get back to you as soon as possible.</p>
+                <p className="text-[#7A7A7A] mb-8">Thank you for reaching out. We will get back to you as soon as possible.</p>
                 <button
                   onClick={() => setSubmitted(false)}
                   className="px-6 py-3 rounded-md bg-[#F47C48] text-white font-semibold hover:bg-[#e86d3f] transition duration-300 shadow-md"
@@ -216,8 +212,7 @@ const ContactUs = () => {
                 </h2>
 
                 <form className="space-y-5" onSubmit={handleSubmit}>
-                  {/* Name */}
-                  <div>
+                   <div>
                     <label htmlFor="name" className="flex items-center text-sm font-semibold text-[#1A3B5D] mb-2">
                       <FiUser className="mr-2 text-[#F47C48]" />
                       Name
@@ -236,8 +231,7 @@ const ContactUs = () => {
                     {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
                   </div>
 
-                  {/* Email */}
-                  <div>
+                   <div>
                     <label htmlFor="email" className="flex items-center text-sm font-semibold text-[#1A3B5D] mb-2">
                       <FiMail className="mr-2 text-[#F47C48]" />
                       Email
@@ -256,8 +250,7 @@ const ContactUs = () => {
                     {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
                   </div>
 
-                  {/* Subject */}
-                  <div>
+                   <div>
                     <label htmlFor="subject" className="flex items-center text-sm font-semibold text-[#1A3B5D] mb-2">
                       <FiInfo className="mr-2 text-[#F47C48]" />
                       Subject
@@ -276,8 +269,7 @@ const ContactUs = () => {
                     {errors.subject && <p className="mt-1 text-sm text-red-500">{errors.subject}</p>}
                   </div>
 
-                  {/* Message */}
-                  <div>
+                   <div>
                     <label htmlFor="message" className="flex items-center text-sm font-semibold text-[#1A3B5D] mb-2">
                       <FiMessageSquare className="mr-2 text-[#F47C48]" />
                       Message
@@ -296,8 +288,7 @@ const ContactUs = () => {
                     {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message}</p>}
                   </div>
 
-                  {/* Submit Button */}
-                  <motion.button
+                   <motion.button
                     type="submit"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
@@ -331,8 +322,7 @@ const ContactUs = () => {
             transition={{ duration: 0.5 }}
             className="space-y-8"
           >
-            {/* Map */}
-            <div className="bg-white p-4 rounded-lg shadow-lg border border-[#E0E0E0] h-[300px] overflow-hidden">
+             <div className="bg-white p-4 rounded-lg shadow-lg border border-[#E0E0E0] h-[300px] overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254344.2773037497!2d45.173323386923845!3d2.0376307895261966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3d58425955ce6b53%3A0xbb20eaaa52cc59d9!2sMogadishu%2C%20Somalia!5e0!3m2!1sen!2sus!4v1658440631950!5m2!1sen!2sus"
                 width="100%"
@@ -346,8 +336,7 @@ const ContactUs = () => {
               ></iframe>
             </div>
 
-            {/* Office Hours */}
-            <div className="bg-white p-6 rounded-lg shadow-lg border border-[#E0E0E0]">
+             <div className="bg-white p-6 rounded-lg shadow-lg border border-[#E0E0E0]">
               <h3 className="text-xl font-semibold text-[#1A3B5D] mb-4">Business Hours</h3>
               <ul className="space-y-2 text-[#7A7A7A]">
                 <li className="flex justify-between">
@@ -365,8 +354,7 @@ const ContactUs = () => {
               </ul>
             </div>
 
-            {/* Social Links */}
-            <div className="bg-white p-6 rounded-lg shadow-lg border border-[#E0E0E0]">
+             <div className="bg-white p-6 rounded-lg shadow-lg border border-[#E0E0E0]">
               <h3 className="text-xl font-semibold text-[#1A3B5D] mb-4">Connect With Us</h3>
               <div className="flex justify-between">
                 {socialLinks.map((social, index) => (
@@ -389,8 +377,7 @@ const ContactUs = () => {
           </motion.div>
         </div>
 
-        {/* Additional Contact Info */}
-        <motion.div
+         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}

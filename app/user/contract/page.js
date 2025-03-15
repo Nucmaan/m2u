@@ -3,6 +3,7 @@
 import RaadiLoading from "@/components/RaadiLoading";
 import userAuth from "@/myStore/UserAuth";
 import axios from "axios";
+import Image from "next/image";
 import React, { useEffect, useState, useCallback } from "react";
 import { FaCalendarAlt, FaHome, FaMoneyBillWave, FaUser, FaPhone, FaEnvelope, FaCheckCircle, FaHourglass, FaTimesCircle, FaClock, FaFileContract, FaTag, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -12,8 +13,7 @@ function ContractPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const user = userAuth((state) => state.user);
   const [errormessage, setErrorMessage] = useState("");
-  // Track active image for each contract
-  const [activeImages, setActiveImages] = useState({});
+   const [activeImages, setActiveImages] = useState({});
 
   const getOwnerContracts = useCallback(async () => {
     if (!user || !user._id) return;
@@ -31,7 +31,7 @@ function ContractPage() {
       setActiveImages(initialActiveImages);
     } catch (error) {
       setErrorMessage("Failed to fetch contracts");
-      setUserContracts([]); // Handle errors
+      setUserContracts([]); 
     } finally {
       setLoading(false);
     }
@@ -74,8 +74,7 @@ function ContractPage() {
     }
   };
 
-  // Handle image navigation
-  const handleImageNav = (contractId, direction) => {
+   const handleImageNav = (contractId, direction) => {
     setActiveImages(prev => {
       const contract = userContracts.find(c => c._id === contractId);
       if (!contract || !contract.property.images || contract.property.images.length <= 1) {
@@ -96,13 +95,11 @@ function ContractPage() {
     });
   };
 
-  // Handle image error
-  const handleImageError = (e) => {
+   const handleImageError = (e) => {
     e.target.src = "https://via.placeholder.com/300x200?text=No+Image+Available";
   };
 
-  // Filter tabs
-  const filterTabs = [
+   const filterTabs = [
     { label: "All Contracts", value: "all", icon: <FaFileContract /> },
     { label: "Active", value: "Active", icon: <FaCheckCircle /> },
     { label: "Pending", value: "Pending", icon: <FaHourglass /> },
@@ -116,8 +113,7 @@ function ContractPage() {
   return (
     <div className="min-h-screen bg-[#F7F7F9] pt-28 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Page Header */}
-        <div className="bg-gradient-to-r from-[#4C8492] to-[#1A3B5D] rounded-xl p-6 mb-6 text-white shadow-md">
+         <div className="bg-gradient-to-r from-[#4C8492] to-[#1A3B5D] rounded-xl p-6 mb-6 text-white shadow-md">
           <h1 className="text-2xl font-bold">My Contracts</h1>
           <p className="mt-1 text-gray-100">Manage all your property agreements in one place</p>
         </div>
@@ -142,14 +138,13 @@ function ContractPage() {
               </div>
               <h2 className="text-xl font-semibold text-gray-700">No Contracts Found</h2>
               <p className="text-gray-500 mt-2 max-w-md">
-                You don't have any active contracts at the moment.
+                You do not have any active contracts at the moment.
               </p>
             </div>
           </div>
         ) : (
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            {/* Contract Statistics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 border-b divide-x">
+             <div className="grid grid-cols-2 md:grid-cols-4 border-b divide-x">
               {filterTabs.map((tab) => (
                 <button
                   key={tab.value}
@@ -183,8 +178,7 @@ function ContractPage() {
               ))}
             </div>
 
-            {/* Contract List */}
-            <div className="p-6">
+             <div className="p-6">
               {filteredContracts.length === 0 ? (
                 <div className="text-center py-8">
                   <p className="text-gray-500">No {activeFilter.toLowerCase()} contracts found.</p>
@@ -213,16 +207,17 @@ function ContractPage() {
                         className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300"
                       >
                         <div className="md:flex">
-                          {/* Property Image or Icon */}
-                          <div className="md:w-1/3 bg-gray-50 relative">
+                           <div className="md:w-1/3 bg-gray-50 relative">
                             {hasImages ? (
                               <div className="relative h-48 md:h-full w-full">
-                                <img 
-                                  src={currentImage} 
-                                  alt={property.title || "Property"} 
-                                  className="h-full w-full object-cover"
-                                  onError={handleImageError}
-                                />
+                              <Image 
+                              src={currentImage} 
+                              alt={property.title || "Property"} 
+                              layout="fill"
+                              objectFit="cover"
+                              onError={(e) => e.target.src = "https://via.placeholder.com/300x200?text=No+Image+Available"}
+                            />
+                            
                                 {property.images.length > 1 && (
                                   <>
                                     <button 
@@ -267,8 +262,7 @@ function ContractPage() {
                             )}
                           </div>
 
-                          {/* Contract Info */}
-                          <div className="p-6 md:w-2/3">
+                           <div className="p-6 md:w-2/3">
                             <div className="flex justify-between items-start mb-4">
                               <div>
                                 <h3 className="text-xl font-semibold text-gray-800">

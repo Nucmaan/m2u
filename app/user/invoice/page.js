@@ -96,7 +96,7 @@ const AllInvoicesPage = () => {
               </div>
               <h2 className="text-xl font-semibold text-gray-700">No Invoices Found</h2>
               <p className="text-gray-500 mt-2 max-w-md">
-                You don't have any payment invoices at the moment.
+                You do not have any payment invoices at the moment.
               </p>
             </div>
           </div>

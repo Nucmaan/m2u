@@ -119,7 +119,7 @@ const UserDashboard = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">Welcome back, {userName.username}!</h1>
-              <p className="text-gray-200 mt-1">Here's what's happening with your properties today.</p>
+              <p className="text-gray-200 mt-1">Here is what is happening with your properties today.</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 relative">

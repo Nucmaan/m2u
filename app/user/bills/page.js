@@ -87,7 +87,7 @@ export default function BillPage() {
         {/* Page Header */}
         <div className="bg-gradient-to-r from-[#4C8492] to-[#1A3B5D] rounded-xl p-6 mb-6 text-white shadow-md">
           <h1 className="text-2xl font-bold">My Bills</h1>
-          <p className="mt-1 text-gray-100">Manage and pay your property-related bills</p>
+          <p className="mt-1 text-gray-100">Manage and pay your property related bills</p>
         </div>
 
         {loading ? (
@@ -110,7 +110,7 @@ export default function BillPage() {
               </div>
               <h2 className="text-xl font-semibold text-gray-700">No Bills Found</h2>
               <p className="text-gray-500 mt-2 max-w-md">
-                You don't have any bills at the moment.
+                You don not have any bills at the moment.
               </p>
             </div>
           </div>
