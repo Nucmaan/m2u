@@ -47,6 +47,7 @@ const Navbar = () => {
   };
 
   const navLinks = [
+    { href: "/", label: "Home" },
     { href: "/listings", label: "Property List" },
     { href: "/contact", label: "Contact Us" },
     { href: "/about", label: "About Us" },
