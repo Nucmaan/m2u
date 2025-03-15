@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  compiler: {
+    reactRemoveProperties: true,
+  },
 };
 
 export default nextConfig;

@@ -18,7 +18,7 @@ export async function GET(req, { params }) {
 
     const bookings = await Booking.find({ user: id })
       .populate("owner", "name email mobile") 
-      .populate("listing", "title address price city houseType");
+      .populate("listing", "title address price city houseType images");
 
     return NextResponse.json({ bookings }, { status: 200 });
   } catch (error) {
