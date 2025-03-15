@@ -26,7 +26,8 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg",
+      default:
+        "https://myhome2u-storage.s3.ap-southeast-2.amazonaws.com/myhome2uFolder/NasriDevLab.jpg",
     },
     verificationToken: {
       type: String,
@@ -49,6 +50,28 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("remove", async function (next) {
+  try {
+    await mongoose.model("Booking").deleteMany({
+      $or: [{ user: this._id }, { owner: this._id }],
+    });
+
+    await mongoose
+      .model("Bill")
+      .deleteMany({ $or: [{ user: this._id }, { owner: this._id }] });
+
+    await mongoose
+      .model("Contract")
+      .deleteMany({ $or: [{ user: this._id }, { owner: this._id }] });
+
+    await mongoose.model("Listings").deleteMany({ owner: this._id });
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 

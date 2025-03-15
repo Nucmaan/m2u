@@ -9,6 +9,7 @@ const AboutUs = () => {
   const defaultImage2 = "/images/naima.jpg";
   const defaultImage3 = "/images/abdi.jpg";
   const defaultImage4 = "/images/customer.jpg";
+  const defaultImage5 = "/images/malik.jpg";
   
   const defaultAboutImage = "https://images.pexels.com/photos/374870/pexels-photo-374870.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
   const defaultValue = "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
@@ -53,8 +54,15 @@ const AboutUs = () => {
     {
       image: defaultImage,
       name: "Nasri Abdi",
-      position: "CEO & Founder",
-      bio: "Passionate about real estate with over 10 years of experience in property management.",
+      position: "CEO",
+      bio: "Passionate about real estate with over 3 years of experience in property management.",
+      delay: 0.2,
+    },
+    {
+      image: defaultImage5,
+      name: "Abdimalik Abdukadir",
+      position: "Co-Founder",
+      bio: "Passionate about real estate with over 5 years of experience in property management.",
       delay: 0.2,
     },
     {

@@ -3,6 +3,9 @@ import User from "@/Models/authModel";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import Listings from "@/Models/listingsModel";
+import Booking from "@/Models/bookingModel";
+import Bill from "@/Models/billModel";
 
 export async function GET(req, { params }) {
     try {
@@ -14,7 +17,7 @@ export async function GET(req, { params }) {
         return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
       }
   
-      const userInfo = await User.findById(id).select("-password"); // Exclude password from the response
+      const userInfo = await User.findById(id).select("-password"); 
   
       if (!userInfo) {
         return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -31,9 +34,9 @@ export async function GET(req, { params }) {
   }
   
 
-export async function DELETE(req, { params }) {
+  export async function DELETE(req, { params }) {
     try {
-      const { id } = await params;
+      const { id } = params;
   
       await ConnectDb();
   
@@ -41,11 +44,17 @@ export async function DELETE(req, { params }) {
         return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
       }
   
-      const userInfo = await User.findByIdAndDelete(id);
-  
+       const userInfo = await User.findById(id);
       if (!userInfo) {
         return NextResponse.json({ message: "User not found" }, { status: 404 });
       }
+  
+      
+      await userInfo.remove(); 
+
+
+  
+       await User.findByIdAndDelete(id);
   
       return NextResponse.json(
         { message: "User deleted successfully" },
@@ -69,8 +78,7 @@ export async function PUT(req, { params }) {
 
     await ConnectDb();
 
-    // Validate if the ID is a valid MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
     }
 
