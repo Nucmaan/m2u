@@ -3,6 +3,7 @@ import ConnectDb from "@/Database/dbConfig";
 import Listings from "@/Models/listingsModel";
 import { NextResponse } from "next/server";
 import User from "@/Models/authModel";
+import mongoose from "mongoose";
 
 const s3 = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION,
@@ -131,5 +132,40 @@ export async function PUT(req, { params }) {
   } catch (error) {
     console.error("Error updating listing:", error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    await ConnectDb();
+    const { id } = await params;
+ 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+  return NextResponse.json(
+    { message: "Invalid listing ID" },
+    { status: 400 }
+  );
+}
+
+ const listing = await Listings.findById(id);
+if (!listing) {
+  return NextResponse.json(
+    { message: "Listing not found" },
+    { status: 404 }
+  );
+}
+
+ await listing.deleteOne();
+
+return NextResponse.json(
+  { message: "Listing deleted successfully" },
+  { status: 200 }
+);
+  } catch (error) {
+    console.error("Error fetching listing:", error);
+    return NextResponse.json(
+      { message: "Internal server error", error: error.message },
+      { status: 500 }
+    );
   }
 }

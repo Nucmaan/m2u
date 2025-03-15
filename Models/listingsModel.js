@@ -53,7 +53,7 @@ const listingsSchema = new mongoose.Schema(
         trim: true,
       },
       images: {
-        type: [String],  // Array of image URLs
+        type: [String],  
         required: true,
       },
       createdAt: {
@@ -65,6 +65,23 @@ const listingsSchema = new mongoose.Schema(
       timestamps: true,
     }
   );
+
+  listingsSchema.pre("deleteOne", { document: true, query: false }, async function (next) {
+    try {
+      console.log(`Deleting related records for property: ${this._id}`);
+  
+       await Booking.deleteMany({ listing: this._id });
+  
+       await Contract.deleteMany({ property: this._id });
+  
+       await Bill.deleteMany({ property: this._id });
+  
+      console.log("Related records deleted successfully.");
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
   
   const Listings = mongoose.models.Listings || mongoose.model("Listings", listingsSchema);
   

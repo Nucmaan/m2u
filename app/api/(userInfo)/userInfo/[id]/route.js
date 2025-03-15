@@ -48,11 +48,8 @@ export async function GET(req, { params }) {
       if (!userInfo) {
         return NextResponse.json({ message: "User not found" }, { status: 404 });
       }
-  
       
       await userInfo.remove(); 
-
-
   
        await User.findByIdAndDelete(id);
   

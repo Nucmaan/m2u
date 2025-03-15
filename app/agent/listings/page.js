@@ -6,6 +6,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function PropertyList() {
   const [listings, setListings] = useState([]);
@@ -51,6 +52,18 @@ export default function PropertyList() {
   const rentedOrSoldProperties = listings.filter(
     (listing) => listing.status !== "Available"
   );
+
+  const handleDelete = async (listingId) => {
+    try {
+     const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings/${listingId}`
+      );
+      getListings();
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete property");
+    }
+  };
 
   if (loading) return <RaadiLoading />; // Show loading animation while fetching
 
@@ -102,6 +115,11 @@ export default function PropertyList() {
                         View Details
                       </Link>
                     </button>
+                    <button
+                      onClick={() => handleDelete(listing._id)}
+                     className="flex-1 py-2 bg-[#F47C48] text-white font-bold rounded-lg hover:bg-[#e86d3f] transition duration-200">
+                      Delete
+                  </button>
                   </div>
                 </div>
               </div>
@@ -164,6 +182,11 @@ export default function PropertyList() {
                         View Details
                       </Link>
                     </button>
+                    <button
+                      onClick={() => handleDelete(listing._id)}
+                     className="flex-1 py-2 bg-[#F47C48] text-white font-bold rounded-lg hover:bg-[#e86d3f] transition duration-200">
+                      Delete
+                  </button>
                   </div>
                 </div>
               </div>
