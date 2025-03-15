@@ -68,7 +68,7 @@ export default function PropertyList() {
   if (loading) return <RaadiLoading />; // Show loading animation while fetching
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] p-6">
+    <div className="min-h-screen bg-[#F7F7F9] p-6 mt-14">
       {/* Available Properties Section */}
       <section>
         <h2 className="text-2xl font-bold text-[#1A3B5D] mb-4 flex items-center justify-between">
