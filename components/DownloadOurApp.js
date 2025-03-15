@@ -55,8 +55,7 @@ const FeatureItem = ({ icon, text, color, delay }) => (
 const DownloadApp = () => {
   return (
     <section className="bg-[#F7F7F9] py-20 px-6 sm:px-12 lg:px-16 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
           backgroundImage: "radial-gradient(#1A3B5D 1px, transparent 1px)",
           backgroundSize: "20px 20px",
@@ -132,7 +131,7 @@ const DownloadApp = () => {
           {/* App Preview Image */}
           <div className="relative transform hover:scale-105 transition-transform duration-500 hover:rotate-2">
             <Image
-              src="/images/downloadApp.jpg" 
+              src="/images/download2.png" 
               alt="Mobile App Preview"
               width={500}
               height={400}

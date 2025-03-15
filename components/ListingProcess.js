@@ -144,7 +144,7 @@ const ListingProcess = () => {
             {/* Main Image */}
             <div className="relative">
               <Image
-                src="/images/cyclepr.jpeg"
+                src="/images/calltv.jpg"
                 alt="Property listing process"
                 width={600}
                 height={500}
