@@ -137,9 +137,44 @@ export default function PropertyListing() {
   const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(false);
 
+  const getListings = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_DOMAIN}/api/listings`
+      );
+
+      if (!response.data?.Listings) {
+        throw new Error("Invalid response from server");
+      }
+      
+      const validListings = response.data.Listings.filter(
+        (listing) =>
+          listing.owner !== null &&
+          listing.owner.isVerified === true &&
+          listing.status === "Available"
+      );
+      
+      setListings(validListings);
+      setFilteredListings(validListings);
+    } catch (error) {
+      setError("Failed to load listings. Please try again later.");
+      setListings([]);
+      setFilteredListings([]);
+      console.error("Error fetching listings:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    getListings();
+  }, [getListings]);
+  
   const applyFilters = useCallback(() => {
     let result = [...listings];
-  
+
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       result = result.filter(
@@ -150,26 +185,30 @@ export default function PropertyListing() {
           listing.address?.toLowerCase().includes(search)
       );
     }
-  
+
     if (filters.priceMin) {
       result = result.filter((listing) => listing.price >= parseInt(filters.priceMin));
     }
     if (filters.priceMax) {
       result = result.filter((listing) => listing.price <= parseInt(filters.priceMax));
     }
+
     if (filters.bedrooms) {
       result = result.filter((listing) => listing.bedrooms >= parseInt(filters.bedrooms));
     }
+
     if (filters.bathrooms) {
       result = result.filter((listing) => listing.bathrooms >= parseInt(filters.bathrooms));
     }
+
     if (filters.propertyType) {
       result = result.filter((listing) => listing.propertyType === filters.propertyType);
     }
+
     if (filters.houseType) {
       result = result.filter((listing) => listing.houseType === filters.houseType);
     }
-  
+
     switch (sortBy) {
       case "priceAsc":
         result.sort((a, b) => a.price - b.price);
@@ -183,15 +222,13 @@ export default function PropertyListing() {
       default:
         break;
     }
-  
+
     setFilteredListings(result);
-  }, [listings, searchTerm, filters, sortBy]); // Add dependencies
-  
+  }, [listings, filters, searchTerm, sortBy]);
+
   useEffect(() => {
-    applyFilters();
-  }, [applyFilters]); // Add applyFilters as a dependency
-  
-  
+    applyFilters();  
+  }, [applyFilters]); 
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
